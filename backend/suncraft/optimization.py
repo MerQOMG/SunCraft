@@ -11,16 +11,22 @@ from .simulation import simulate
 
 DEPTHS = np.round(np.linspace(0, scene.MAX_OVERHANG, 41), 2)
 TILTS = np.arange(25) * scene.MAX_TILT / 24
-GRID_DEPTH = np.repeat(DEPTHS, TILTS.size)
-GRID_TILT = np.tile(TILTS, DEPTHS.size)
+# The studio sliders advance in 50 mm and 1 degree increments.
+STUDIO_DEPTHS = np.arange(37) / 20
+STUDIO_TILTS = np.arange(81)
+
+
+def search_axes(studio):
+    return (STUDIO_DEPTHS, STUDIO_TILTS) if studio else (DEPTHS, TILTS)
 
 
 @lru_cache(maxsize=32)
-def grid_compliance(window, louvers_enabled):
+def grid_compliance(window, louvers_enabled, studio=False):
     # Thin depth and tilt axes broadcast over 32 sky directions. The same
     # diffuse field applies across cities and orientations for a given window.
-    transmission = daylight.diffuse_transmission(window, DEPTHS[:, None], TILTS[None, :], louvers_enabled)
-    transmission = np.broadcast_to(transmission, (DEPTHS.size, TILTS.size))
+    depths, tilts = search_axes(studio)
+    transmission = daylight.diffuse_transmission(window, depths[:, None], tilts[None, :], louvers_enabled)
+    transmission = np.broadcast_to(transmission, (depths.size, tilts.size))
     rates = daylight.compliance_rates(daylight.unshaded_grid(window), transmission.ravel())
     rates.setflags(write=False)
     return rates
@@ -43,11 +49,12 @@ def pareto_indices(shading, gain, compliance, depth, tilt):
 
 
 @lru_cache(maxsize=16)
-def grid_performance(wwr, latitude, orientation, enabled):
+def grid_performance(wwr, latitude, orientation, enabled, studio=False):
     window = scene.Window.from_ratio(wwr)
     suns = solar.solstices(latitude, orientation)
-    depth, tilt = DEPTHS[:, None], TILTS[None, :]
-    compliance = grid_compliance(window, enabled).reshape(DEPTHS.size, TILTS.size)
+    depths, tilts = search_axes(studio)
+    depth, tilt = depths[:, None], tilts[None, :]
+    compliance = grid_compliance(window, enabled, studio).reshape(depths.size, tilts.size)
     shading, gain = solar.direct_rates(window, suns, depth, tilt, enabled)
     shading, gain = (np.broadcast_to(a, compliance.shape) for a in (shading, gain))
     penetration = solar.penetration(window, suns[1], depth, tilt, gain, enabled)
@@ -63,12 +70,15 @@ def grid_performance(wwr, latitude, orientation, enabled):
     return result
 
 
-def optimize(request: SimulationInput, *, include_simulation: bool = False) -> OptimizationResult:
+def optimize(request: SimulationInput, *, include_simulation: bool = False,
+             studio: bool = False) -> OptimizationResult:
     summary = simulate(request, include_heatmap=False)
     before = EvaluatedDesign(parameters=request, metrics=summary.metrics, score_report=summary.score_report)
-    depth, tilt = GRID_DEPTH, GRID_TILT
+    depths, tilts = search_axes(studio)
+    depth, tilt = np.repeat(depths, tilts.size), np.tile(tilts, depths.size)
     shading, gain, compliance, totals = grid_performance(
-        request.window_to_wall_ratio, request.resolved_latitude, request.orientation_deg % 360, request.louvers_enabled)
+        request.window_to_wall_ratio, request.resolved_latitude, request.orientation_deg % 360,
+        request.louvers_enabled, studio)
     if not np.any((depth == request.overhang_depth_m) & (tilt == request.louver_tilt_deg)):
         # Evaluate only the extra candidate. Never append to the cached arrays in place.
         compliance = np.append(compliance, before.metrics.daylight_compliance_rate)
