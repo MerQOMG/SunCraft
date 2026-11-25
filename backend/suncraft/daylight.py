@@ -1,5 +1,7 @@
 """Uniform diffuse sky, clear rectangular aperture and one room-average reflection term."""
 
+from functools import lru_cache
+
 import numpy as np
 
 from . import scene
@@ -17,6 +19,7 @@ _u = (np.arange(32) + 0.5) / 32
 SKY_SLOPES = _u / np.sqrt(1 - _u**2)
 
 
+@lru_cache(maxsize=32)
 def unshaded_grid(window: scene.Window) -> np.ndarray:
     """DF in percent. Axis 0 is depth, axis 1 is transverse position."""
     n = scene.GRID_SIZE
@@ -39,7 +42,9 @@ def unshaded_grid(window: scene.Window) -> np.ndarray:
                          + (FLOOR_REFLECTANCE + CEILING_REFLECTANCE) * floor_area)
                         / total_area)
     indirect = 0.5 * glazing / total_area * FIRST_BOUNCE_REFLECTANCE / (1 - mean_reflectance)
-    return 100 * GLASS_TRANSMITTANCE * (direct + indirect)
+    grid = 100 * GLASS_TRANSMITTANCE * (direct + indirect)
+    grid.setflags(write=False)
+    return grid
 
 
 def diffuse_transmission(window, depth, tilt):
@@ -49,6 +54,14 @@ def diffuse_transmission(window, depth, tilt):
 
 
 def compliance_rates(base_grid, transmission):
-    """Count equal-area cells with exactly the same threshold as the simulation."""
-    grids = np.asarray(transmission)[..., None] * base_grid.ravel()
-    return np.mean(grids >= scene.DF_THRESHOLD, axis=-1)
+    """Find the first passing sorted DF for each transmission using exact products."""
+    base = np.sort(base_grid, axis=None)
+    low = np.zeros(np.shape(transmission), dtype=np.intp)
+    high = np.full_like(low, base.size)
+    while np.any(low < high):
+        mid = (low + high) // 2
+        passing = base[np.minimum(mid, base.size - 1)] * transmission >= scene.DF_THRESHOLD
+        active = low < high
+        high = np.where(active & passing, mid, high)
+        low = np.where(active & ~passing, mid + 1, low)
+    return (base.size - low) / base.size

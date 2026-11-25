@@ -159,3 +159,51 @@ def test_infeasible_and_cors(client):
                                "Access-Control-Request-Method": "POST",
                                "Access-Control-Request-Headers": "content-type"})
     assert preflight.status_code == 200 and "access-control-allow-origin" in preflight.headers
+
+
+def test_demo_start_and_single_request_replay(client):
+    presets = client.get("/api/presets").json()
+    assert presets["default_inputs"]["city"] == "shanghai"
+    start = presets["demo_inputs"]
+    original = post(client, "optimize", start)
+    result = post(client, "optimize?include_simulation=true", start)
+    simulation = result.pop("simulation")
+    assert result == original and result["status"] == "optimal"
+    assert simulation == post(client, "simulate", result["after"]["parameters"])
+    assert simulation["metrics"] == result["after"]["metrics"]
+    assert simulation["metrics"]["summer_shading_rate"] > result["before"]["metrics"]["summer_shading_rate"] + 0.25
+    assert simulation["metrics"]["winter_solar_gain_rate"] >= result["before"]["metrics"]["winter_solar_gain_rate"]
+
+
+@pytest.mark.parametrize("design", [{}, {"window_to_wall_ratio": 0.1}, {"latitude": 80},
+                                    {"city": "guangzhou", "overhang_depth_m": 0.137}])
+def test_drag_summary_matches_heatmap_view(client, design):
+    full = post(client, "simulate", design)
+    assert post(client, "simulate?include_heatmap=true", design) == full
+    assert len(full.pop("heatmap_grid")) == scene.GRID_SIZE
+    assert post(client, "simulate?include_heatmap=false", design) == full
+
+
+def test_combined_infeasible_response(client):
+    design = {"window_to_wall_ratio": 0.1}
+    combined = post(client, "optimize?include_simulation=true", design)
+    assert combined.pop("simulation") is None
+    assert combined == post(client, "optimize", design)
+
+
+def test_bulk_compliance_matches_products_at_threshold():
+    from suncraft.daylight import compliance_rates
+
+    base = np.array([[1.0, 2.0, 2.0], [3.1, 4.9, 8.0]])
+    edges = scene.DF_THRESHOLD / base.ravel()
+    values = np.r_[0, 1, np.nextafter(edges, 0), edges, np.nextafter(edges, np.inf)]
+    expected = np.mean(base.ravel() * values[:, None] >= scene.DF_THRESHOLD, axis=1)
+    np.testing.assert_array_equal(compliance_rates(base, values), expected)
+
+
+def test_off_grid_request_does_not_change_fixed_candidates(client):
+    design = {"city": "beijing", "window_to_wall_ratio": 0.52, "overhang_depth_m": 0.12}
+    fixed = post(client, "optimize", design)
+    extra = post(client, "optimize", dict(design, overhang_depth_m=0.137, louver_tilt_deg=35.2))
+    assert fixed["search"]["candidate_count"] + 1 == extra["search"]["candidate_count"]
+    assert fixed == post(client, "optimize", design)

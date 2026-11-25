@@ -5,7 +5,8 @@ from fastapi.responses import JSONResponse
 
 from . import scene
 from .optimization import optimize
-from .schemas import OptimizationResult, SimulationInput, SimulationResult
+from .schemas import (OptimizationResult, OptimizationWithSimulation, SimulationInput,
+                      SimulationResult, SimulationSummary)
 from .simulation import simulate
 
 app = FastAPI(title="SunCraft 典型客厅光热推演", version="1.0.0")
@@ -27,6 +28,7 @@ def presets():
         "cities": [{"id": key, "name": name, "latitude": lat}
                    for key, (name, lat) in scene.CITIES.items()],
         "default_inputs": SimulationInput(city=scene.DEFAULT_CITY).model_dump(exclude_none=True),
+        "demo_inputs": SimulationInput(city="harbin", louver_tilt_deg=75).model_dump(exclude_none=True),
         "limits": {"overhang_depth_m": [0, scene.MAX_OVERHANG], "louver_tilt_deg": [0, scene.MAX_TILT],
                    "window_to_wall_ratio": [scene.WWR_MIN, scene.WWR_MAX], "orientation_deg": [0, 360]},
         "room": {"width_m": scene.WIDTH, "depth_m": scene.DEPTH, "height_m": scene.HEIGHT,
@@ -40,10 +42,16 @@ def presets():
 
 
 @app.post("/api/simulate")
-def simulate_route(request: SimulationInput) -> SimulationResult:
-    return simulate(request)
+def simulate_route(
+    request: SimulationInput, include_heatmap: bool = True,
+) -> SimulationResult | SimulationSummary:
+    """普通拖动可设置 include_heatmap=false，只返回太阳角度、指标与剖面光线。"""
+    return simulate(request, include_heatmap=include_heatmap)
 
 
 @app.post("/api/optimize")
-def optimize_route(request: SimulationInput) -> OptimizationResult:
-    return optimize(request)
+def optimize_route(
+    request: SimulationInput, include_simulation: bool = False,
+) -> OptimizationWithSimulation | OptimizationResult:
+    """设置 include_simulation=true 可取得推荐设计的完整模拟；无可行解时 simulation 为 null。"""
+    return optimize(request, include_simulation=include_simulation)

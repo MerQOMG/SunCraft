@@ -63,11 +63,14 @@ class Section(BaseModel):
     winter: list[Ray]
 
 
-class SimulationResult(BaseModel):
+class SimulationSummary(BaseModel):
     solar_angles: Angles
     metrics: Metrics
-    heatmap_grid: list[list[float]]
     svg_rays: Section
+
+
+class SimulationResult(SimulationSummary):
+    heatmap_grid: list[list[float]]
 
 
 class EvaluatedDesign(BaseModel):
@@ -88,3 +91,7 @@ class OptimizationResult(BaseModel):
     before: EvaluatedDesign
     after: EvaluatedDesign | None
     search: SearchStats
+
+
+class OptimizationWithSimulation(OptimizationResult):
+    simulation: SimulationResult | None

@@ -1,22 +1,28 @@
 """Feasibility first, then an exact two-objective Pareto sweep on the discrete grid."""
 
+from functools import lru_cache
+
 import numpy as np
 
 from . import daylight, scene, solar
-from .schemas import EvaluatedDesign, OptimizationResult, SearchStats, SimulationInput
+from .schemas import EvaluatedDesign, OptimizationResult, OptimizationWithSimulation, SearchStats, SimulationInput
 from .simulation import simulate
 
 
-def candidate_grid(request):
-    # Grid depths have centimetre precision. Match JSON decimals such as 0.12 exactly.
-    depths = np.round(np.linspace(0, scene.MAX_OVERHANG, 41), 2)
-    tilts = np.arange(25) * scene.MAX_TILT / 24
-    depth, tilt = (grid.ravel() for grid in np.meshgrid(depths, tilts, indexing="ij"))
-    # Keep an off-grid starting design eligible on exactly the same terms.
-    if not np.any((depth == request.overhang_depth_m) & (tilt == request.louver_tilt_deg)):
-        depth = np.append(depth, request.overhang_depth_m)
-        tilt = np.append(tilt, request.louver_tilt_deg)
-    return depth, tilt
+DEPTHS = np.round(np.linspace(0, scene.MAX_OVERHANG, 41), 2)
+TILTS = np.arange(25) * scene.MAX_TILT / 24
+GRID_DEPTH = np.repeat(DEPTHS, TILTS.size)
+GRID_TILT = np.tile(TILTS, DEPTHS.size)
+
+
+@lru_cache(maxsize=32)
+def grid_compliance(window):
+    # Thin depth and tilt axes broadcast over 32 sky directions. The same
+    # diffuse field applies across cities and orientations for a given window.
+    transmission = daylight.diffuse_transmission(window, DEPTHS[:, None], TILTS[None, :])
+    rates = daylight.compliance_rates(daylight.unshaded_grid(window), transmission.ravel())
+    rates.setflags(write=False)
+    return rates
 
 
 def pareto_indices(shading, gain, compliance, depth, tilt):
@@ -35,22 +41,29 @@ def pareto_indices(shading, gain, compliance, depth, tilt):
     return best_at_shading[best_gain > previous_best]
 
 
-def optimize(request: SimulationInput) -> OptimizationResult:
+def optimize(request: SimulationInput, *, include_simulation: bool = False) -> OptimizationResult:
     window = scene.Window.from_ratio(request.window_to_wall_ratio)
     suns = solar.solstices(request.resolved_latitude, request.orientation_deg)
-    depth, tilt = candidate_grid(request)
+    before = EvaluatedDesign(parameters=request, metrics=simulate(request, include_heatmap=False).metrics)
+    depth, tilt = GRID_DEPTH, GRID_TILT
+    compliance = grid_compliance(window)
+    if not np.any((depth == request.overhang_depth_m) & (tilt == request.louver_tilt_deg)):
+        # Evaluate only the extra candidate. Never append to the cached arrays in place.
+        compliance = np.append(compliance, before.metrics.daylight_compliance_rate)
+        depth = np.append(depth, request.overhang_depth_m)
+        tilt = np.append(tilt, request.louver_tilt_deg)
     shading, gain = solar.direct_rates(window, suns, depth, tilt)
-    transmission = daylight.diffuse_transmission(window, depth, tilt)
-    compliance = daylight.compliance_rates(daylight.unshaded_grid(window), transmission)
     front = pareto_indices(shading, gain, compliance, depth, tilt)
     stats = SearchStats(candidate_count=depth.size,
                         feasible_count=np.count_nonzero(compliance >= scene.AREA_TARGET),
                         pareto_objective_count=front.size,
                         max_daylight_compliance_rate=np.max(compliance))
-    before = EvaluatedDesign(parameters=request, metrics=simulate(request).metrics)
     if not front.size:
-        return OptimizationResult(status="infeasible", reason="daylight_target_unreachable",
-                                  before=before, after=None, search=stats)
+        fields = dict(status="infeasible", reason="daylight_target_unreachable",
+                      before=before, after=None, search=stats)
+        if include_simulation:
+            return OptimizationWithSimulation(**fields, simulation=None)
+        return OptimizationResult(**fields)
 
     # Both objectives are fractions on the same scale. Closest to the ideal (1, 1).
     distance = (1 - shading[front])**2 + (1 - gain[front])**2
@@ -58,5 +71,9 @@ def optimize(request: SimulationInput) -> OptimizationResult:
     best = front[ranking[0]]
     parameters = request.model_copy(update={"overhang_depth_m": float(depth[best]),
                                             "louver_tilt_deg": float(tilt[best])})
-    after = EvaluatedDesign(parameters=parameters, metrics=simulate(parameters).metrics)
+    recommended = simulate(parameters, include_heatmap=include_simulation)
+    after = EvaluatedDesign(parameters=parameters, metrics=recommended.metrics)
+    if include_simulation:
+        return OptimizationWithSimulation(status="optimal", before=before, after=after, search=stats,
+                                          simulation=recommended)
     return OptimizationResult(status="optimal", before=before, after=after, search=stats)
