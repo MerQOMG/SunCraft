@@ -46,9 +46,9 @@ def clear_length_above(distance, slat_shadow):
     """Total clear length from head to distance, before applying the overhang."""
     pitch = scene.SLAT_PITCH
     shadow = np.minimum(pitch, slat_shadow)
-    return np.floor(distance / pitch) * (pitch - shadow) + np.maximum(
-        0, np.remainder(distance, pitch) - shadow
-    )
+    cells = np.floor(distance / pitch)
+    remainder = distance - cells * pitch
+    return cells * (pitch - shadow) + np.maximum(0, remainder - shadow)
 
 
 def opening_fraction(window: Window, depth, tilt, slope):

@@ -1,5 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
+from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse
 
 from . import scene
 from .optimization import optimize
@@ -10,6 +12,13 @@ app = FastAPI(title="SunCraft 典型客厅光热推演", version="1.0.0")
 # Read-only public calculations; supports local Vite and independently hosted frontends.
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST"],
                    allow_headers=["Content-Type"])
+
+
+@app.exception_handler(RequestValidationError)
+async def validation_error(request: Request, exc: RequestValidationError):
+    # An out-of-range JSON exponent can parse as infinity, which cannot be echoed in JSON.
+    details = [{key: error[key] for key in ("loc", "msg", "type")} for error in exc.errors()]
+    return JSONResponse(status_code=422, content={"detail": details})
 
 
 @app.get("/api/presets")

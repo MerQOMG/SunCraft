@@ -8,7 +8,8 @@ from .simulation import simulate
 
 
 def candidate_grid(request):
-    depths = np.arange(41) * scene.MAX_OVERHANG / 40
+    # Grid depths have centimetre precision. Match JSON decimals such as 0.12 exactly.
+    depths = np.round(np.linspace(0, scene.MAX_OVERHANG, 41), 2)
     tilts = np.arange(25) * scene.MAX_TILT / 24
     depth, tilt = (grid.ravel() for grid in np.meshgrid(depths, tilts, indexing="ij"))
     # Keep an off-grid starting design eligible on exactly the same terms.
