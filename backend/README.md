@@ -18,7 +18,7 @@ macOS 或 Linux 使用 `.venv/bin/python` 代替 `.\.venv\Scripts\python`。服�
 
 | 方法和路径 | 输入 | 返回 |
 | --- | --- | --- |
-| GET `/api/presets` | 无 | 四个城市及纬度、默认输入、参数范围、房间和遮阳尺寸、两个采光阈值 |
+| GET `/api/presets` | 无 | 四个城市及纬度、上海默认输入、哈尔滨演示输入、参数范围、房间和遮阳尺寸、两个采光阈值 |
 | POST `/api/simulate` | 当前设计，空对象使用上海默认值 | 冬夏太阳角度、五个指标、24 × 24 的 DF 矩阵、两季剖面光线坐标 |
 | POST `/api/optimize` | 与模拟相同，挑檐与百叶表示优化前的设计 | `before` 与 `after` 各含完整参数和指标，另附搜索统计及状态 |
 
@@ -32,17 +32,25 @@ macOS 或 Linux 使用 `.venv/bin/python` 代替 `.\.venv\Scripts\python`。服�
 
 字段名错误、类型错误、未知城市、位置冲突或数值越界返回 HTTP 422。合法输入在固定窗墙比下无法实现采光目标时，寻优接口返回 HTTP 200、`status="infeasible"`、`after=null` 及最高可达面积比例。
 
-在另一个 PowerShell 窗口中可直接完成一次优化并重放结果。
+## 演示接入
+
+| 界面动作 | 请求 | 读取结果 |
+| --- | --- | --- |
+| 打开演示 | `GET /api/presets` | 将 `demo_inputs` 直接填入控件。哈尔滨初始挑檐 0.40 m、百叶倾角 75°。常规工作台可使用 `default_inputs`。 |
+| 拖动滑块，热力图关闭 | `POST /api/simulate?include_heatmap=false` | 读 `metrics`、`solar_angles` 和 `svg_rays`。此响应省略 `heatmap_grid`。 |
+| 打开热力图或在热力图模式拖动 | `POST /api/simulate` | 用当前参数请求完整响应，从 `heatmap_grid` 绘制 24 × 24 贴图。 |
+| 点击一键寻优 | `POST /api/optimize?include_simulation=true` | 成功时用 `after.parameters` 回填控件，直接用 `simulation` 绘制推荐方案；无解时 `after` 和 `simulation` 均为 `null`。 |
+
+下列 PowerShell 示例可在服务启动后运行。按此起点点击寻优，夏季遮挡率从约 65.5% 升至 99.2%，冬季直射透过率从约 79.4% 升至 80.4%。前端回填推荐参数时可复用同一响应，省去再次查询。
 
 ```powershell
 $api = 'http://127.0.0.1:8000/api'
-$design = @{city='harbin'; window_to_wall_ratio=0.50; overhang_depth_m=0.40; louver_tilt_deg=0}
-$result = Invoke-RestMethod "$api/optimize" -Method Post -ContentType 'application/json' -Body ($design | ConvertTo-Json)
+$design = (Invoke-RestMethod "$api/presets").demo_inputs
+$result = Invoke-RestMethod "$api/optimize?include_simulation=true" -Method Post -ContentType 'application/json' -Body ($design | ConvertTo-Json)
 $result.before.metrics
 if ($result.status -eq 'optimal') {
     $result.after.metrics
-    $simulation = Invoke-RestMethod "$api/simulate" -Method Post -ContentType 'application/json' -Body ($result.after.parameters | ConvertTo-Json)
-    $simulation.svg_rays
+    $result.simulation.svg_rays
 }
 ```
 
@@ -75,9 +83,15 @@ git log --oneline
 
 用例覆盖四城预设、朝向与天顶边界、极夜、热力矩阵、光线几何、阴影区间并集、非法参数、跨域请求及寻优可行性。寻优结果与单组模拟逐一枚举核对，并通过模拟接口重放。
 
-以下为一次 Windows / Python 3.14.7 / NumPy 2.5.3 的上海默认场景实测。每项预热 10 次，串行采样 100 次。ASGI 测量包含请求验证、路由、响应序列化和客户端 JSON 解析。测试环境限制回环 TCP，接口耗时为进程内数据，Uvicorn 另行验证了实际端口监听与正常关闭。
+以下数据比较 `4986370` 和本版。两版在同机运行同一份 `benchmark.py`，基线使用 `--legacy`。每版运行三轮，每项预热 10 次、采样 100 次，表中分别取三轮 P50 和 P95 的中位数。每个请求改变滑块位置；“变化窗墙比”行还为每次请求使用新的窗墙比。环境为 Windows、Python 3.14.7、NumPy 2.5.3、FastAPI 0.162.0。ASGI 耗时包含路由、序列化及客户端 JSON 解析。网络往返、浏览器绘制与屏幕帧率需在前端实测。
 
-| 路径 | 引擎 P50 / P95 | ASGI 接口 P50 / P95 |
+| 演示路径 | 基线 P50 / P95 (ms) | 本版 P50 / P95 (ms) |
 | --- | --- | --- |
-| 模拟 | 0.14 / 0.26 ms | 1.85 / 2.33 ms |
-| 寻优 | 4.19 / 5.60 ms | 6.77 / 8.96 ms |
+| 拖动，仅更新读数和剖面 | 1.74 / 2.17 | 1.51 / 1.98 |
+| 拖动，同时更新热力图 | 1.79 / 2.25 | 1.77 / 2.11 |
+| 寻优并取得绘图数据，固定窗墙比 | 7.20 / 8.42 | 2.23 / 2.78 |
+| 寻优并取得绘图数据，变化窗墙比 | 7.09 / 7.87 | 2.68 / 3.15 |
+| 仅寻优引擎，固定窗墙比 | 3.41 / 4.12 | 0.36 / 0.62 |
+| 仅寻优引擎，变化窗墙比 | 3.59 / 4.10 | 0.76 / 1.07 |
+
+普通拖动的中位 JSON 响应体由 11,560 B 降至 872 B。完整热力图的中位响应体为 11,560 B。固定窗墙比下，寻优与绘图从两次请求合为一次，总响应体由 12,484 B 变为 12,498 B。采光基础矩阵和固定候选的采光达标率各自最多复用最近 32 种窗高；首次遇到新窗高时，通过在排序后的 DF 上二分计数求出达标面积，比较表达式与完整热力图采用相同的浮点乘法和阈值。
