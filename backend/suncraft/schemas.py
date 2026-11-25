@@ -14,6 +14,7 @@ class SimulationInput(BaseModel):
                                    description="Outward facade normal, clockwise from north")
     window_to_wall_ratio: float = Field(scene.DEFAULT_WWR, ge=scene.WWR_MIN, le=scene.WWR_MAX)
     overhang_depth_m: float = Field(scene.DEFAULT_OVERHANG, ge=0, le=scene.MAX_OVERHANG)
+    louvers_enabled: bool = Field(True, description="False fully retracts the slats; the canopy still applies")
     louver_tilt_deg: float = Field(scene.DEFAULT_TILT, ge=0, le=scene.MAX_TILT,
                                    description="Outer edge tilts downward from horizontal")
 
@@ -63,10 +64,48 @@ class Section(BaseModel):
     winter: list[Ray]
 
 
+class ScoreItem(BaseModel):
+    key: str
+    name: str
+    value: float | dict[str, float]
+    value_display: str
+    threshold_display: str
+    score: float
+    max_score: int
+    status: Literal["pass", "warn"]
+    citation: str
+    citation_type: Literal["project", "reference", "mandatory_reference"]
+    highlight_target: str | None = None
+
+
+class ScoreDimension(BaseModel):
+    id: str
+    name: str
+    weight: int
+    score: float
+    items: list[ScoreItem]
+
+
+class ScoreWarning(BaseModel):
+    key: str
+    message: str
+
+
+class ScoreReport(BaseModel):
+    total_score: float
+    grade: Literal["S", "A", "B", "C"]
+    grade_label: str
+    warnings: list[ScoreWarning]
+    methodology_note: str
+    suggest_optimization: bool
+    dimensions: list[ScoreDimension]
+
+
 class SimulationSummary(BaseModel):
     solar_angles: Angles
     metrics: Metrics
     svg_rays: Section
+    score_report: ScoreReport
 
 
 class SimulationResult(SimulationSummary):
@@ -76,6 +115,7 @@ class SimulationResult(SimulationSummary):
 class EvaluatedDesign(BaseModel):
     parameters: SimulationInput
     metrics: Metrics
+    score_report: ScoreReport
 
 
 class SearchStats(BaseModel):
@@ -83,6 +123,7 @@ class SearchStats(BaseModel):
     feasible_count: int
     pareto_objective_count: int
     max_daylight_compliance_rate: float
+    objective: Literal["total_score"] = "total_score"
 
 
 class OptimizationResult(BaseModel):

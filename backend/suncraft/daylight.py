@@ -47,9 +47,9 @@ def unshaded_grid(window: scene.Window) -> np.ndarray:
     return grid
 
 
-def diffuse_transmission(window, depth, tilt):
+def diffuse_transmission(window, depth, tilt, louvers_enabled=True):
     fraction = opening_fraction(window, np.asarray(depth)[..., None],
-                                np.asarray(tilt)[..., None], SKY_SLOPES)
+                                np.asarray(tilt)[..., None], SKY_SLOPES, louvers_enabled)
     return np.mean(fraction, axis=-1)
 
 

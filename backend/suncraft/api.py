@@ -3,13 +3,13 @@ from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
 
-from . import scene
+from . import comfort_physics, scene
 from .optimization import optimize
 from .schemas import (OptimizationResult, OptimizationWithSimulation, SimulationInput,
                       SimulationResult, SimulationSummary)
 from .simulation import simulate
 
-app = FastAPI(title="SunCraft 典型客厅光热推演", version="1.0.0")
+app = FastAPI(title="SunCraft 典型客厅光热推演", version="1.1.0")
 # Read-only public calculations; supports local Vite and independently hosted frontends.
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST"],
                    allow_headers=["Content-Type"])
@@ -34,6 +34,8 @@ def presets():
         "room": {"width_m": scene.WIDTH, "depth_m": scene.DEPTH, "height_m": scene.HEIGHT,
                  "window_width_m": scene.WINDOW_WIDTH, "sill_m": scene.SILL,
                  "slat_chord_m": scene.SLAT_CHORD, "slat_pitch_m": scene.SLAT_PITCH,
+                 "sofa_depth_range_m": [comfort_physics.SOFA_NEAR, comfort_physics.SOFA_FAR],
+                 "sofa_width_m": comfort_physics.SOFA_WIDTH,
                  "grid_shape": [scene.GRID_SIZE, scene.GRID_SIZE]},
         "daylight_standard": {"reference": "GB 50033（方案演示阈值）",
                               "min_df_percent": scene.DF_THRESHOLD,

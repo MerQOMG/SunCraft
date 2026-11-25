@@ -110,7 +110,7 @@ def test_nonfinite_json_number(client):
 
 
 def test_optimizer_matches_independent_route_enumeration(client):
-    current = {"city": "harbin", "window_to_wall_ratio": 0.49, "orientation_deg": 158,
+    current = {"city": "harbin", "window_to_wall_ratio": 0.49, "orientation_deg": 90,
                "overhang_depth_m": 0.233, "louver_tilt_deg": 21.3}
     result = post(client, "optimize", current)
     assert result["status"] == "optimal"
@@ -130,15 +130,14 @@ def test_optimizer_matches_independent_route_enumeration(client):
     scores = []
     for depth, tilt in pairs:
         design = dict(current, overhang_depth_m=depth, louver_tilt_deg=tilt)
-        m = simulate(SimulationInput(**design)).metrics
-        if m.is_gb_compliant:
-            scores.append((m.summer_shading_rate, m.winter_solar_gain_rate))
+        simulated = simulate(SimulationInput(**design), include_heatmap=False)
+        if simulated.metrics.is_gb_compliant:
+            scores.append(simulated.score_report.total_score)
     assert result["search"]["candidate_count"] == len(pairs)
     assert result["search"]["feasible_count"] == len(scores)
-    selected = np.array([metrics["summer_shading_rate"], metrics["winter_solar_gain_rate"]])
-    scores = np.array(scores)
-    assert not np.any(np.all(scores >= selected, axis=1) & np.any(scores > selected, axis=1))
-    assert np.sum((1 - selected)**2) == pytest.approx(np.min(np.sum((1 - scores)**2, axis=1)))
+    assert result["search"]["objective"] == "total_score"
+    assert result["after"]["score_report"]["total_score"] == max(scores)
+    assert result["after"]["score_report"] == post(client, "simulate", chosen)["score_report"]
     assert result == post(client, "optimize", current)
 
 
@@ -171,7 +170,10 @@ def test_demo_start_and_single_request_replay(client):
     assert result == original and result["status"] == "optimal"
     assert simulation == post(client, "simulate", result["after"]["parameters"])
     assert simulation["metrics"] == result["after"]["metrics"]
-    assert simulation["metrics"]["summer_shading_rate"] > result["before"]["metrics"]["summer_shading_rate"] + 0.25
+    assert simulation["score_report"] == result["after"]["score_report"]
+    assert simulation["score_report"]["total_score"] > result["before"]["score_report"]["total_score"]
+    assert simulation["score_report"]["grade"] == "S"
+    assert simulation["metrics"]["summer_shading_rate"] >= 0.90
     assert simulation["metrics"]["winter_solar_gain_rate"] >= result["before"]["metrics"]["winter_solar_gain_rate"]
 
 
