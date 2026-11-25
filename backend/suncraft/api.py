@@ -2,7 +2,8 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from . import scene
-from .schemas import SimulationInput, SimulationResult
+from .optimization import optimize
+from .schemas import OptimizationResult, SimulationInput, SimulationResult
 from .simulation import simulate
 
 app = FastAPI(title="SunCraft 典型客厅光热推演", version="1.0.0")
@@ -32,3 +33,8 @@ def presets():
 @app.post("/api/simulate")
 def simulate_route(request: SimulationInput) -> SimulationResult:
     return simulate(request)
+
+
+@app.post("/api/optimize")
+def optimize_route(request: SimulationInput) -> OptimizationResult:
+    return optimize(request)

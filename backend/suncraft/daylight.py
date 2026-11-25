@@ -49,7 +49,6 @@ def diffuse_transmission(window, depth, tilt):
 
 
 def compliance_rates(base_grid, transmission):
-    """Count passing cells for each design without allocating a grid per design."""
-    # Each positive base DF determines the minimum transmission for this cell.
-    cutoffs = np.sort(scene.DF_THRESHOLD / base_grid.ravel())
-    return np.searchsorted(cutoffs, transmission, side="right") / cutoffs.size
+    """Count equal-area cells with exactly the same threshold as the simulation."""
+    grids = np.asarray(transmission)[..., None] * base_grid.ravel()
+    return np.mean(grids >= scene.DF_THRESHOLD, axis=-1)

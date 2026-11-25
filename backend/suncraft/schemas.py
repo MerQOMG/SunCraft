@@ -68,3 +68,23 @@ class SimulationResult(BaseModel):
     metrics: Metrics
     heatmap_grid: list[list[float]]
     svg_rays: Section
+
+
+class EvaluatedDesign(BaseModel):
+    parameters: SimulationInput
+    metrics: Metrics
+
+
+class SearchStats(BaseModel):
+    candidate_count: int
+    feasible_count: int
+    pareto_objective_count: int
+    max_daylight_compliance_rate: float
+
+
+class OptimizationResult(BaseModel):
+    status: Literal["optimal", "infeasible"]
+    reason: str | None = None
+    before: EvaluatedDesign
+    after: EvaluatedDesign | None
+    search: SearchStats
