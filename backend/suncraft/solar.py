@@ -1,7 +1,7 @@
 """Parallel horizontal shades. All section distances are normal to the facade."""
 
 from dataclasses import dataclass
-from math import cos, floor, hypot, radians, tan
+from math import cos, hypot, radians, tan
 
 import numpy as np
 
@@ -37,9 +37,10 @@ def solstices(latitude: float, orientation: float) -> tuple[Sun, Sun]:
             noon_sun(latitude, -summer_declination, orientation))
 
 
-def shade_lengths(depth, tilt, slope):
+def shade_lengths(depth, tilt, slope, louvers_enabled=True):
     angle = np.deg2rad(tilt)
-    return depth * slope, scene.SLAT_CHORD * (np.sin(angle) + np.cos(angle) * slope)
+    slat = scene.SLAT_CHORD * (np.sin(angle) + np.cos(angle) * slope) if louvers_enabled else 0.0
+    return depth * slope, slat
 
 
 def clear_length_above(distance, slat_shadow):
@@ -51,28 +52,44 @@ def clear_length_above(distance, slat_shadow):
     return cells * (pitch - shadow) + np.maximum(0, remainder - shadow)
 
 
-def opening_fraction(window: Window, depth, tilt, slope):
+def opening_fraction(window: Window, depth, tilt, slope, louvers_enabled=True):
     """Exact union of periodic slat shadows and the head-mounted canopy shadow."""
-    canopy, slat = shade_lengths(depth, tilt, slope)
+    canopy, slat = shade_lengths(depth, tilt, slope, louvers_enabled)
+    return clear_fraction(window, canopy, slat)
+
+
+def clear_fraction(window, canopy, slat):
     clear = clear_length_above(window.height, slat) - clear_length_above(
         np.minimum(window.height, canopy), slat
     )
     return np.clip(clear / window.height, 0, 1)
 
 
-def direct_rates(window: Window, suns: tuple[Sun, Sun], depth, tilt):
+def direct_rates(window: Window, suns: tuple[Sun, Sun], depth, tilt, louvers_enabled=True):
     summer, winter = suns
     zero = np.zeros_like(depth, dtype=float)
-    shading = zero if summer.slope is None else 1 - opening_fraction(window, depth, tilt, summer.slope)
-    gain = zero if winter.slope is None else opening_fraction(window, depth, tilt, winter.slope)
+    shading = zero if summer.slope is None else 1 - opening_fraction(window, depth, tilt, summer.slope, louvers_enabled)
+    gain = zero if winter.slope is None else opening_fraction(window, depth, tilt, winter.slope, louvers_enabled)
     return shading, gain
 
 
-def section_rays(window: Window, sun: Sun, depth: float, tilt: float) -> list[Ray]:
+def highest_entry(window, canopy, slat):
+    cell_top = np.floor(canopy / scene.SLAT_PITCH) * scene.SLAT_PITCH
+    return window.head - np.maximum(canopy, cell_top + slat)
+
+
+def penetration(window, sun, depth, tilt, gain, louvers_enabled):
+    if sun.slope is None:
+        return np.zeros_like(depth, dtype=float)
+    canopy, slat = shade_lengths(depth, tilt, sun.slope, louvers_enabled)
+    return np.where(gain > 0, np.minimum(scene.DEPTH, highest_entry(window, canopy, slat) / sun.slope), 0)
+
+
+def section_rays(window: Window, sun: Sun, depth: float, tilt: float, louvers_enabled=True) -> list[Ray]:
     slope = sun.slope
     if slope is None:
         return []
-    canopy, slat = shade_lengths(depth, tilt, slope)
+    canopy, slat = shade_lengths(depth, tilt, slope, louvers_enabled)
     # Trace a short exterior segment along the same line, even at grazing incidence.
     dx = 0.50 / hypot(1, slope)
 
@@ -90,10 +107,9 @@ def section_rays(window: Window, sun: Sun, depth: float, tilt: float) -> list[Ra
         z = window.head - blocked_sample + outward * slope
         rays.append(Ray(kind="blocked", start=upstream(x, z), end=(x, z)))
 
-    if opening_fraction(window, depth, tilt, slope) > 0:
+    if opening_fraction(window, depth, tilt, slope, louvers_enabled) > 0:
         # Upper limiting ray of the first clear interval below the canopy.
-        cell_top = floor(canopy / scene.SLAT_PITCH) * scene.SLAT_PITCH
-        entry_z = window.head - max(canopy, cell_top + slat)
+        entry_z = highest_entry(window, canopy, slat)
         reach = min(scene.DEPTH, entry_z / slope)
         end = (reach, max(0.0, entry_z - reach * slope))
         rays.append(Ray(kind="transmitted", start=upstream(0, entry_z),

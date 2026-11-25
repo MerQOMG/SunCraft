@@ -11,6 +11,7 @@ from fastapi.testclient import TestClient
 from suncraft.api import app
 from suncraft.optimization import optimize
 from suncraft.schemas import SimulationInput
+from suncraft.simulation import simulate
 
 
 def design(frame, moving_window):
@@ -47,6 +48,11 @@ def main():
         optimize(SimulationInput(**payload))
         return 0
 
+    def full_simulation(payload):
+        simulate(SimulationInput(**payload))
+        return 0
+
+    measure("simulate + score / engine", full_simulation, moving_window=True)
     measure("optimize engine / fixed WWR", engine)
     measure("optimize engine / moving WWR", engine, moving_window=True)
     with TestClient(app) as client:
