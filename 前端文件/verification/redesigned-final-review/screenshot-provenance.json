@@ -1,0 +1,86 @@
+[
+  {
+    "file": "summer-default.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/c07fdac45cfdbf1382d4368350693521f72236c580e6ec7cacd1c70746848715.png",
+    "sha256": "c07fdac45cfdbf1382d4368350693521f72236c580e6ec7cacd1c70746848715",
+    "bytes": 305653,
+    "provenance": "主任务标准浏览器真实截图；逐字节复制，未裁剪、重绘或改造",
+    "image_pixels": [
+      1274,
+      696
+    ],
+    "review_viewport_css": "1274×696 CSS（主任务最终桌面实测；恢复图记录同批实看）"
+  },
+  {
+    "file": "winter-solstice.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/d5b0f27281e96cbbf6189a21ad8c4877dc4ba11c5b778b4bfd9c068b9f7a88ec.png",
+    "sha256": "d5b0f27281e96cbbf6189a21ad8c4877dc4ba11c5b778b4bfd9c068b9f7a88ec",
+    "bytes": 308444,
+    "provenance": "主任务标准浏览器真实截图；逐字节复制，未裁剪、重绘或改造",
+    "image_pixels": [
+      1274,
+      696
+    ],
+    "review_viewport_css": "1274×696 CSS（主任务最终桌面实测；恢复图记录同批实看）"
+  },
+  {
+    "file": "daylight-heatmap.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/dec32bd7ad31bf93d0c97bd7117cd890c0ce4e8b165f1a1e5260387a0ef92b66.png",
+    "sha256": "dec32bd7ad31bf93d0c97bd7117cd890c0ce4e8b165f1a1e5260387a0ef92b66",
+    "bytes": 265017,
+    "provenance": "主任务标准浏览器真实截图；逐字节复制，未裁剪、重绘或改造",
+    "image_pixels": [
+      1274,
+      696
+    ],
+    "review_viewport_css": "1274×696 CSS（主任务最终桌面实测；恢复图记录同批实看）"
+  },
+  {
+    "file": "analysis-view.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/849e116457f450929b4c0978e1d8959b16f5cfc9990c1bca5c2f68c33a1f8345.png",
+    "sha256": "849e116457f450929b4c0978e1d8959b16f5cfc9990c1bca5c2f68c33a1f8345",
+    "bytes": 325552,
+    "provenance": "主任务标准浏览器真实截图；逐字节复制，未裁剪、重绘或改造",
+    "image_pixels": [
+      1274,
+      696
+    ],
+    "review_viewport_css": "1274×696 CSS（主任务最终桌面实测；恢复图记录同批实看）"
+  },
+  {
+    "file": "mobile-400x810css.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/7fd07680dabf023833c810f5e560570f7a8ac1371fdbc82d5750aca3a327f6a8.png",
+    "sha256": "7fd07680dabf023833c810f5e560570f7a8ac1371fdbc82d5750aca3a327f6a8",
+    "bytes": 95579,
+    "provenance": "主任务标准浏览器真实截图；逐字节复制，未裁剪、重绘或改造",
+    "image_pixels": [
+      320,
+      648
+    ],
+    "review_viewport_css": "400×810 CSS，125%缩放"
+  },
+  {
+    "file": "mobile-section-400x810css.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/742bf9e1200037f8aadfabbfc2326772b769b50176e8b300bb31ba1f9adbff39.png",
+    "sha256": "742bf9e1200037f8aadfabbfc2326772b769b50176e8b300bb31ba1f9adbff39",
+    "bytes": 52769,
+    "provenance": "主任务标准浏览器真实截图；逐字节复制，未裁剪、重绘或改造",
+    "image_pixels": [
+      400,
+      810
+    ],
+    "review_viewport_css": "400×810 CSS，125%缩放"
+  },
+  {
+    "file": "desktop-restored-default.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/7d57287673cc8d7acc57f54c9ce1a14bda7c63dca457ee56b5c72b5934c668f9.png",
+    "sha256": "7d57287673cc8d7acc57f54c9ce1a14bda7c63dca457ee56b5c72b5934c668f9",
+    "bytes": 752923,
+    "provenance": "主任务标准浏览器真实截图；逐字节复制，未裁剪、重绘或改造",
+    "image_pixels": [
+      1920,
+      1072
+    ],
+    "review_viewport_css": "大屏恢复默认状态；原图1920×1072像素，CSS视口未另给出，不据此推算"
+  }
+]

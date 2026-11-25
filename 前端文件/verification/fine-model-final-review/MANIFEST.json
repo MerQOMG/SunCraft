@@ -1,0 +1,57 @@
+[
+  {
+    "file": "desktop-summer.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/c079f45fe144d865e002d8c2c012d06f25ab32b19380b1fb3ed5c47649def746.png",
+    "sha256": "c079f45fe144d865e002d8c2c012d06f25ab32b19380b1fb3ed5c47649def746",
+    "image_pixels": [
+      1920,
+      1072
+    ],
+    "state": "R4细模最终标准浏览器实看，原始文件逐字节复制；未缩放、裁切、重绘或修饰",
+    "reported_viewport": "主任务报告桌面1920×1072；近景使用真实相机交互"
+  },
+  {
+    "file": "desktop-winter.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/27aecab1784b89739ba8e9629f13a577085b7ec2b2cd71f1693e05b93e741373.png",
+    "sha256": "27aecab1784b89739ba8e9629f13a577085b7ec2b2cd71f1693e05b93e741373",
+    "image_pixels": [
+      1920,
+      1072
+    ],
+    "state": "R4细模最终标准浏览器实看，原始文件逐字节复制；未缩放、裁切、重绘或修饰",
+    "reported_viewport": "主任务报告桌面1920×1072；近景使用真实相机交互"
+  },
+  {
+    "file": "closeup-sofa.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/fa79a79a66f99b6efcc7708effa072f8a1bcbaa0467dd19cb729af7f9f8d5717.png",
+    "sha256": "fa79a79a66f99b6efcc7708effa072f8a1bcbaa0467dd19cb729af7f9f8d5717",
+    "image_pixels": [
+      1920,
+      1072
+    ],
+    "state": "R4细模最终标准浏览器实看，原始文件逐字节复制；未缩放、裁切、重绘或修饰",
+    "reported_viewport": "主任务报告桌面1920×1072；近景使用真实相机交互"
+  },
+  {
+    "file": "closeup-window-plant.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/c0e4b346a50c3efac700bcdc689c61c932b9e2c94cc3ce25df0556ede91951b3.png",
+    "sha256": "c0e4b346a50c3efac700bcdc689c61c932b9e2c94cc3ce25df0556ede91951b3",
+    "image_pixels": [
+      1920,
+      1072
+    ],
+    "state": "R4细模最终标准浏览器实看，原始文件逐字节复制；未缩放、裁切、重绘或修饰",
+    "reported_viewport": "主任务报告桌面1920×1072；近景使用真实相机交互"
+  },
+  {
+    "file": "narrow-400x810-css.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/e81abfdddfb08287d0db8de67f123c827b692c9418a590afb4df6c7725452322.png",
+    "sha256": "e81abfdddfb08287d0db8de67f123c827b692c9418a590afb4df6c7725452322",
+    "image_pixels": [
+      320,
+      648
+    ],
+    "state": "R4细模最终标准浏览器实看，原始文件逐字节复制；未缩放、裁切、重绘或修饰",
+    "reported_viewport": "CSS 400×810（图320×648）"
+  }
+]

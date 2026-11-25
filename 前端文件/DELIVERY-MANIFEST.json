@@ -1,0 +1,867 @@
+{
+  "archive_root": "SunCraft-panoramic-scoring/",
+  "packaged_at": "2026-11-25T20:37:45.041045+08:00",
+  "timezone": "Asia/Shanghai",
+  "excludes": [
+    ".cache",
+    ".git",
+    ".tools",
+    ".vite",
+    "__pycache__",
+    "node_modules",
+    "playwright-report",
+    "test-results"
+  ],
+  "files": [
+    {
+      "path": ".env.example",
+      "bytes": 111,
+      "sha256": "baa887e0a86b9b8d12529a3b15d8aac83f2a862cff7d566213e614fbf11481d9"
+    },
+    {
+      "path": ".gitignore",
+      "bytes": 92,
+      "sha256": "3bfa0ea1e72e160b3b82d686b5d19595f7ba3c405ff0d99a8f2a9643c419c7f7"
+    },
+    {
+      "path": "README.md",
+      "bytes": 24282,
+      "sha256": "98af7661ddf48e5bff85bde9b80a68c16c1facab047367cd6d82bda552934641"
+    },
+    {
+      "path": "SunCraft-离线演示.html",
+      "bytes": 1275453,
+      "sha256": "dc9f7941ea5c20eed755e53342c076cafbe36d3b947669579bf5bc019e3dd461"
+    },
+    {
+      "path": "design-notes/02-建筑研究台.md",
+      "bytes": 2130,
+      "sha256": "9d3637fa19a7d5a00deb85f678f8b9c15f3b442da5e1b8c58dc7b3dca66a3e6a"
+    },
+    {
+      "path": "design-notes/03-日照诊断与实看后修正.md",
+      "bytes": 3651,
+      "sha256": "a23053c3dbd9be19894e90ed4742e07d80f4adddb7da44cb8020f347590be0f8"
+    },
+    {
+      "path": "design-notes/04-细模结构与性能取舍.md",
+      "bytes": 4454,
+      "sha256": "c7e734cba3f64ec2a92d12e6028fb3fa8e56efdced08ee064d9db9bbd81e505b"
+    },
+    {
+      "path": "design-notes/05-P0-室内观察与分析全景.md",
+      "bytes": 3279,
+      "sha256": "d13027ea5bf806db2fa962d81b726256a81ef4fe7365cfa0089eb7f4913a7167"
+    },
+    {
+      "path": "design-notes/06-P1-受力大形与材质尺度.md",
+      "bytes": 4543,
+      "sha256": "a64d0a7c4fa3856215eb5f5fc05816ece395574271b75baf82dacae7fb4ccc02"
+    },
+    {
+      "path": "design-notes/07-P2-窗光首反射与接触层次.md",
+      "bytes": 5569,
+      "sha256": "25d4f05074ed5d23f42ec3b6c97d2f43ac287d3206e00f1dbedc4630e5072873"
+    },
+    {
+      "path": "design-notes/08-P3-可读的建筑工作台.md",
+      "bytes": 3505,
+      "sha256": "bcbaebd499f2692ff9bd8f87c326968fe0062c0065bad5e17850ca91eeb1ab53"
+    },
+    {
+      "path": "design-notes/09-评分工作台与全景偏好.md",
+      "bytes": 4455,
+      "sha256": "3b22e4cd92a433eb719c31b837549d1d75eaddb97fd43aff0b00b09ee149b5bb"
+    },
+    {
+      "path": "design-notes/10-评分追加契约与后端待联调.md",
+      "bytes": 4322,
+      "sha256": "fe2accac14d3439a16cb98e87f4cd762fbbecba2fea372d06f8003fb05595343"
+    },
+    {
+      "path": "design-notes/11-评分实看后短屏与焦点修复.md",
+      "bytes": 3254,
+      "sha256": "171e8cb5d03b5feb510a0a874ea5be819dafc624af56f9a7c6c90e4d9667223f"
+    },
+    {
+      "path": "design-notes/Scene.before-r2.tsx.txt",
+      "bytes": 13805,
+      "sha256": "b483ea8b97bc3e576806cc851fd6189f817deecedd97ae95f07d962f9d9847a1"
+    },
+    {
+      "path": "design-notes/fine-model-inventory.json",
+      "bytes": 1413,
+      "sha256": "9db45d98576088ecfa18a400f42f29bd0e470df2b1214a040070e05bd7ba60a8"
+    },
+    {
+      "path": "design-notes/r2-http-check.html",
+      "bytes": 588,
+      "sha256": "7fd902224d132fad000abf57436240f77424c0a1fdc02f78cdd9a7263f03209d"
+    },
+    {
+      "path": "design-notes/r3-sunlight-legacy.txt",
+      "bytes": 1483,
+      "sha256": "d28292d65b2969842cb8df2ce15c42f752cc16d65db3ca6f4216b6d079dae418"
+    },
+    {
+      "path": "design-notes/r3-sunlight-revised.txt",
+      "bytes": 1465,
+      "sha256": "e1848a13e0a1d5ec21e656043f5f5697a3f7fb32c218c0b6487dbfc2477255aa"
+    },
+    {
+      "path": "design-notes/styles.before-r2.css.txt",
+      "bytes": 19358,
+      "sha256": "ad3e22658ccbb223306df436e2e1a90b973640951553a40727d7febde073ba5e"
+    },
+    {
+      "path": "dist/assets/gsap-I1jVCVBc.js",
+      "bytes": 70473,
+      "sha256": "1911cab06d77ee5c85e6996b9f0e569cadd806f80b71bfe87d5f6b4a4281eeea"
+    },
+    {
+      "path": "dist/assets/index-BzpM42KO.js",
+      "bytes": 622996,
+      "sha256": "c46b931367c7102753d1f552a2a12768cb6d5107fbfbdce37195252906af6fbd"
+    },
+    {
+      "path": "dist/assets/index-DeUaQEvp.css",
+      "bytes": 37252,
+      "sha256": "7bfffcb377b1ae234fef9fde7e1b3fad72d4f25a95b9cf3ced2f5391256c431e"
+    },
+    {
+      "path": "dist/assets/three-CjaM9LPK.js",
+      "bytes": 542880,
+      "sha256": "b4b814a97a00154a57b9a852d39231737fa1d8b925bbbb9115080ac0833e77be"
+    },
+    {
+      "path": "dist/index.html",
+      "bytes": 587,
+      "sha256": "c12bb0130565c8d934f690166e75b3c8daee09126ed99bceace84455632f6231"
+    },
+    {
+      "path": "index.html",
+      "bytes": 337,
+      "sha256": "2cc826e0a6392d7a0e0b841df16cedcfd02ddee0a12b4ec428d19a81b6f84e0b"
+    },
+    {
+      "path": "package-lock.json",
+      "bytes": 102922,
+      "sha256": "141800346274b7fa0361a037a3bd525c162790173e6b9de86fa1c00eb84ff0e4"
+    },
+    {
+      "path": "package.json",
+      "bytes": 1013,
+      "sha256": "500a76305b1a3665261f9bbfa6f84351c2ad8eaf3f24b3924f56e82767692b85"
+    },
+    {
+      "path": "playwright.config.ts",
+      "bytes": 430,
+      "sha256": "fda9e170d840de117e61a59473af3c4a92bee531afea72a5e86060f1b9e407fe"
+    },
+    {
+      "path": "scripts/build-offline.mjs",
+      "bytes": 1035,
+      "sha256": "3404964384e2c0ecda962c96d3343924e453d5161adc7587297b5f9accb83abe"
+    },
+    {
+      "path": "scripts/diagnostics/model-inventory.mjs",
+      "bytes": 1196,
+      "sha256": "f299f8efcec4bfb77edc42e1b479f8d53bc9694cbf435d8b34d9eddecba63a41"
+    },
+    {
+      "path": "scripts/diagnostics/sunlight-audit.mjs",
+      "bytes": 3054,
+      "sha256": "c2dc947991a7d0b3503b81a32a4f719ffa285998e1b8bd1f5c62f52cd23d1560"
+    },
+    {
+      "path": "scripts/preview.cjs",
+      "bytes": 1158,
+      "sha256": "566e2e6c51a7b2518bf01f6a1df2d70b445cd46246949cd226bded29da0649a8"
+    },
+    {
+      "path": "src/App.tsx",
+      "bytes": 18931,
+      "sha256": "ce8481871a0b7951ff177b9b7bd135458a466f0d45246b446fe7d67149b5951d"
+    },
+    {
+      "path": "src/Scene.tsx",
+      "bytes": 15952,
+      "sha256": "7a09f22d6eb99ee9fb3c0edf996982027a4563a0e2d7f48bfa4128322d439efd"
+    },
+    {
+      "path": "src/Section.tsx",
+      "bytes": 5745,
+      "sha256": "8d7d19eae1c1930d7d4db56c08e3b966af77b07a179d72164a45323f0fd6fcae"
+    },
+    {
+      "path": "src/api.ts",
+      "bytes": 4748,
+      "sha256": "375dacc633cd8d3df4fe98c52b4115a0fdfd0ead0fc683d08e17e79c07075fdf"
+    },
+    {
+      "path": "src/camera.ts",
+      "bytes": 561,
+      "sha256": "aa8a34ce70f0106ba09864a7aaecc6466844acb880f6f6f24c6525ea9793ccc9"
+    },
+    {
+      "path": "src/contactAO.ts",
+      "bytes": 2736,
+      "sha256": "fc918075f94b178e020202a040f0b38d5432b1835744e0eddd54446f70acd73c"
+    },
+    {
+      "path": "src/export.ts",
+      "bytes": 3337,
+      "sha256": "c360d33e81fe60c0b4487c20eb54ccb5915e77b6c007d1ca8e806f1ab5e3c6fb"
+    },
+    {
+      "path": "src/lighting.ts",
+      "bytes": 4487,
+      "sha256": "c1f7283690e9833c9e75c84766b3e1ed7cdac7f1835e2f98cff1b7747377fa96"
+    },
+    {
+      "path": "src/main.tsx",
+      "bytes": 249,
+      "sha256": "0d4fe87f2b6caef74b0df3a845d6f9138463d539c6a89dc5a58dd3420e688bb7"
+    },
+    {
+      "path": "src/materials.ts",
+      "bytes": 3717,
+      "sha256": "8b099ab5460df65cc7368911d2d046fad71b36fba4b3f0164bb5513f91c5cedd"
+    },
+    {
+      "path": "src/model.ts",
+      "bytes": 3351,
+      "sha256": "ee5bc0b3b143fbb7552dc5bae32f42a0517e7811b0c7a61ad70354ba0d4ddfea"
+    },
+    {
+      "path": "src/modeling/construction.ts",
+      "bytes": 6671,
+      "sha256": "8354a43283e1b90e67f6f342c82ab72b8be3afba5d101b6f12e4a6ea3137321a"
+    },
+    {
+      "path": "src/modeling/interior.ts",
+      "bytes": 11538,
+      "sha256": "d5634511e1e459b8ace027fe9b23b3aa19ff8888cfa400896c0ce65d179c1ac3"
+    },
+    {
+      "path": "src/modeling/upholstery.ts",
+      "bytes": 1758,
+      "sha256": "095e9175667d0d00530da08830a55fe58b2441235db12dc952ebd4df786cbd21"
+    },
+    {
+      "path": "src/modeling/window.ts",
+      "bytes": 4159,
+      "sha256": "63ee6215e100e55018c5c065f8c0922714e4a2901b05dbaec10ecc0deec1ac18"
+    },
+    {
+      "path": "src/presentation.ts",
+      "bytes": 797,
+      "sha256": "6034db391d8e77d23bd5957eaf4b080df3ae036b5cf225d7e31f02eb41763ad5"
+    },
+    {
+      "path": "src/refinements.css",
+      "bytes": 10839,
+      "sha256": "c0ee0f5ca524b1b039bdbfac2b4c243f9676dd670699d9efdd91f8f206fcdc58"
+    },
+    {
+      "path": "src/scoring/DimensionAccordion.tsx",
+      "bytes": 2512,
+      "sha256": "568abd1696173a83a02221ecede9307c694293cbc9c3d587ac0842b9077be7b1"
+    },
+    {
+      "path": "src/scoring/ScoreDrawer.tsx",
+      "bytes": 6742,
+      "sha256": "ae1de742465391a0a5d52484b3f194a8bd06c3798709deda9ab1c93b77c714f4"
+    },
+    {
+      "path": "src/scoring/ScoreRing.tsx",
+      "bytes": 1360,
+      "sha256": "ae580b81bf525b64372c19b061ffbefd33164fc9d59584ba9546852fd3ad1462"
+    },
+    {
+      "path": "src/scoring/example.ts",
+      "bytes": 3827,
+      "sha256": "1266e94f7f37953e3e1ccc8c6c8554e38376e40aecd4ed4a36c5db38ac2b6f08"
+    },
+    {
+      "path": "src/scoring/report.ts",
+      "bytes": 5588,
+      "sha256": "f9ed499b45c67df719b0b0f61fbe4204ee91c270641d6f9b8d3f68eb1df82eed"
+    },
+    {
+      "path": "src/scoring/scoring.css",
+      "bytes": 12334,
+      "sha256": "3d4c2aa61306da9df5a2c2b366620ee63d604a4728f3a266b122cf6415ee7ff7"
+    },
+    {
+      "path": "src/scoring/spatial.ts",
+      "bytes": 1474,
+      "sha256": "de965b5cef1f1649c68eac288b479027af2912fa07efce8850c3f4bae7114875"
+    },
+    {
+      "path": "src/shading.ts",
+      "bytes": 623,
+      "sha256": "db74cf53f37b574c7d00b99d6ad8fe2888026ff4566a42217a70a867aae3fb82"
+    },
+    {
+      "path": "src/solar.ts",
+      "bytes": 1064,
+      "sha256": "f77182f283c2f47693885730505b75415a681c29c7851e09a496b09ab6750a5e"
+    },
+    {
+      "path": "src/styles.css",
+      "bytes": 18490,
+      "sha256": "c1c3efa888de34138e51bf0614dfcc5bd2189287cf092d431501a047504db4bb"
+    },
+    {
+      "path": "src/useSimulation.ts",
+      "bytes": 1508,
+      "sha256": "53f0d0ef538037262e1279462cd2ab185fe00507fe5b5a58752c4042b8cf10d8"
+    },
+    {
+      "path": "src/vite-env.d.ts",
+      "bytes": 38,
+      "sha256": "65996936fbb042915f7b74a200fcdde7e410f32a669b1ab9597cfaa4b0faddb5"
+    },
+    {
+      "path": "start-dev.cmd",
+      "bytes": 361,
+      "sha256": "07fdd146387edecab86daa5f5b32be41a36a11218cf3d224baddbf4c3eb4f36e"
+    },
+    {
+      "path": "start-preview.cmd",
+      "bytes": 298,
+      "sha256": "bf0c600846c7f33bacc6ae6a61372254cb0def141d521de6cdc438cd28321e38"
+    },
+    {
+      "path": "tests/browser/studio.spec.ts",
+      "bytes": 8530,
+      "sha256": "018664cf44c1f9b463d143e3263e14cfa43accee3db22b5fe02fcbf6ad87f2ef"
+    },
+    {
+      "path": "tests/camera.test.ts",
+      "bytes": 2265,
+      "sha256": "846f83b7c707b5d4a7572cfdedc9233b6d0d038af7534ce84df3d084b26fbf5e"
+    },
+    {
+      "path": "tests/lighting.test.ts",
+      "bytes": 3817,
+      "sha256": "55baf204757c6c857c71ef04f7d641d36d1a468b841ae116a594aef4bde60180"
+    },
+    {
+      "path": "tests/model.test.ts",
+      "bytes": 7126,
+      "sha256": "30ca37975f76a91979a18482df2632409794896ffa5d011a0a4d1ebd89b34604"
+    },
+    {
+      "path": "tests/modeling.test.ts",
+      "bytes": 6524,
+      "sha256": "c4de27be4b2377e1f2000ae662f9ecfacdf55785d1dba884316d3a1c3dd92645"
+    },
+    {
+      "path": "tests/presentation.test.tsx",
+      "bytes": 4487,
+      "sha256": "2f85b29ab7d913354f1a59286c4a35b2d5e3f813074f598403d2271864d3c3e0"
+    },
+    {
+      "path": "tests/scoring-layout.test.tsx",
+      "bytes": 4222,
+      "sha256": "0beb85b7f9dcc53cb47aec4562f373bd0e1044548bf41898d272131621daa694"
+    },
+    {
+      "path": "tests/scoring.test.tsx",
+      "bytes": 6908,
+      "sha256": "0574e8984e9d6f712b3be042d887326aeb95ca0b1b20d39c51f41b363ee82a44"
+    },
+    {
+      "path": "tsconfig.json",
+      "bytes": 440,
+      "sha256": "4ca150a0e20d6a490ad15231804de7eb461fe945678ebcdd9a52e2fa6735153a"
+    },
+    {
+      "path": "verification/FINAL-VERIFICATION.md",
+      "bytes": 3058,
+      "sha256": "0c07a7e73014c9999b62771477a1b70f7f913ce0796d1cefe9b1277ce1624e4e"
+    },
+    {
+      "path": "verification/FINE-MODEL-PACKAGE-CONTENTS.json",
+      "bytes": 14571,
+      "sha256": "7ee12077f8e5a34beebeeb6b50ad7aae1be5ba4917731f0f8b98c4cdaaf07caa"
+    },
+    {
+      "path": "verification/FINE-MODEL-VERIFICATION.md",
+      "bytes": 3531,
+      "sha256": "332e1bd7472dde1b455712810b3e72367bb4f9a9892a0fcaeb5e8b702b788b40"
+    },
+    {
+      "path": "verification/final-review/MANIFEST.json",
+      "bytes": 4857,
+      "sha256": "af651fd7210c63327e0124ae3f637f88d3aebd579fee0abaec6b67f991a6154f"
+    },
+    {
+      "path": "verification/final-review/desktop-heat-before-mobile-export-fix.png",
+      "bytes": 680252,
+      "sha256": "59ebfc901475dac6afe7e1dfb78876ffc9fbd914497653e8424e46cb9c4e0ff5"
+    },
+    {
+      "path": "verification/final-review/desktop-summer-before-mobile-export-fix.png",
+      "bytes": 689773,
+      "sha256": "9b0f07f3daace1502214e7e92327ef8d347ff4c4cfb8db9663ab92919d1c8ca4"
+    },
+    {
+      "path": "verification/final-review/desktop-winter-before-mobile-export-fix.png",
+      "bytes": 704137,
+      "sha256": "ce9e08adc25b8ea7f7392900a14dcb19d8767e6af8807e97cc7c0f48933d3485"
+    },
+    {
+      "path": "verification/final-review/history-before-type-finish/changed-parameters-desktop-before-type-finish.png",
+      "bytes": 696751,
+      "sha256": "15f16364055e83d1f3d4b1fe7be2e9457758203cc1840f1d48cda7317ba707f9"
+    },
+    {
+      "path": "verification/final-review/history-before-type-finish/summer-default-desktop-before-type-finish.png",
+      "bytes": 685345,
+      "sha256": "3d0c2fa12ac1699b298f4c4f731ec2d9a482fd21ae07c7f14cbc9c341bb2c13b"
+    },
+    {
+      "path": "verification/final-review/history-before-type-finish/summer-narrow-tool-capture-before-type-finish.png",
+      "bytes": 82495,
+      "sha256": "5754208c322257044bf96d5d7cd47545446728cc97f64bb0e54412babc1ab2e5"
+    },
+    {
+      "path": "verification/final-review/history-before-type-finish/winter-default-desktop-before-type-finish.png",
+      "bytes": 698620,
+      "sha256": "dffdebe5ba07c044d2a671ac983ffd34b5d988686f363aa729d4ecfaf5bcf0cb"
+    },
+    {
+      "path": "verification/final-review/history-before-type-finish/winter-heat-desktop-before-type-finish.png",
+      "bytes": 673717,
+      "sha256": "c3dae7b3b4d54847375ddfa976628533aec00db5820ece56719aaaf62aeb0eb0"
+    },
+    {
+      "path": "verification/final-review/history-before-type-finish/winter-narrow-tool-capture-before-type-finish.png",
+      "bytes": 86684,
+      "sha256": "e5c552fcc3a40d66657798671d53212ab4b19b2e285c88b89a9d040e3650cdcc"
+    },
+    {
+      "path": "verification/fine-model-build-records/tests-35-passed.txt",
+      "bytes": 7836,
+      "sha256": "7e8c7fed9afbd04b173e7807ac93fdecd6e6b768379f6f4c4e3c32a29b0367d2"
+    },
+    {
+      "path": "verification/fine-model-build-records/typecheck-production-offline-build.txt",
+      "bytes": 1506,
+      "sha256": "8e75f8c82f7cf0c672511568178fdd254f031afc371bc46ed32c66f22d70c35c"
+    },
+    {
+      "path": "verification/fine-model-final-review/MANIFEST.json",
+      "bytes": 2754,
+      "sha256": "4242135934e0db5f28bda567fd2fe5cc9fe294bb0e21c70cbdaacc569094245d"
+    },
+    {
+      "path": "verification/fine-model-final-review/closeup-sofa.png",
+      "bytes": 941509,
+      "sha256": "fa79a79a66f99b6efcc7708effa072f8a1bcbaa0467dd19cb729af7f9f8d5717"
+    },
+    {
+      "path": "verification/fine-model-final-review/closeup-window-plant.png",
+      "bytes": 866327,
+      "sha256": "c0e4b346a50c3efac700bcdc689c61c932b9e2c94cc3ce25df0556ede91951b3"
+    },
+    {
+      "path": "verification/fine-model-final-review/desktop-summer.png",
+      "bytes": 703711,
+      "sha256": "c079f45fe144d865e002d8c2c012d06f25ab32b19380b1fb3ed5c47649def746"
+    },
+    {
+      "path": "verification/fine-model-final-review/desktop-winter.png",
+      "bytes": 716594,
+      "sha256": "27aecab1784b89739ba8e9629f13a577085b7ec2b2cd71f1693e05b93e741373"
+    },
+    {
+      "path": "verification/fine-model-final-review/narrow-400x810-css.png",
+      "bytes": 86239,
+      "sha256": "e81abfdddfb08287d0db8de67f123c827b692c9418a590afb4df6c7725452322"
+    },
+    {
+      "path": "verification/p0-composition/tests-and-build.txt",
+      "bytes": 4588,
+      "sha256": "8c8a2a62b4d8a68a4bcc04ad76a2165fd52263cec2c975f3308949efa9b60ae9"
+    },
+    {
+      "path": "verification/p1-form-materials/model-inventory.json",
+      "bytes": 1413,
+      "sha256": "001412cc3471837329b7e2eac8df139bbad5cc67386ecd1a7391d2d9f83328e1"
+    },
+    {
+      "path": "verification/p1-form-materials/tests-and-build.txt",
+      "bytes": 4730,
+      "sha256": "58ec4b51ee1643b7230e6be28e1d21dfe42d38d06cbf8b1630975811c6e61eef"
+    },
+    {
+      "path": "verification/p1-form-materials/unchanged-baseline.json",
+      "bytes": 788,
+      "sha256": "bd702b5e5b031056ac9534846373b1f3b056a3c5d58dc7d6ea1b253e39ffb025"
+    },
+    {
+      "path": "verification/p2-lighting/relative-light-budget.json",
+      "bytes": 1012,
+      "sha256": "3e65d5784f960f067487c0fdfbbcc65a383a083e3d402c1708d8ad0f97c1641d"
+    },
+    {
+      "path": "verification/p2-lighting/tests-and-build.txt",
+      "bytes": 3601,
+      "sha256": "03523bda156f8c95e30b132b34a87a1a82433418c59f3333972ef86941f2acd2"
+    },
+    {
+      "path": "verification/p2-lighting/unchanged-baseline.json",
+      "bytes": 1076,
+      "sha256": "ffcc9efbc4615cd40bd8f4f534dea65ada37ede83b2c81b650ec3f1c5fa834f5"
+    },
+    {
+      "path": "verification/p3-interface/VERIFICATION.md",
+      "bytes": 3137,
+      "sha256": "6b5e1b860b7e6437838d8e4fa7808f40d19abe3814c89364967922d697d19dc8"
+    },
+    {
+      "path": "verification/p3-interface/artifact-checks.json",
+      "bytes": 312,
+      "sha256": "0fb61752da98c7963e79e4018257b6d201af1127330502d8c7c9db32e700c58a"
+    },
+    {
+      "path": "verification/p3-interface/export-default.svg",
+      "bytes": 6224,
+      "sha256": "e62482e71362e872d5bd96c6fce8eef5821f6bb0ea88b484f27921bec0eff2f1"
+    },
+    {
+      "path": "verification/p3-interface/export-long-city.svg",
+      "bytes": 7275,
+      "sha256": "7a20c41311be3008059cbc10d6525452bcd9486fe47208458efc65a9ecfa0cfc"
+    },
+    {
+      "path": "verification/p3-interface/offline-build.txt",
+      "bytes": 297,
+      "sha256": "0cf4dcb1c7179f803eada8e48de2642406558877e1eb77e4cb2b00d1a6c4a9c5"
+    },
+    {
+      "path": "verification/p3-interface/production-build.txt",
+      "bytes": 863,
+      "sha256": "4fbcdd4a25a77aea5466da9954808d36ca01146f534622b6434d910e0cb8f42f"
+    },
+    {
+      "path": "verification/p3-interface/protected-source-hashes.json",
+      "bytes": 1550,
+      "sha256": "657d477c6e612cc696bcd46e687c674e7677f5d9cf0f69e7f2b60ffa9c719b13"
+    },
+    {
+      "path": "verification/p3-interface/tests.txt",
+      "bytes": 380,
+      "sha256": "a87c05f78cbf556eecb1eb28fcf687e266adaef2c3c0a4001674c474a49a9790"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/FINAL-VERIFICATION.md",
+      "bytes": 4777,
+      "sha256": "c28b5464cf9d930b808be5c83411992ad33f1693ce36dc44beb517a43a377dcc"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/final-code-artifact-hashes.json",
+      "bytes": 2973,
+      "sha256": "5f14dab39b30f67cf6791ed4b2c28d2c5b526f59f0fcc0738a3bd7e45a722e00"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/mobile-default-400x534css.png",
+      "bytes": 77435,
+      "sha256": "4c7ddf121b8c60b8b31ec9b7c312869e5ccda35555628b7cca2e4ba84c2182ce"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/mobile-drawer-400x534css.png",
+      "bytes": 37211,
+      "sha256": "6b5715d35747d08ac7778fe732cc92dcd719b46ba5e4ee3b483243a66cf0924d"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/panoramic-default.png",
+      "bytes": 329327,
+      "sha256": "415681fb305c0d12835fb0b08b4649d32463dd58e63ed2fa8873e788f9b9e8a9"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/score-drawer.png",
+      "bytes": 299900,
+      "sha256": "9bf0ea4a7cab19d7c2a273f8f17cf13832e1097c885e76e6679329f6eeda04bf"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/screenshot-provenance.json",
+      "bytes": 2758,
+      "sha256": "43ff70e10531898f444ab7ef961766fca430a0363321d6d2c71e1ada39b90b19"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/winter-before-r2-reference.png",
+      "bytes": 337405,
+      "sha256": "fda82441c9a30a048f65f4a0e19ba60275058b7474a8a0096496881f7dc67b9c"
+    },
+    {
+      "path": "verification/panoramic-scoring-final-review/winter-depth-highlight.png",
+      "bytes": 39174,
+      "sha256": "574847c42aec2dcaf01300437eb9a49d05fdd5e956d4639dcf2f6189448a2c46"
+    },
+    {
+      "path": "verification/r1-baseline/TEST-REPORT.md",
+      "bytes": 2022,
+      "sha256": "fe9b6c3b9f7fe70535cfa93f371bbeb0d293a2ab823309de8279235cb356caa9"
+    },
+    {
+      "path": "verification/r1-baseline/design-sheet.svg",
+      "bytes": 5307,
+      "sha256": "bdbf14f88c940dfe95526142fad8b45db0e2f375cee2ec718c4e6f6e4ddc4dcf"
+    },
+    {
+      "path": "verification/r1-baseline/desktop-1366x768.png",
+      "bytes": 268534,
+      "sha256": "b42cc1189b6f15a791178125533a295a7776fd422fb05c0165b0076e57ea2834"
+    },
+    {
+      "path": "verification/r1-baseline/desktop-summer.png",
+      "bytes": 357257,
+      "sha256": "700119f828fd6af38118bd9dfc393eb2133ae67220bb51c5fcc81c76d7967125"
+    },
+    {
+      "path": "verification/r1-baseline/desktop-winter-heat.png",
+      "bytes": 360483,
+      "sha256": "f0090ddc5b2cd90e9e71edbb559d246a8f125cfb5d39ab7fd72468692f1608f6"
+    },
+    {
+      "path": "verification/r1-baseline/mobile.png",
+      "bytes": 120913,
+      "sha256": "37e8c4798a633a0fd6a806780a4b7a05fe2b1a0f589c47309a6793c237c57d23"
+    },
+    {
+      "path": "verification/r1-baseline/offline-file.png",
+      "bytes": 376242,
+      "sha256": "e7c696eba0e1adf9c592d360c924c2bbfe0d5a379577f8ff2dea83f43b8928c9"
+    },
+    {
+      "path": "verification/r2-review/daylight-heatmap.png",
+      "bytes": 616792,
+      "sha256": "2c698b683f1930834f3ccf024a1e5962dd92e78b5817d69dc170c021cf3baebb"
+    },
+    {
+      "path": "verification/r2-review/small-window-390x674css.png",
+      "bytes": 160214,
+      "sha256": "3508a781e8563cc363284446c552421fdea8cae3c2f86b77bf66e4bb65475acf"
+    },
+    {
+      "path": "verification/r2-review/summer-solstice.png",
+      "bytes": 626893,
+      "sha256": "b7fc7db773991253be1ac4913e202228f455fa02e0e6b01c9bd80d2de01c5bf1"
+    },
+    {
+      "path": "verification/r2-review/winter-solstice.png",
+      "bytes": 633977,
+      "sha256": "4d9173bb7dfca7d6d8ba9ce76bc4611365bd548295b2350643a455f42f851c57"
+    },
+    {
+      "path": "verification/r3-review/summer-default-390x675.png",
+      "bytes": 168285,
+      "sha256": "49bc1c31b2ae683f9d27bea07c11b9ac3ecc0fef470e608fa9925a3e513e33a2"
+    },
+    {
+      "path": "verification/r3-review/summer-default-desktop-1280x715.png",
+      "bytes": 684146,
+      "sha256": "d977a42e8b13830fb0f34ad45e636a11b652462f3867a4c79f2e5bd45c4b01ef"
+    },
+    {
+      "path": "verification/redesigned-final-review/FINAL-VERIFICATION.md",
+      "bytes": 4879,
+      "sha256": "4d5bd079ecd16697c2e71bf984c1ad43a49e4942f0f61d9e0942058fdd4c8be9"
+    },
+    {
+      "path": "verification/redesigned-final-review/analysis-view.png",
+      "bytes": 325552,
+      "sha256": "849e116457f450929b4c0978e1d8959b16f5cfc9990c1bca5c2f68c33a1f8345"
+    },
+    {
+      "path": "verification/redesigned-final-review/daylight-heatmap.png",
+      "bytes": 265017,
+      "sha256": "dec32bd7ad31bf93d0c97bd7117cd890c0ce4e8b165f1a1e5260387a0ef92b66"
+    },
+    {
+      "path": "verification/redesigned-final-review/desktop-restored-default.png",
+      "bytes": 752923,
+      "sha256": "7d57287673cc8d7acc57f54c9ce1a14bda7c63dca457ee56b5c72b5934c668f9"
+    },
+    {
+      "path": "verification/redesigned-final-review/diagnostic-cairo-default-missing-cjk.png",
+      "bytes": 88560,
+      "sha256": "2e1201de9de75950774318d641f9b719f70f946f72fad659c69c3f66f6f92f9e"
+    },
+    {
+      "path": "verification/redesigned-final-review/download-provenance.json",
+      "bytes": 350,
+      "sha256": "f02deaeb76ad678c24d7c4e17c538adfe09ff2319da539186a5a59bfaec254e2"
+    },
+    {
+      "path": "verification/redesigned-final-review/downloaded-design-sheet.png",
+      "bytes": 187959,
+      "sha256": "b790ad2c731a9207abbbdbdc1fb4047f928d6f62ed6512ba4319dee0e4fa65c9"
+    },
+    {
+      "path": "verification/redesigned-final-review/downloaded-design-sheet.svg",
+      "bytes": 6002,
+      "sha256": "0e4c6a28b54505b7f779cf618ff127bb55c57de5b25c4b66dd8db051c10cf0ae"
+    },
+    {
+      "path": "verification/redesigned-final-review/final-checks.json",
+      "bytes": 383,
+      "sha256": "76583029b796c536d9fba529894ede7ef9fd4f3aad5f6eb50eeebcc3109f3e6b"
+    },
+    {
+      "path": "verification/redesigned-final-review/final-code-artifact-hashes.json",
+      "bytes": 3455,
+      "sha256": "5baeefa1838d437ec3b7ed961a057b85b465fcdc47a0885fe86a0d0dee991d4b"
+    },
+    {
+      "path": "verification/redesigned-final-review/fontconfig-offline-preview.conf",
+      "bytes": 446,
+      "sha256": "83acd48f8085ad0b24734689e8547a4f10e99c1812f25d7cf88ed381b9ada049"
+    },
+    {
+      "path": "verification/redesigned-final-review/mobile-400x810css.png",
+      "bytes": 95579,
+      "sha256": "7fd07680dabf023833c810f5e560570f7a8ac1371fdbc82d5750aca3a327f6a8"
+    },
+    {
+      "path": "verification/redesigned-final-review/mobile-section-400x810css.png",
+      "bytes": 52769,
+      "sha256": "742bf9e1200037f8aadfabbfc2326772b769b50176e8b300bb31ba1f9adbff39"
+    },
+    {
+      "path": "verification/redesigned-final-review/render-downloaded-svg.py",
+      "bytes": 413,
+      "sha256": "de757d683f47c121a594dc8b3785a77846e6e12f0652598f67346ebdf8e4bf9c"
+    },
+    {
+      "path": "verification/redesigned-final-review/screenshot-provenance.json",
+      "bytes": 3964,
+      "sha256": "c752fca2b3a915ded5d0270bedf481d9716434b0d8de84639ba798422a0c77ca"
+    },
+    {
+      "path": "verification/redesigned-final-review/summer-default.png",
+      "bytes": 305653,
+      "sha256": "c07fdac45cfdbf1382d4368350693521f72236c580e6ec7cacd1c70746848715"
+    },
+    {
+      "path": "verification/redesigned-final-review/winter-solstice.png",
+      "bytes": 308444,
+      "sha256": "d5b0f27281e96cbbf6189a21ad8c4877dc4ba11c5b778b4bfd9c068b9f7a88ec"
+    },
+    {
+      "path": "verification/scoring-r1/VERIFICATION.md",
+      "bytes": 2896,
+      "sha256": "eff97e652219232397ac54dfe75eb27a73bbf0dcec98651ffec14e13dd7fd4db"
+    },
+    {
+      "path": "verification/scoring-r1/artifact-checks.json",
+      "bytes": 3037,
+      "sha256": "8f9ac6928fadde646abefeb2e0643cb065a669a73ce64e93d0d43adda31a42c3"
+    },
+    {
+      "path": "verification/scoring-r1/drawer-static-markup.html",
+      "bytes": 10284,
+      "sha256": "63bf8ea6f3dd12776dbc1762fce11cff2aa058d43f4446bde22be72558c2c59d"
+    },
+    {
+      "path": "verification/scoring-r1/first-build.txt",
+      "bytes": 531,
+      "sha256": "22ff210aba79e11671011c91660ca65594c209eb3bb735789b3d4e48b2d2ebd3"
+    },
+    {
+      "path": "verification/scoring-r1/independent-score-example.json",
+      "bytes": 5809,
+      "sha256": "1ba23c8ab0d17c4a9c6175248523e0802305952057bbbc219ea182aa6aa607c5"
+    },
+    {
+      "path": "verification/scoring-r1/offline-build.txt",
+      "bytes": 297,
+      "sha256": "4b2a13644d16ca5486469723448649b3f5d40c98f97a3aaeeb4c6158b13c2c0c"
+    },
+    {
+      "path": "verification/scoring-r1/production-build.txt",
+      "bytes": 863,
+      "sha256": "467e184412d309ffe3480d4efac5bde7786c2bbdcf0a210a7c5c5fb3f5e4c525"
+    },
+    {
+      "path": "verification/scoring-r1/protected-physics-model-hashes.json",
+      "bytes": 846,
+      "sha256": "37e770e06e82369a76bc44a616c8a969a5e6e5f7cf0a1338feb0e1af0237b089"
+    },
+    {
+      "path": "verification/scoring-r1/second-build.txt",
+      "bytes": 863,
+      "sha256": "eb22c128c21e7332369196915c6b440c184cce4d582d23210fae9266d49ff002"
+    },
+    {
+      "path": "verification/scoring-r1/tests.txt",
+      "bytes": 403,
+      "sha256": "e01ae0704bba9c83aa1935e741ca426528a2aa34209169606179f6c44d1d9158"
+    },
+    {
+      "path": "verification/scoring-r2/VERIFICATION.md",
+      "bytes": 2151,
+      "sha256": "1a7821a2fb86baea9f06432688770c46e6a4ea4aebeb8522b5c7c4d0a8a7f8c3"
+    },
+    {
+      "path": "verification/scoring-r2/WARNING-AUDIT.md",
+      "bytes": 3165,
+      "sha256": "16f43db57843a97721bec4ca5e7cf49f8d08ebd08a097e3cdffce91162e331e3"
+    },
+    {
+      "path": "verification/scoring-r2/artifact-checks.json",
+      "bytes": 379,
+      "sha256": "456920d321e5659d9f3ff89a9a3b0b93b6234c6446a12fe79e98b1e7e8957d1a"
+    },
+    {
+      "path": "verification/scoring-r2/before-depth-focus.png",
+      "bytes": 303174,
+      "sha256": "19c00132a549b9251e8144f788701fa302c5bcf2fb75cf8db90a953512c860d1"
+    },
+    {
+      "path": "verification/scoring-r2/before-depth-section.png",
+      "bytes": 308795,
+      "sha256": "6bafe3e7f609934b5f6a997d46d37f8fdde982ee28d508da4c4665ae402be4f4"
+    },
+    {
+      "path": "verification/scoring-r2/before-mobile-overlay.png",
+      "bytes": 61295,
+      "sha256": "c42c8f8a9157863137bc5a9005b172bea24aaffa1d793d4e323e510dbda2fc37"
+    },
+    {
+      "path": "verification/scoring-r2/before-screenshot-provenance.json",
+      "bytes": 1151,
+      "sha256": "33f9211b437ef5a601a109b51afc894bb264afbdfabb959a6d507c207c49d0c0"
+    },
+    {
+      "path": "verification/scoring-r2/offline-build.txt",
+      "bytes": 297,
+      "sha256": "85ead6e7be0729866f3aaadfaacf0b8fecc81e1cc36e91dda318f53f7c9c3d6e"
+    },
+    {
+      "path": "verification/scoring-r2/production-build.txt",
+      "bytes": 863,
+      "sha256": "db8956d3cdaef3a081d2defb722300ed303e3ba264142fb1e6b550e41d70b557"
+    },
+    {
+      "path": "verification/scoring-r2/tests.txt",
+      "bytes": 433,
+      "sha256": "bf8fbf686dd9aefd4ff74f83548b0cce0249cc3f5842d7305264d4703ff145fd"
+    },
+    {
+      "path": "verification/scoring-r2/unchanged-baseline.json",
+      "bytes": 1381,
+      "sha256": "ca8e200299288a172aa90c84f0a7bc7651ab30687eecd99f2a2a68c598092fdb"
+    },
+    {
+      "path": "vite.config.ts",
+      "bytes": 301,
+      "sha256": "68e18a5bd828221e91497be6481843c32143c58ac76bef5d0d714c4197104f5f"
+    }
+  ]
+}

@@ -1,0 +1,37 @@
+{
+  "note": "Relative rendering units; aperture/global visibility + first-bounce approximation, not radiometric/DF data",
+  "budget": {
+    "summer": {
+      "exposure": 1.1,
+      "skyFraction": 0.5169270833333334,
+      "sunFloorFraction": 0,
+      "portal": 4.910807291666667,
+      "floorBounce": 0.16035435970819306,
+      "northBounce": 0.21157866905942144,
+      "sunIntensity": 5.6,
+      "sunColor": 16774893,
+      "sunColorLinear": [
+        1,
+        0.922842719414901,
+        0.8455763698332801
+      ],
+      "sunColorDisplayHex": "fff6ed"
+    },
+    "winter": {
+      "exposure": 1.1,
+      "skyFraction": 0.5169270833333334,
+      "sunFloorFraction": 0.14583333333333334,
+      "portal": 4.910807291666667,
+      "floorBounce": 0.22482776857043835,
+      "northBounce": 0.21157866905942144,
+      "sunIntensity": 5,
+      "sunColor": 16771285,
+      "sunColorLinear": [
+        1,
+        0.8062739896720541,
+        0.6631998270614556
+      ],
+      "sunColorDisplayHex": "ffe8d5"
+    }
+  }
+}

@@ -1,0 +1,80 @@
+{
+  "capture_method": "主任务标准浏览器工具实际截图；非Shell/Playwright自动化，逐字节复制，未重绘/缩放",
+  "reviewed_viewports_reported_by_parent": [
+    "桌面1920×1072",
+    "窄窗口400×810",
+    "首轮约1280×715 CSS",
+    "首轮约390×675 CSS"
+  ],
+  "warning": "主要视图为最新桌面实看截图，截于仅小屏导出按钮修复之前；桌面设计在此修复中未变。旧图位于history-before-type-finish。没有修复后的新窄屏图，不能据此声称按钮修复已视觉通过。",
+  "images": [
+    {
+      "file": "history-before-type-finish/summer-default-desktop-before-type-finish.png",
+      "state": "夏至默认；标准浏览器实看，字体收尾前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/3d0c2fa12ac1699b298f4c4f731ec2d9a482fd21ae07c7f14cbc9c341bb2c13b.png",
+      "sha256": "3d0c2fa12ac1699b298f4c4f731ec2d9a482fd21ae07c7f14cbc9c341bb2c13b",
+      "modified": false
+    },
+    {
+      "file": "history-before-type-finish/winter-default-desktop-before-type-finish.png",
+      "state": "冬至默认，地毯真实光带；标准浏览器实看，字体收尾前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/dffdebe5ba07c044d2a671ac983ffd34b5d988686f363aa729d4ecfaf5bcf0cb.png",
+      "sha256": "dffdebe5ba07c044d2a671ac983ffd34b5d988686f363aa729d4ecfaf5bcf0cb",
+      "modified": false
+    },
+    {
+      "file": "history-before-type-finish/winter-heat-desktop-before-type-finish.png",
+      "state": "冬至采光热力；标准浏览器实看，字体收尾前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/c3dae7b3b4d54847375ddfa976628533aec00db5820ece56719aaaf62aeb0eb0.png",
+      "sha256": "c3dae7b3b4d54847375ddfa976628533aec00db5820ece56719aaaf62aeb0eb0",
+      "modified": false
+    },
+    {
+      "file": "history-before-type-finish/changed-parameters-desktop-before-type-finish.png",
+      "state": "挑檐0.80m、百叶45°、窗墙比55%；标准浏览器实看，字体收尾前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/15f16364055e83d1f3d4b1fe7be2e9457758203cc1840f1d48cda7317ba707f9.png",
+      "sha256": "15f16364055e83d1f3d4b1fe7be2e9457758203cc1840f1d48cda7317ba707f9",
+      "modified": false
+    },
+    {
+      "file": "history-before-type-finish/winter-narrow-tool-capture-before-type-finish.png",
+      "state": "窄窗口冬至；工具导出局部/缩放图，字体收尾前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/e5c552fcc3a40d66657798671d53212ab4b19b2e285c88b89a9d040e3650cdcc.png",
+      "sha256": "e5c552fcc3a40d66657798671d53212ab4b19b2e285c88b89a9d040e3650cdcc",
+      "modified": false
+    },
+    {
+      "file": "history-before-type-finish/summer-narrow-tool-capture-before-type-finish.png",
+      "state": "窄窗口夏至；工具导出局部/缩放图，字体收尾前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/5754208c322257044bf96d5d7cd47545446728cc97f64bb0e54412babc1ab2e5.png",
+      "sha256": "5754208c322257044bf96d5d7cd47545446728cc97f64bb0e54412babc1ab2e5",
+      "modified": false
+    },
+    {
+      "file": "desktop-summer-before-mobile-export-fix.png",
+      "state": "最新桌面夏至；字体收尾之后，仅小屏导出按钮修复之前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/9b0f07f3daace1502214e7e92327ef8d347ff4c4cfb8db9663ab92919d1c8ca4.png",
+      "sha256": "9b0f07f3daace1502214e7e92327ef8d347ff4c4cfb8db9663ab92919d1c8ca4",
+      "modified": false
+    },
+    {
+      "file": "desktop-winter-before-mobile-export-fix.png",
+      "state": "最新桌面冬至，真实地毯光带；仅小屏导出按钮修复之前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/ce9e08adc25b8ea7f7392900a14dcb19d8767e6af8807e97cc7c0f48933d3485.png",
+      "sha256": "ce9e08adc25b8ea7f7392900a14dcb19d8767e6af8807e97cc7c0f48933d3485",
+      "modified": false
+    },
+    {
+      "file": "desktop-heat-before-mobile-export-fix.png",
+      "state": "最新桌面冬至热力；仅小屏导出按钮修复之前",
+      "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/59ebfc901475dac6afe7e1dfb78876ffc9fbd914497653e8424e46cb9c4e0ff5.png",
+      "sha256": "59ebfc901475dac6afe7e1dfb78876ffc9fbd914497653e8424e46cb9c4e0ff5",
+      "modified": false
+    }
+  ],
+  "primary_views": [
+    "desktop-summer-before-mobile-export-fix.png",
+    "desktop-winter-before-mobile-export-fix.png",
+    "desktop-heat-before-mobile-export-fix.png"
+  ]
+}

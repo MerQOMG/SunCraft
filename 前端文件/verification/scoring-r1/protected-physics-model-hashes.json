@@ -1,0 +1,11 @@
+{
+  "src/solar.ts": "f77182f283c2f47693885730505b75415a681c29c7851e09a496b09ab6750a5e",
+  "src/shading.ts": "db74cf53f37b574c7d00b99d6ad8fe2888026ff4566a42217a70a867aae3fb82",
+  "src/lighting.ts": "c1f7283690e9833c9e75c84766b3e1ed7cdac7f1835e2f98cff1b7747377fa96",
+  "src/materials.ts": "8b099ab5460df65cc7368911d2d046fad71b36fba4b3f0164bb5513f91c5cedd",
+  "src/useSimulation.ts": "53f0d0ef538037262e1279462cd2ab185fe00507fe5b5a58752c4042b8cf10d8",
+  "src/modeling/interior.ts": "d5634511e1e459b8ace027fe9b23b3aa19ff8888cfa400896c0ce65d179c1ac3",
+  "src/modeling/upholstery.ts": "095e9175667d0d00530da08830a55fe58b2441235db12dc952ebd4df786cbd21",
+  "src/modeling/window.ts": "63ee6215e100e55018c5c065f8c0922714e4a2901b05dbaec10ecc0deec1ac18",
+  "src/modeling/construction.ts": "8354a43283e1b90e67f6f342c82ab72b8be3afba5d101b6f12e4a6ea3137321a"
+}

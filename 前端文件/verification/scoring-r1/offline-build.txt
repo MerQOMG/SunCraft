@@ -1,0 +1,10 @@
+
+> suncraft-studio@0.1.0 build:offline
+> node scripts/build-offline.mjs
+
+vite v7.3.8 building client environment for production...
+transforming...
+✓ 1729 modules transformed.
+rendering chunks...
+✓ built in 3.20s
+Created self-contained offline HTML (demo mode, no runtime installation needed).

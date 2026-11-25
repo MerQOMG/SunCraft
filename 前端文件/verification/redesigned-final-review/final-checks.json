@@ -1,0 +1,13 @@
+{
+  "code_and_offline_hashes_unchanged": 37,
+  "actual_download_xml_parses": true,
+  "actual_download_bytes": 6002,
+  "rendered_png_pixels": [
+    1120,
+    1328
+  ],
+  "conversion": "CairoSVG 2.9.1; process-local Noto Sans CJK SC font selection, original SVG unchanged",
+  "tests_repeated_during_packaging": false,
+  "prior_test_count": 62,
+  "browser_svg_render_verified": false
+}

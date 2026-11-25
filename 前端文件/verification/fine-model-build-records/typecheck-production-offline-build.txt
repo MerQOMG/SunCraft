@@ -1,0 +1,45 @@
+---
+pid: 243792
+cwd: "/workspace/suncraft-implementation"
+command: "npm run build && npm run build:offline"
+title: "严格类型检查、生产构建与细模单文件离线入口更新"
+status: succeeded
+started_at: 2026-11-25T09:15:12.970Z
+running_for_ms: 6917     
+---
+
+> suncraft-studio@0.1.0 build
+> tsc -b && vite build
+
+vite v7.3.8 building client environment for production...
+transforming...
+✓ 1705 modules transformed.
+rendering chunks...
+computing gzip size...
+dist/index.html                   0.59 kB │ gzip:   0.39 kB
+dist/assets/index-B0XTjOB3.css   41.93 kB │ gzip:   9.19 kB
+dist/assets/gsap-I1jVCVBc.js     70.47 kB │ gzip:  27.67 kB
+dist/assets/index-TMnjPluA.js   309.95 kB │ gzip: 100.17 kB
+dist/assets/three-CKYpb1Kb.js   535.65 kB │ gzip: 139.90 kB
+
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.
+✓ built in 2.30s
+
+> suncraft-studio@0.1.0 build:offline
+> node scripts/build-offline.mjs
+
+vite v7.3.8 building client environment for production...
+transforming...
+✓ 1705 modules transformed.
+rendering chunks...
+✓ built in 2.19s
+Created self-contained offline HTML (demo mode, no runtime installation needed).
+
+---
+exit_code: 0
+elapsed_ms: 6917
+ended_at: 2026-11-25T09:15:19.887Z
+---

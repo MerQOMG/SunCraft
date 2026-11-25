@@ -1,0 +1,14 @@
+import type { Parameters, Simulation } from './model';
+import { percent } from './model';
+import { FONT_STACK, INK, wrapLabel } from './presentation';
+export function escapeXml(s:string){return s.replace(/[<>&"']/g,c=>({'<':'&lt;','>':'&gt;','&':'&amp;','"':'&quot;',"'":'&apos;'}[c]!))}
+export function designSheet(p:Parameters,result:Simulation,section:string,city:string,mode:string,daylightThreshold=2){
+ const m=result.metrics,date=new Date().toLocaleString('zh-CN',{timeZone:'Asia/Shanghai',hour12:false});
+ const lines=[`地点：${city} / ${p.latitude.toFixed(1)}°N · 固定正南向`,`固定房间：5.4 × 6.0 × 3.0 m / 32.4 m²`,`挑檐深度：${p.overhang_depth_m.toFixed(2)} m`,`水平百叶倾角：${p.louver_angle_deg.toFixed(0)}°（0° 为水平，仍会遮光）`,`窗墙比：${percent(p.window_wall_ratio)}（固定窗宽 4.4 m，仅改变窗洞高度）`,`夏季遮阳率：${percent(m.summer_shading_rate)} / 冬季得热率：${percent(m.winter_solar_gain_rate)}`,`采光面积比例（DF ≥ ${daylightThreshold.toFixed(1)}%）：${percent(m.daylight_compliance_rate)} / 面积目标 80%（待复核）`,`冬至日入射深度：${m.winter_penetration_m.toFixed(2)} m`].flatMap(line=>wrapLabel(line));
+ const drawing=section.replace(/style="[^"]*"/,'').replace('<svg ',`<svg x="78" y="190" width="964" height="650" font-family="${FONT_STACK}" `);
+ // The diagram ends at y=840. Parameter rows start at 916, never on top of it.
+ const footY=965+lines.length*31,height=footY+115;
+ const warning=mode==='演示 / 近似数据'?'演示数据不是物理精度或 GB 50033 达标证明；三维渲染与剖面是辅助预览。':'指标来自接口，仍需专业校核；本单不是施工图、物理精度证明或 GB 50033 认证报告。';
+ return `<?xml version="1.0" encoding="UTF-8"?><svg xmlns="http://www.w3.org/2000/svg" width="1120" height="${height}" viewBox="0 0 1120 ${height}"><rect width="1120" height="${height}" fill="${INK.paper}"/><g font-family="${FONT_STACK}" fill="${INK.text}"><text x="78" y="64" font-size="21" font-weight="600">SunCraft / 夏遮冬透</text><text x="78" y="114" font-size="34" font-weight="550">建筑表皮光热设计单</text><text x="78" y="151" font-size="19" fill="${INK.muted}">${escapeXml(mode)}</text><path d="M78 174H1042" stroke="${INK.line}"/>${drawing}<text x="78" y="881" font-size="21" font-weight="600">设计参数与结果快照</text><g font-size="19" fill="${INK.text}">${lines.map((l,i)=>`<text x="78" y="${916+i*31}">${escapeXml(l)}</text>`).join('')}</g><path d="M78 ${footY-20}H1042" stroke="${INK.line}"/><g fill="${INK.muted}" font-size="17"><text x="78" y="${footY+9}">${escapeXml(date)} Asia/Shanghai（UTC+8） · 南北向太阳几何示意，矢量可缩放</text><text x="78" y="${footY+39}">${escapeXml(warning)}</text><text x="78" y="${footY+69}">参数快照不表示全局最优或规范认证；固定窗墙比寻优，演示评分不是真实帕累托解。</text></g></g></svg>`;
+}
+export function downloadSvg(source:string){const blob=new Blob([source],{type:'image/svg+xml;charset=utf-8'});const url=URL.createObjectURL(blob);const a=document.createElement('a');a.href=url;a.download='夏遮冬透-建筑表皮光热设计单.svg';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1500)}

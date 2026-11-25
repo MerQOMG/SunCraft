@@ -1,0 +1,20 @@
+[
+  {
+    "file": "before-mobile-overlay.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/c42c8f8a9157863137bc5a9005b172bea24aaffa1d793d4e323e510dbda2fc37.png",
+    "sha256": "c42c8f8a9157863137bc5a9005b172bea24aaffa1d793d4e323e510dbda2fc37",
+    "status": "真实R1问题截图，R2修复之前，未改造，不是R2验收图"
+  },
+  {
+    "file": "before-depth-focus.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/19c00132a549b9251e8144f788701fa302c5bcf2fb75cf8db90a953512c860d1.png",
+    "sha256": "19c00132a549b9251e8144f788701fa302c5bcf2fb75cf8db90a953512c860d1",
+    "status": "真实R1问题截图，R2修复之前，未改造，不是R2验收图"
+  },
+  {
+    "file": "before-depth-section.png",
+    "source": "/cursor/stores/user/grok-bot/agents/2e0577a5-98a8-42ec-b36e-1e3beb47ffac/assets/6bafe3e7f609934b5f6a997d46d37f8fdde982ee28d508da4c4665ae402be4f4.png",
+    "sha256": "6bafe3e7f609934b5f6a997d46d37f8fdde982ee28d508da4c4665ae402be4f4",
+    "status": "真实R1问题截图，R2修复之前，未改造，不是R2验收图"
+  }
+]

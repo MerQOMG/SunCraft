@@ -1,0 +1,62 @@
+{
+  "scope": "Only new fine interior assets + window detailing; NOT full scene or measured draw calls/fps",
+  "components": {
+    "detailed-sofa-0": {
+      "meshes": 8,
+      "instances": 1297,
+      "triangles": 78216,
+      "uniqueGeometries": 8,
+      "geometryBytes": 6518384,
+      "materials": 8
+    },
+    "woven-rug-1": {
+      "meshes": 4,
+      "instances": 770,
+      "triangles": 43860,
+      "uniqueGeometries": 4,
+      "geometryBytes": 232496,
+      "materials": 3
+    },
+    "walnut-coffee-table-2": {
+      "meshes": 8,
+      "instances": 8,
+      "triangles": 22816,
+      "uniqueGeometries": 8,
+      "geometryBytes": 2190336,
+      "materials": 8
+    },
+    "fine-fiddle-leaf-3": {
+      "meshes": 7,
+      "instances": 7,
+      "triangles": 22176,
+      "uniqueGeometries": 7,
+      "geometryBytes": 2128896,
+      "materials": 7
+    },
+    "fine-fiddle-leaf-4": {
+      "meshes": 7,
+      "instances": 7,
+      "triangles": 22176,
+      "uniqueGeometries": 7,
+      "geometryBytes": 2128896,
+      "materials": 7
+    },
+    "window": {
+      "meshes": 18,
+      "instances": 44,
+      "triangles": 6624,
+      "uniqueGeometries": 18,
+      "geometryBytes": 556328,
+      "materials": 4
+    }
+  },
+  "total": {
+    "meshes": 52,
+    "instances": 2133,
+    "triangles": 195868,
+    "uniqueGeometries": 52,
+    "geometryBytes": 13755336,
+    "materials": 36
+  },
+  "geometryBuildMs": 226.21
+}
