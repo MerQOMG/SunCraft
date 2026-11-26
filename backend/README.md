@@ -1,6 +1,6 @@
 # SunCraft · 夏遮冬透后端
 
-Python、FastAPI 和 NumPy 实现的典型客厅遮阳与采光模拟服务。房间宽 5.4 m、进深 6.0 m、高 3.0 m。计算在本机完成。实施计划见 [PLAN.md](PLAN.md)。
+Python、FastAPI 和 NumPy 实现的典型客厅遮阳与采光模拟服务。房间宽 5.4 m、进深 6.0 m、高 3.0 m。计算在本机完成。当前项目入口与开发启动器见 [根目录 README](../README.md)。
 
 ## 启动
 

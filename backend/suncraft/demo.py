@@ -15,7 +15,7 @@ from .optimization import optimize
 from .schemas import SimulationInput, SimulationResult
 from .simulation import simulate
 
-FRONTEND = Path(__file__).resolve().parents[2] / "前端文件" / "SunCraft-离线演示.html"
+FRONTEND = Path(__file__).resolve().parents[2] / "夏遮冬透.html"
 app = FastAPI(title="SunCraft Studio", version="1.0")
 app.add_exception_handler(RequestValidationError, validation_error)
 app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET", "POST"],
