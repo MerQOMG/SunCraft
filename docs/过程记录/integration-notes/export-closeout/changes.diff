@@ -1,0 +1,3 @@
+本轮（07 点导出与收尾）无产品源码改动。
+按当前源码重验 export.ts / Section.tsx / App 导出路径 / presentation.ts，规则仍成立，未见构成导出错误、裁切、缺字、误导来源或阻断打包的缺陷，因此不为改而改。
+相对备份 zip 的产品文件 SHA 不变。记录只新增 integration-notes/export-closeout/。

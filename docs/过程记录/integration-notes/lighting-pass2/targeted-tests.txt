@@ -1,0 +1,28 @@
+
+ RUN  v4.1.12 /workspace/suncraft-upload-20261125-2314/extracted/前端文件
+
+·········x
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lighting.test.ts > P2 geometric contact AO contracts, no GPU or screenshots > uses a small world-space radius and bounded intensity, and supports resize/disposal
+AssertionError: expected 0.45 to be 0.35 // Object.is equality
+
+- Expected
++ Received
+
+- 0.35
++ 0.45
+
+ ❯ tests/lighting.test.ts:23:184
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 9 passed (10)
+   Start at  02:20:03
+   Duration  304ms (transform 78ms, setup 0ms, import 134ms, tests 40ms, environment 0ms)
+
+EXIT:1

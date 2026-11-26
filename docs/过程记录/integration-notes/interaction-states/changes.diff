@@ -1,0 +1,130 @@
+--- before/前端文件/src/App.tsx
++++ after/前端文件/src/App.tsx
+@@ -1,5 +1,6 @@
+ import {flushSync} from 'react-dom';
+ import {HEATMAP_GRADIENT} from './heatmap';
++import {caseRayLegend} from './analysisCopy';
+ import AnnualTimeline,{useAnnualTimeline,solsticeDay} from './AnnualTimeline';
+ import {annualSolarFrame,termAt,SUMMER_DAY,WINTER_DAY} from './annual';
+ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
+@@ -44,7 +45,7 @@
+  }catch(e){if(!ctrl.signal.aborted&&op===operation.current){setOptError(e instanceof Error?e.message:'寻优失败');setBusy(false)}}}
+  const summerContribution=result?.score_report?.dimensions.flatMap(d=>d.items).find(item=>item.key==='summer_shading_rate');
+  const city=presets.cities.find(c=>c.id===parameters.city_id),hasError=error||presetError||optError;
+- const currentResult=pending||hasError?null:result,m=currentResult?.metrics,heatReady=!!room&&!!currentResult;
++ const currentResult=pending||hasError?null:result,m=currentResult?.metrics,heatReady=!!room&&!!currentResult,rayLegend=caseRayLegend(currentResult);
+  const exportContext=useRef({parameters,result,pending,hasError,cityName:city?.name??parameters.city_id,mode:config.mode,threshold:presets.daylight_threshold_pct,room,frame});
+  useLayoutEffect(()=>{exportContext.current={parameters,result,pending,hasError,cityName:city?.name??parameters.city_id,mode:config.mode,threshold:presets.daylight_threshold_pct,room,frame}});
+  const [exportDate,setExportDate]=useState('');
+@@ -84,13 +85,13 @@
+  </aside>
+  <div className="scene-caption" aria-label={room?`固定南向客厅，${room.width_m} × ${room.depth_m} × ${room.height_m} 米`:'南向客厅，几何未同步'}><div className="scene-title"><h2>南向客厅</h2><p><span>分析全景</span><span className="view-size">{room?`${room.width_m}×${room.depth_m}×${room.height_m} m`:'几何未同步'}</span></p></div><div className="study-meta"><strong>{frame.date.slice(5).replace('-','.')} · {termAt(timeline.day).label}</strong><span>12:00 太阳时</span></div></div>
+  <AnnualTimeline state={timeline} frame={frame} onSection={()=>{setReportView('date');setReportFocusRequest(n=>n+1);setScoreOpen(true);setTab('diagnostics')}}/>
+- <ScoreCapsule report={scoreReport} open={scoreOpen} pending={pending||!!hasError} error={result?.score_report_error} onToggle={toggleScore} buttonRef={scoreButton}/>
+- <ScoreDrawer view={reportView} onViewChange={setReportView} focusRequest={reportFocusRequest} open={scoreOpen} report={scoreReport} pending={pending||!!hasError} error={result?.score_report_error} preview={<div className="annual-section"><Section drawingId="date-section-drawing" previewFrame={frame} room={room} parameters={parameters} result={null} season={season}/><p>真太阳12:00（非北京时间）· NOAA日级几何，与3D同源；非真实GI，也不计算当天分数/DF。</p></div>}
+- applicability={config.mode==='api'&&result?.svg_rays.summer_incident===false?<p className="annual-applicability" role="note">适用性待校核：夏至正午南窗无正面入射，后端按约定返回遮挡率0，原报告遮阳项贡献{summerContribution?.score??'—'}/{summerContribution?.max_score??'—'}；本页保留原总分与贡献。这不等于普通遮阳不足，也不是所选日期或全年性能。</p>:undefined}
++ <ScoreCapsule report={scoreReport} open={scoreOpen} pending={pending} error={hasError||result?.score_report_error} onToggle={toggleScore} buttonRef={scoreButton}/>
++ <ScoreDrawer view={reportView} onViewChange={setReportView} focusRequest={reportFocusRequest} open={scoreOpen} report={scoreReport} pending={pending} failed={!!hasError} scopeKey={JSON.stringify(parameters)} error={result?.score_report_error} preview={<div className="annual-section"><Section drawingId="date-section-drawing" previewFrame={frame} room={room} parameters={parameters} result={null} season={season}/><p>真太阳12:00（非北京时间）· NOAA日级几何，与3D同源；非真实GI，也不计算当天分数/DF。</p></div>}
++ applicability={config.mode==='api'&&currentResult?.svg_rays.summer_incident===false?<p className="annual-applicability" role="note">适用性待校核：夏至正午南窗无正面入射，后端按约定返回遮挡率0，原报告遮阳项贡献{summerContribution?.score??'—'}/{summerContribution?.max_score??'—'}；本页保留原总分与贡献。这不等于普通遮阳不足，也不是所选日期或全年性能。</p>:undefined}
+  simulationNotice={hasError&&<div className="error-box" role="alert"><TriangleAlert size={15}/><span>{hasError}<button onClick={()=>{setOptError('');setRetry(r=>r+1)}}>重新请求</button></span></div>} onClose={closeScore} onHighlight={setHighlight} onOptimize={optimize} onCancel={cancelAndSnap} busy={busy} canOptimize={presetsReady&&!pending&&!error} renderDepthPreview={drawingId=><><p className="linked-depth-caption">当前冬季结果标注：<strong>{pending?'更新中':currentResult?`${currentResult.svg_rays.winter_hit_depth.toFixed(2)} m`:'待可用结果'}</strong><span>模拟剖面定位，非评分示例值</span></p><Section room={room} drawingId={drawingId} highlightWinter={highlight==='winter-depth'} parameters={parameters} result={currentResult} season={season}/></>}>
+  <div className={`data-notice ${config.mode==='api'?'api-mode':''}`}><span className="notice-dot"/>{config.mode==='mock'?'演示 / 近似数据 · 非规范判定':room?'后端计算 / 理想几何已同步 · 非精度认证':'后端计算 / 几何未同步 · 暂停3D'}</div>
+  
+- <section className="section-card"><div className="section-card-title"><h3>冬夏工况剖面对照</h3><span>A — A</span></div><Section room={room} highlightWinter={highlight==='winter-depth'} parameters={parameters} result={currentResult} season={season}/><div className="drawing-legend"><span><i className="summer-line"/>夏至光线</span><span><i className="winter-line"/>冬至光线</span><span>几何示意 · 非施工图</span></div></section>
++ <section className="section-card"><div className="section-card-title"><h3>冬夏工况剖面对照</h3><span>A — A</span></div><Section room={room} highlightWinter={highlight==='winter-depth'} parameters={parameters} result={currentResult} season={season}/><div className="drawing-legend">{!rayLegend.ready&&<span>工况图例待可用结果</span>}{rayLegend.ready&&rayLegend.summer&&<span><i className="summer-line"/>夏至光线</span>}{rayLegend.ready&&rayLegend.noSummerIncident&&<span>夏季无正面入射，无夏至代表线</span>}{rayLegend.ready&&rayLegend.winter&&<span><i className="winter-line"/>冬至光线</span>}<span>几何示意 · 非施工图</span></div></section>
+  <div className="depth-row"><span>冬至日入射深度</span><strong>{m?m.winter_penetration_m.toFixed(2):'—'}<small> m</small></strong></div>
+  <div className="metrics" aria-busy={pending}>
+  <Metric name="夏季遮阳率" tag="直射遮挡" value={m?.summer_shading_rate} color="terra" icon={<Sun size={15}/>} hint={currentResult?.svg_rays.summer_incident===false?'无正面入射 · 原评分待校核':m&&m.summer_shading_rate<.65?'夏季遮阳率偏低':m?'夏季遮阳改善':'等待计算'} />
+@@ -98,7 +99,7 @@
+  <Metric name="采光面积比例" tag={`DF ≥ ${presets.daylight_threshold_pct.toFixed(1)}%`} value={m?.daylight_compliance_rate} color="green" icon={<Leaf size={15}/>} hint={m?(m.daylight_compliance_rate>=.8?'面积比例 ≥ 80%（待复核）':'面积比例低于 80% 目标'):'等待计算'} />
+  </div>
+  {comparison&&<div className="comparison"><Check size={14}/><span>{config.mode==='mock'?'演示寻优已应用':'寻优参数已应用'} · 遮阳率 {percent(comparison.before.metrics.summer_shading_rate)} → {percent(comparison.after.metrics.summer_shading_rate)}</span></div>}
+- <p className="model-footnote">{pending?'参数已即时预览，指标与热力图待更新。':config.mode==='mock'?`${result?.heatmap_grid.length??'—'} × ${result?.heatmap_grid[0]?.length??'—'} 演示矩阵，与 3D 阴影独立；非 GB 50033 判定。0° 水平百叶夏至仍可能全遮直射。`:`${result?.heatmap_grid.length??'—'} × ${result?.heatmap_grid[0]?.length??'—'} DF百分数矩阵；固定均匀天空，与日期无关。热力为地面投影，0–5%固定色标（≥5%封顶），平滑仅显示，不新增采样；数值/虚线来自接口，${room?'理想几何已同步；型材/家具/反射为展示近似，统计区不等于实体沙发。':'几何未同步，3D/剖面暂停。'}`}</p>
++ <p className="model-footnote">{hasError?'当前结果不可用，指标与热力不以上次成功为准。':pending?'参数已即时预览，指标与热力图待更新。':config.mode==='mock'?`${result?.heatmap_grid.length??'—'} × ${result?.heatmap_grid[0]?.length??'—'} 演示矩阵，与 3D 阴影独立；非 GB 50033 判定。0° 水平百叶夏至仍可能全遮直射。`:`${result?.heatmap_grid.length??'—'} × ${result?.heatmap_grid[0]?.length??'—'} DF百分数矩阵；固定均匀天空，与日期无关。热力为地面投影，0–5%固定色标（≥5%封顶），平滑仅显示，不新增采样；数值/虚线来自接口，${room?'理想几何已同步；型材/家具/反射为展示近似，统计区不等于实体沙发。':'几何未同步，3D/剖面暂停。'}`}</p>
+  
+  </ScoreDrawer>
+  <div className="viewport-tools glass" role="group" aria-label="全景相机"><button aria-label="复位全景相机" title="按当前画布完整取景（含1.8m挑檐）；手动旋转后窗口变化不强制复位" onClick={()=>setResetToken(t=>t+1)}><RotateCcw size={15}/><span>复位</span></button><span/><button aria-label="全屏显示" title="全屏显示" onClick={fullscreen}><Maximize size={16}/></button></div>
+--- before/前端文件/src/api.ts
++++ after/前端文件/src/api.ts
+@@ -1,4 +1,5 @@
+ import {validRoom} from './geometry';
++import {networkErrorMessage} from './analysisCopy';
+ import {adaptScoreReport} from './scoring/report';
+ import { PRESETS, mockOptimize, mockSimulate, LIMITS } from './model';
+ import type { Parameters, Presets, Simulation, Optimization } from './model';
+@@ -37,7 +38,7 @@
+  try{const response=await fetch(`${config.baseUrl.replace(/\/$/,'')}${path}`,{method:payload?'POST':'GET',headers:payload?{'Content-Type':'application/json'}:undefined,body:payload?JSON.stringify(payload):undefined,signal:timeout.signal});if(!response.ok){const body=await response.json().catch(()=>null);const detail=object(body)?body.detail:null;
+  if(response.status===409&&object(detail)&&detail.reason==='daylight_target_unreachable'){const best=detail.max_daylight_compliance_rate,required=detail.required_daylight_compliance_rate;const rates=num(best)&&num(required)?`（最大面积比例${(best*100).toFixed(1)}%，目标${(required*100).toFixed(1)}%）`:'';throw Error(`当前窗墙比下没有满足采光目标的候选${rates}；请调整窗墙比后重试。HTTP 409`)}
+  const message=typeof detail==='string'?detail:Array.isArray(detail)&&object(detail[0])&&typeof detail[0].msg==='string'?detail[0].msg:object(detail)&&typeof detail.reason==='string'?detail.reason:'';throw Error(`后端响应 HTTP ${response.status}${message?`：${message.slice(0,400)}`:''}`)}return await response.json()}
+- catch(error){if(timeout.signal.aborted&&!signal.aborted)throw Error('后端响应超时（8 秒），请检查服务');throw error}
++ catch(error){if(timeout.signal.aborted&&!signal.aborted)throw Error('后端响应超时（8 秒），请检查服务');if(signal.aborted)throw error;throw Error(networkErrorMessage(error))}
+  finally{clearTimeout(id);signal.removeEventListener('abort',cancel)}
+ }
+ const abortCheck=(signal:AbortSignal)=>{if(signal.aborted)throw new DOMException('Aborted','AbortError')};
+--- before/前端文件/src/scoring/ScoreDrawer.tsx
++++ after/前端文件/src/scoring/ScoreDrawer.tsx
+@@ -14,7 +14,7 @@
+ }
+ export type ReportView='score'|'date'|'cases';
+ const REPORT_VIEWS:[ReportView,string][]=[['score','评分细则'],['date','日期几何'],['cases','两至工况']];
+-export function ScoreDrawer({open,report,pending,error,simulationNotice,onClose,onHighlight,onOptimize,onCancel,busy,canOptimize,children,renderDepthPreview,preview,applicability,view,onViewChange,focusRequest=0}:{open:boolean;report:ScoreReport|null;pending:boolean;error?:string;simulationNotice?:ReactNode;onClose:()=>void;onHighlight:(target:LinkTarget|null)=>void;onOptimize:()=>void;onCancel:()=>void;busy:boolean;canOptimize:boolean;children:ReactNode;preview?:ReactNode;applicability?:ReactNode;renderDepthPreview?:(drawingId:string)=>ReactNode;view?:ReportView;onViewChange?:(view:ReportView)=>void;focusRequest?:number}){
++export function ScoreDrawer({open,report,pending,error,simulationNotice,onClose,onHighlight,onOptimize,onCancel,busy,canOptimize,children,renderDepthPreview,preview,applicability,view,onViewChange,focusRequest=0,scopeKey="",failed=false}:{open:boolean;report:ScoreReport|null;pending:boolean;error?:string;simulationNotice?:ReactNode;onClose:()=>void;onHighlight:(target:LinkTarget|null)=>void;onOptimize:()=>void;onCancel:()=>void;busy:boolean;canOptimize:boolean;children:ReactNode;preview?:ReactNode;applicability?:ReactNode;renderDepthPreview?:(drawingId:string)=>ReactNode;view?:ReportView;onViewChange?:(view:ReportView)=>void;focusRequest?:number;scopeKey?:string;failed?:boolean}){
+  const [openId,setOpenId]=useState<string|null>(null),[localView,setLocalView]=useState<ReportView>('score'),close=useRef<HTMLButtonElement>(null),body=useRef<HTMLDivElement>(null),lastFocusRequest=useRef(0),tabs=useRef<Record<ReportView,HTMLButtonElement|null>>({score:null,date:null,cases:null});
+  const active=view??localView,changeView=onViewChange??setLocalView;
+  useEffect(()=>{if(!open)return;close.current?.focus();const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'&&!document.querySelector('[aria-modal="true"]')){event.stopPropagation();onClose()}};document.addEventListener('keydown',escape);return()=>document.removeEventListener('keydown',escape)},[open,onClose]);
+@@ -25,7 +25,7 @@
+  function handleSpatial(action:SpatialAction){dispatchSpatial(action);if(action.type==='focus')dispatchInspection({type:'focus',owner:{key:action.key,target:action.target}})}
+  function navigateView(next:ReportView){dispatchInspection({type:'navigate',view:next});changeView(next)}
+  function inspectDepth(key:string){dispatchInspection({type:'activate',owner:{key,target:'winter-depth'}});changeView('cases');requestAnimationFrame(()=>{const panel=document.getElementById('report-panel-cases');if(panel&&!panel.hidden&&!panel.closest('[inert]')){panel.focus({preventScroll:true});panel.scrollIntoView({block:'start',behavior:'auto'})}})}
+- useEffect(()=>{dispatchInspection({type:'clear'})},[open,openId,report,pending]);
++ useEffect(()=>{dispatchInspection({type:'clear'})},[open,openId,report,pending,scopeKey,failed]);
+  useEffect(()=>{if(active!=='cases')dispatchInspection({type:'clear'})},[active]);
+  useEffect(()=>{if(!open)return;const forget=(event:Event)=>{const element=event.target;if(!(element instanceof Element)||!element.closest('#score-drawer .score-item,#score-drawer [role="tab"]'))dispatchInspection({type:'forget-candidate'})};const blur=()=>dispatchInspection({type:'forget-candidate'});document.addEventListener('focusin',forget);document.addEventListener('pointerdown',forget);window.addEventListener('blur',blur);return()=>{document.removeEventListener('focusin',forget);document.removeEventListener('pointerdown',forget);window.removeEventListener('blur',blur)}},[open]);
+  useEffect(()=>{dispatchSpatial({type:'clear'})},[open,openId,report,active]);
+@@ -35,13 +35,13 @@
+  {applicability}{simulationNotice}
+  {error&&<p role="alert" className="score-report-error">评分暂不可用：{error}。原模拟指标与剖面仍可使用。</p>}
+  <section id="report-panel-score" role="tabpanel" aria-labelledby="report-tab-score" className="report-view-panel" hidden={active!=='score'} tabIndex={0}><h3>{example?'独立评分示例':'后端评分 · 冬夏设计工况'}</h3>
+- {report?<><p className="score-provenance">{example?'以下为固定界面示例，不随参数或寻优变化；模拟指标在“两至工况”单列，不参与此示例评分。':pending?'参数已变化，以下为上次返回的评分，等待更新。':'以下报告值与来源由接口提供，前端不重新计分，也不作规范认证。'}</p>{report.completeness==='partial'&&<p className="score-partial">报告不完整：仅展示后端已返回的维度/子项，不补造其余结果。</p>}
++ {report?<><p className="score-provenance">{example?'以下为固定界面示例，不随参数或寻优变化；模拟指标在“两至工况”单列，不参与此示例评分。':failed?'当前请求失败，以下不是本次有效评分，请重试。':pending?'参数已变化，以下为上次返回的评分，等待更新。':'以下报告值与来源由接口提供，前端不重新计分，也不作规范认证。'}</p>{report.completeness==='partial'&&<p className="score-partial">报告不完整：仅展示后端已返回的维度/子项，不补造其余结果。</p>}
+  <div className="dimension-overview" aria-label="各维度得分总览">{report.dimensions.map(d=><button key={d.id} onClick={()=>setOpenId(id=>id===d.id?null:d.id)} aria-label={`${d.name} ${formatScore(d.score)}/${d.weight}，展开子项`}><span><span>{d.name}</span><b>{formatScore(d.score)} / {d.weight}</b></span><i><i style={{width:`${d.weight?Math.min(100,(d.score??0)/d.weight*100):0}%`,background:gradeColor(report.grade)}}/></i></button>)}</div>
+  {report.warnings.length>0&&<details className="score-warnings"><summary><TriangleAlert size={14}/>口径与警示（{report.warnings.length}）</summary><ul>{report.warnings.map(w=><li key={w.id}>{w.message}</li>)}</ul><p>警示单列，不擅自清零；来源分类不等于合规认定。</p></details>}
+  <div className="score-dimensions">{report.dimensions.map(d=><DimensionAccordion key={d.id} dimension={d} open={openId===d.id} onToggle={()=>setOpenId(id=>id===d.id?null:d.id)} onSpatialAction={handleSpatial} onInspectDepth={inspectDepth} depthPreview={d.items.some(item=>item.link_target==='winter-depth')?renderDepthPreview?.(`score-linked-mobile-${d.id}`):undefined}/>)}</div><div className="score-method"><strong>{example?'示例口径':'后端方法声明 · 前端未验证'}</strong><p>{report.methodology_note||'后端尚未提供方法声明。'}</p><p>精度、法规适用与S级可达性需独立验证。</p></div></>:<p className="score-provenance">当前模拟接口未提供 score_report。保留原有指标、热力与剖面，不从正午结果推造全天日照或低碳分数。</p>}
+ 
+  </section><section id="report-panel-date" role="tabpanel" aria-labelledby="report-tab-date" className="report-view-panel" hidden={active!=='date'} tabIndex={0}><h3>当前日期 · 前端几何</h3>{preview}</section>
+- <section id="report-panel-cases" role="tabpanel" aria-labelledby="report-tab-cases" className="report-view-panel" hidden={active!=='cases'} tabIndex={0}><h3>{example?'演示两至工况':'后端两至工况'} <span className="report-update">{pending?'更新中':example?'近似示例':'接口结果'}</span></h3><p className="report-scope">{example?'演示':'接口'}指标与代表射线，不是所选日期或全年性能。</p>{inspection.selected&&<p className="score-help inspection-selection" role="status">已定位：冬季阳光进深<button type="button" className="text-button" onClick={()=>{dispatchInspection({type:'clear'});document.getElementById('report-panel-cases')?.focus({preventScroll:true})}}>清除定位</button></p>}{children}</section>
++ <section id="report-panel-cases" role="tabpanel" aria-labelledby="report-tab-cases" className="report-view-panel" hidden={active!=='cases'} tabIndex={0}><h3>{example?'演示两至工况':'后端两至工况'} <span className="report-update">{failed?'不可用':pending?'更新中':example?'近似示例':'接口结果'}</span></h3><p className="report-scope">{example?'演示':'接口'}指标与代表射线，不是所选日期或全年性能。</p>{inspection.selected&&<p className="score-help inspection-selection" role="status">已定位：冬季阳光进深<button type="button" className="text-button" onClick={()=>{dispatchInspection({type:'clear'});document.getElementById('report-panel-cases')?.focus({preventScroll:true})}}>清除定位</button></p>}{children}</section>
+  <div className="score-optimize"><button className="optimize-button" onClick={onOptimize} disabled={!canOptimize||busy}>{busy?'正在优化参数…':example?'优化构件':'优化评分'}</button>{busy&&<button className="text-button" onClick={onCancel}>取消寻优</button>}<p>{example?'近似网格寻优，不对应此独立评分示例。':'以实际后端冬夏工况目标为准，不承诺提分或S级。'}</p></div>
+ 
+  </div>{previewDimension&&renderDepthPreview&&<div className="linked-section-preview">{renderDepthPreview("score-linked-desktop")}</div>}</section>;
+--- before/前端文件/src/useSimulation.ts
++++ after/前端文件/src/useSimulation.ts
+@@ -1,12 +1,13 @@
+ import { useEffect, useRef, useState } from 'react';
+ import { api } from './api';
++import {networkErrorMessage} from './analysisCopy';
+ import type { TransportConfig } from './api';
+ import type { Parameters, Simulation } from './model';
+ export function useSimulation(parameters:Parameters,config:TransportConfig,paused:boolean,retry:number){
+  const [snapshot,setSnapshot]=useState<{data:Simulation;parameters:Parameters;source:string}|null>(null);const [pending,setPending]=useState(true);const [error,setError]=useState('');const sequence=useRef(0),lastStart=useRef(-Infinity);
+  const source=JSON.stringify(config);
+  useEffect(()=>{const id=++sequence.current;const ctrl=new AbortController();setError('');setPending(true);if(paused)return()=>ctrl.abort();
+- const timer=setTimeout(()=>{lastStart.current=performance.now();api.simulate(parameters,config,ctrl.signal).then(data=>{if(id===sequence.current&&!ctrl.signal.aborted){setSnapshot({data,parameters,source});setPending(false)}}).catch(err=>{if(!ctrl.signal.aborted&&id===sequence.current){setError(err instanceof Error?err.message:'计算请求失败');setPending(false)}})},Math.max(0,80-(performance.now()-lastStart.current)));
++ const timer=setTimeout(()=>{lastStart.current=performance.now();api.simulate(parameters,config,ctrl.signal).then(data=>{if(id===sequence.current&&!ctrl.signal.aborted){setSnapshot({data,parameters,source});setPending(false)}}).catch(err=>{if(!ctrl.signal.aborted&&id===sequence.current){setError(networkErrorMessage(err));setPending(false)}})},Math.max(0,80-(performance.now()-lastStart.current)));
+  return()=>{clearTimeout(timer);ctrl.abort()}
+  },[parameters,config,paused,retry,source]);
+  const current=snapshot?.source===source?snapshot:null;
+--- /dev/null
++++ after/前端文件/src/analysisCopy.ts
+@@ -0,0 +1,12 @@
++import type {Simulation} from './model';
++/** Presentation-only solstice-diagram labels. Never invents rays or scores. */
++export function caseRayLegend(result:Simulation|null){
++ if(!result)return {ready:false as const,summer:false,winter:false,noSummerIncident:false};
++ const summer=result.svg_rays.summer_incident!==false&&!!result.svg_rays.summer?.length;
++ return {ready:true as const,summer,winter:!!result.svg_rays.winter?.length||Number.isFinite(result.svg_rays.winter_hit_depth),noSummerIncident:result.svg_rays.summer_incident===false};
++}
++export function networkErrorMessage(error:unknown){
++ const message=error instanceof Error?error.message:'';
++ if(/failed to fetch|networkerror|load failed|err_internet_disconnected|err_name_not_resolved/i.test(message)||(error instanceof TypeError&&!message.startsWith('后端')&&!message.startsWith('当前窗墙比')&&!message.startsWith('请求超时')&&!message.startsWith('评分')))return '无法连接计算服务，请检查网络或后端后重试。';
++ return message||'计算请求失败';
++}

@@ -1,0 +1,74 @@
+PASS  unchanged 前端文件/src/lighting.ts 22325e24073117ff
+PASS  unchanged 前端文件/src/materials.ts db86490cbb54e489
+PASS  unchanged 前端文件/src/styles.css 69b423941e6743c2
+PASS  unchanged 前端文件/src/camera.ts 6dac747aa0a0b87e
+PASS  unchanged 前端文件/src/export.ts 2928c1102f7ed9a0
+PASS  unchanged 前端文件/src/surfaceSamples.ts 9a8bda7445cb302b
+PASS  unchanged 前端文件/src/modeling/construction.ts a07c4e927eb1cdfd
+PASS  unchanged 前端文件/src/contactAO.ts fc918075f94b178e
+PASS  unchanged 前端文件/src/Scene.tsx 8f1d8682f2be45bf
+PASS  unchanged 前端文件/src/timelineClock.ts d382c8894e2e0ecc
+PASS  unchanged 前端文件/src/api.ts 8e5ca5660db71e4f
+PASS  unchanged 前端文件/src/useSimulation.ts 055de54d326849b5
+PASS  unchanged 前端文件/src/scoring/ScoreRing.tsx ae580b81bf525b64
+PASS  unchanged notes under integration-notes/freeze/
+PASS  unchanged notes under integration-notes/materials-gap/
+PASS  unchanged notes under integration-notes/lighting-pass2/
+PASS  jump is pause(); setDay(...)
+PASS  range onChange uses jump
+PASS  prev day uses jump
+PASS  next day uses jump
+PASS  date input uses jump
+PASS  month buttons use jump
+PASS  term select uses jump
+PASS  date-controls / months pause on pointerdown
+PASS  range and term select pause on pointerdown
+PASS  App solstice tabs: pointerdown pause, click jump
+PASS  reset uses timeline.jump(SUMMER_DAY) (pauses then lands on 夏至)
+PASS  playback wraps with setDay(d=>(d+days)%DAY_COUNT); clock stop() invalidates queued ticks
+PASS  hidden page pauses both on visibilitychange and mid-tick
+PASS  prefers-reduced-motion change calls pause()
+PASS  play button aria includes 每秒 speed*4 日 (1/2/4× → 4/8/16)
+PASS  AnnualTimeline still contains hidden or reduced-motion handling
+PASS  waiting copy present: 冬夏工况评分更新中，上次分数仅供对照，不是当前有效评分
+PASS  waiting copy present: 更新中 · 上次分仅供对照
+PASS  waiting copy present: 上次 · ${report.grade}级
+PASS  waiting copy present: 参数已变化，评分更新中；以下为上次返回，仅供对照，不是当前有效结果。
+PASS  stale waiting copy removed: 更新中 · 上次评分
+PASS  stale waiting copy removed: 上次结果待复核
+PASS  stale waiting copy removed: 以下为上次返回的评分，等待更新。
+PASS  failure copy kept: 不可用
+PASS  failure copy kept: 不以上次成功为准
+PASS  failure copy kept: 评分不可用，不是上次成功结果
+PASS  failure copy kept: 当前请求失败，以下不是本次有效评分，请重试。
+PASS  annual-range has touch-action:pan-x
+PASS  timeline buttons/select/date have touch-action:manipulation
+PASS  cancelOptimize / cancelAndSnap still in App
+PASS  取消寻优 sits in optimize-area after </fieldset>, clickable while busy
+PASS  api mapping kept: 当前窗墙比下没有满足采光目标的候选
+PASS  api mapping kept: HTTP 409
+PASS  api mapping kept: 后端响应超时（8 秒），请检查服务
+PASS  api mapping kept: 后端响应 HTTP ${response.status}
+PASS  ScoreRing mentions reduced motion
+
+RESULT: PASS (52 passed, 0 failed)
+
+
+## vitest interaction-play-capsule.test.tsx
+
+
+ RUN  v4.1.12 /workspace/suncraft-upload-20261125-2314/extracted/前端文件
+
+ ✓ tests/interaction-play-capsule.test.tsx > waiting and failure capsule copy > pending last score is labeled comparison-only, not the live result 16ms
+
+ Test Files  1 passed (1)
+      Tests  1 passed (1)
+   Start at  05:16:58
+   Duration  455ms (transform 195ms, setup 0ms, import 324ms, tests 17ms, environment 0ms)
+
+
+
+## capsule-ssr.txt exists: True
+
+## scoring.test.tsx (pre-existing, not caused by this pass)
+21 passed, 1 failed: ScoreDrawer (not ScoreCapsule) markup does not contain '非当前方案评分'. That phrase exists only on the capsule aria-label, before and after this pass. Not fixed this round.

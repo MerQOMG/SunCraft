@@ -1,0 +1,35 @@
+// Small deterministic math/contract probe, not application/browser suite.
+import fs from 'node:fs/promises';import vm from 'node:vm';import {fileURLToPath} from 'node:url';import {createServer} from '../../前端文件/node_modules/vite/dist/node/index.js';
+const root=fileURLToPath(new URL('../../前端文件/',import.meta.url)),out=new URL('./',import.meta.url);
+const server=await createServer({root,server:{middlewareMode:true},logLevel:'error'});
+try{
+ const A=await server.ssrLoadModule('/src/annual.ts');const {DEFAULTS}=await server.ssrLoadModule('/src/model.ts');const {EXAMPLE_ROOM}=await server.ssrLoadModule('/src/geometry.ts');const {default:Section}=await server.ssrLoadModule('/src/Section.tsx');const {designSheet}=await server.ssrLoadModule('/src/export.ts');const {validateSimulation}=await server.ssrLoadModule('/src/api.ts');
+ const source=await fs.readFile(new URL('NOAA-main-reference.js',out),'utf8');
+ const names=['radToDeg','degToRad','calcTimeJulianCent','calcGeomMeanLongSun','calcGeomMeanAnomalySun','calcSunEqOfCenter','calcSunTrueLong','calcSunApparentLong','calcMeanObliquityOfEcliptic','calcObliquityCorrection','calcSunDeclination'];
+ const pure=names.map(name=>{const start=source.indexOf(`function ${name}(`);if(start<0)throw Error('Missing reference '+name);const brace=source.indexOf('{',start);let depth=1,end=brace+1;for(;depth&&end<source.length;end++){if(source[end]==='{')depth++;if(source[end]==='}')depth--}return source.slice(start,end)}).join('\n');
+ if(/document|window|fetch|require|eval|cookie/i.test(pure))throw Error('Reference extraction contains nonmath code');
+ const ref=vm.runInNewContext(pure+'; ({calcSunDeclination,calcTimeJulianCent})',{Math});let maxPortDifference=0,maxHalfDayDrift=0,maxNormError=0;const seasonSamples=[];
+ for(const date of ['2026-01-01','2026-02-28','2026-03-01','2026-03-20','2026-06-21','2026-09-23','2026-12-22','2026-12-31']){
+  const day=A.dayFromDate(date);if(day===null||A.dateFromDay(day)!==date)throw Error('Date roundtrip');
+  const jd=Date.parse(date+'T12:00:00Z')/86400000+2440587.5,decl=ref.calcSunDeclination(ref.calcTimeJulianCent(jd));maxPortDifference=Math.max(maxPortDifference,Math.abs(decl-A.declinationAtJulianDay(jd)));
+  for(const latitude of [23.1,31.2,39.9,45.8]){const frame=A.annualSolarFrame(day,latitude);const norm=Math.hypot(frame.direction.x,frame.direction.y,frame.direction.z);maxNormError=Math.max(maxNormError,Math.abs(norm-1));if(Math.abs(frame.declination-decl)>1e-9||frame.direction.x!==0)throw Error('NOAA date math mismatch');seasonSamples.push({date,latitude,declination:frame.declination,altitude:frame.altitude,south:frame.south});
+   const rays=A.previewRays(DEFAULTS,EXAMPLE_ROOM,frame);for(const r of rays){if(![...r.start,...r.end].every(Number.isFinite))throw Error('Nonfinite ray');if(r.kind==='transmitted'){const slope=(r.start[1]-r.end[1])/(r.end[0]-r.start[0]);if(Math.abs(slope-frame.direction.y/-frame.direction.z)>1e-8)throw Error('Ray changed sun slope')}}
+  }
+ }
+ for(let day=0;day<365;day++){const date=A.dateFromDay(day),jd=Date.parse(date+'T12:00:00Z')/86400000+2440587.5,d=A.declinationAtJulianDay(jd);maxHalfDayDrift=Math.max(maxHalfDayDrift,Math.abs(d-A.declinationAtJulianDay(jd-.5)),Math.abs(d-A.declinationAtJulianDay(jd+.5)))}
+ if(A.dayFromDate('2026-02-29')!==null||A.dayFromDate('2027-01-01')!==null||A.dayFromDate('2025-12-31')!==null)throw Error('Unsupported date accepted');
+ if(A.dateFromDay(A.WINTER_DAY)!=='2026-12-22'||A.SOLAR_TERMS.length!==24||A.dateFromDay(A.SUMMER_DAY)!=='2026-06-21')throw Error('HKO dates wrong');
+ const north=A.annualSolarFrame(A.SUMMER_DAY,23.1),polar=A.annualSolarFrame(A.WINTER_DAY,80);if(north.south||A.previewRays(DEFAULTS,EXAMPLE_ROOM,north).length||polar.aboveHorizon||A.previewRays(DEFAULTS,EXAMPLE_ROOM,polar).length)throw Error('Back-facing/horizon guard failed');
+ const request=async(p,name)=>{const response=await fetch('http://127.0.0.1:5174/api/simulate',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(p)});const body=await response.json();await fs.writeFile(new URL(name,out),JSON.stringify({payload:p,status:response.status,body},null,2));if(response.status!==200)throw Error('HTTP '+response.status);return validateSimulation(body)};
+ const baseline=await request(DEFAULTS,'shanghai-real.json'),guangzhou=await request({...DEFAULTS,city_id:'guangzhou',latitude:23.1},'guangzhou-real.json');
+ const prior=JSON.parse(await fs.readFile(new URL('../geometry-http-evidence/02-simulate.json',out),'utf8')).body;if(JSON.stringify(prior)!==JSON.stringify(JSON.parse(await fs.readFile(new URL('shanghai-real.json',out),'utf8')).body))throw Error('Backend default response changed');
+ const item=guangzhou.score_report.dimensions.flatMap(d=>d.items).find(i=>i.key==='summer_shading_rate');if(guangzhou.svg_rays.summer_incident!==false||guangzhou.metrics.summer_shading_rate!==0||item.score!==0||item.max_score!==20)throw Error('Guangzhou raw rule differs');
+ const {createElement}=await import('../../前端文件/node_modules/react/index.js');const {renderToStaticMarkup}=await import('../../前端文件/node_modules/react-dom/server.node.js');const frame=A.annualSolarFrame(A.WINTER_DAY,31.2);
+ const preview=renderToStaticMarkup(createElement(Section,{room:EXAMPLE_ROOM,parameters:DEFAULTS,result:null,season:'winter',previewFrame:frame,drawingId:'date-section-drawing'}),{identifierPrefix:'date-fixture-'});
+ const backend=renderToStaticMarkup(createElement(Section,{room:EXAMPLE_ROOM,parameters:DEFAULTS,result:baseline,season:'winter'}),{identifierPrefix:'backend-fixture-'});
+ const sheet=designSheet(DEFAULTS,baseline,preview,'上海','后端计算 / 待专业校核',2,EXAMPLE_ROOM,frame,backend);
+ if(!preview.includes('data-ray-source="frontend-date-geometry"')||preview.includes('data-result-depth')||!backend.includes('data-ray-source="backend"')||!sheet.includes('冬夏设计工况对照')||!sheet.includes('2026-12-22'))throw Error('Preview/report/export source separation failed');
+ await fs.writeFile(new URL('date-preview.svg',out),preview);await fs.writeFile(new URL('annual-export-fixture.svg',out),sheet);
+ const report={note:'Math/serialization + two actual API calls only, not browser/GPU/FPS/physical accuracy or full tests.',sample_count:seasonSamples.length,maxPortDifferenceDegrees:maxPortDifference,maxUnitVectorError:maxNormError,maxDailyRepresentativeVersusSameModelHalfDayDegrees:maxHalfDayDrift,dates2026Only:true,termCount:A.SOLAR_TERMS.length,summerDate:A.dateFromDay(A.SUMMER_DAY),winterDate:A.dateFromDay(A.WINTER_DAY),guangzhou:{total:guangzhou.score_report.total_score,summerIncident:guangzhou.svg_rays.summer_incident,rawShading:guangzhou.metrics.summer_shading_rate,rawContribution:item.score,max:item.max_score},baselineScore:baseline.score_report.total_score,backendDefaultJsonUnchanged:true,nightNote:'Only mathematical above-horizon guard checked; no night-time UI is offered.',seasonSamples};
+ await fs.writeFile(new URL('math-report.json',out),JSON.stringify(report,null,2));console.log(JSON.stringify({...report,seasonSamples:undefined},null,2));
+}finally{await server.close()}

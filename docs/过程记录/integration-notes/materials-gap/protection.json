@@ -1,0 +1,21 @@
+{
+  "modified": [
+    "前端文件/src/Scene.tsx",
+    "前端文件/src/materials.ts",
+    "前端文件/src/modeling/construction.ts",
+    "前端文件/src/modeling/interior.ts",
+    "前端文件/src/modeling/upholstery.ts",
+    "前端文件/src/surfaceSamples.ts"
+  ],
+  "backend_unchanged": 23,
+  "locked": [
+    "lighting.ts",
+    "camera.ts",
+    "export.ts",
+    "styles.css",
+    "window.ts",
+    "ScoreDrawer.tsx"
+  ],
+  "walnutSample_unchanged": true,
+  "FINISH_unchanged": true
+}

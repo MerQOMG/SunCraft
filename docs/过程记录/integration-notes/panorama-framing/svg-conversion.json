@@ -1,0 +1,24 @@
+[
+  {
+    "source": "/home/box/Downloads/夏遮冬透-建筑表皮光热设计单 (6).svg",
+    "source_sha256": "6c59924b5f1d45708850832b17e2d08248892a9cf1a1294e62fcb81821db9590",
+    "source_unchanged": true,
+    "png": "verification/panorama-framing/download-6-librsvg-full.png",
+    "width": 1120,
+    "height": 2191,
+    "conversion": "installed librsvg + Cairo/Pango; NOT browser render or screenshot",
+    "font_resolution": "Fontconfig sans-serif=Noto Sans, zh-cn fallback=Noto Sans CJK SC; original font-family retained",
+    "browser_visual_note": "(6) upper half browser verified only; (8) download date verified; these PNGs are offline vector conversion, not browser proof"
+  },
+  {
+    "source": "/home/box/Downloads/夏遮冬透-建筑表皮光热设计单 (8).svg",
+    "source_sha256": "a1c6f19f51af704fdce4c44fdee4829f02e248d2d9a78e7d6996586955c8bc95",
+    "source_unchanged": true,
+    "png": "verification/panorama-framing/download-8-librsvg-full.png",
+    "width": 1120,
+    "height": 2191,
+    "conversion": "installed librsvg + Cairo/Pango; NOT browser render or screenshot",
+    "font_resolution": "Fontconfig sans-serif=Noto Sans, zh-cn fallback=Noto Sans CJK SC; original font-family retained",
+    "browser_visual_note": "(6) upper half browser verified only; (8) download date verified; these PNGs are offline vector conversion, not browser proof"
+  }
+]

@@ -1,9 +1,13 @@
 import * as T from 'three';
-import {Assembly,softBlock,seamLoop,slab,lathe,cylinderBetween,namedMaterial} from './construction.ts';
+import {Assembly,softBlock,seamLoop,slab,lathe,cylinderBetween,namedMaterial,applyPositionUvMetres} from './construction.ts';
+import {coat,finished} from './surfaceUV';
 import {SEAT,throwGeometry,throwPoint} from './upholstery.ts';
 import {FINISH,sofaFoot} from '../shading.ts';
 export interface Palette {fabric:T.MeshPhysicalMaterial;walnut:T.MeshStandardMaterial;dark:T.MeshStandardMaterial;metal:T.MeshStandardMaterial;fabricMap?:T.Texture;fabricBump?:T.Texture;rugMap?:T.Texture;rugBump?:T.Texture;rugRoughness?:T.Texture}
-function fabricVariant(p:Palette,color:string,name:string){const m=p.fabric.clone();m.color.set(color);m.name=name;return m}
+function fabricVariant(p:Palette,color:string,name:string,kind:'cushion'|'throw'='cushion'){
+ const m=coat(p.fabric.clone(),kind,'original');m.color.set(color);m.name=name;
+ m.sheen=kind==='throw'?.23:.16;return m;
+}
 function stitches(loops:T.Vector3[][],material:T.Material){
  const transforms:T.Matrix4[]=[];const up=new T.Vector3(0,1,0);
  for(const points of loops){const curve=new T.CatmullRomCurve3(points,true,'centripetal'),length=curve.getLength(),count=Math.floor(length/.016);for(let i=0;i<count;i++){const at=curve.getPointAt((i+.5)/count),tangent=curve.getTangentAt((i+.5)/count);transforms.push(new T.Matrix4().compose(at,new T.Quaternion().setFromUnitVectors(up,tangent),new T.Vector3(1,.007,1)))}}
@@ -14,7 +18,7 @@ export function detailedSofa(p:Palette){
  // A low tailored deck on a visible wood rail; seat top ~474mm, not the old 694mm.
  a.box(.94,.065,2.72,-1.91,.24,.48,wood,.009);a.box(.95,.006,2.75,-1.91,.2745,.48,darkFeet,.002);
  for(const x of [-2.23,-1.48])for(const z of [-.7,1.65]){const f=sofaFoot(x>-1.85);a.add(new T.CylinderGeometry(.024,.019,f.height,16),wood,new T.Vector3(x,f.center,z));a.add(new T.CylinderGeometry(.022,.022,.005,16),darkFeet,new T.Vector3(x,f.bottom+.0025,z))}
- a.add(softBlock(.94,.066,2.83,'arm',0,{radius:.014,crown:.001}),fabric,new T.Vector3(-1.91,.309,.48));
+ a.add(softBlock(.94,.066,2.83,'arm',0,{radius:.014,crown:.0035}),fabric,new T.Vector3(-1.91,.309,.48));
  a.add(softBlock(.115,.54,2.84,'arm',0,{radius:.022,crown:.001}),fabric,new T.Vector3(-2.385,.56,.48));
  for(const z of [-.91,1.87])a.add(softBlock(1.03,.36,.14,'arm',0,{radius:.025,crown:.0015}),fabric,new T.Vector3(-1.91,.48,z));
  for(let i=0;i<3;i++){
@@ -28,17 +32,19 @@ export function detailedSofa(p:Palette){
  for(const [z,m,rz] of [[-.48,rust,.17],[1.1,sage,.21]] as const){const position=new T.Vector3(-2.075,.64,z);a.add(softBlock(.16,.36,.40,'pillow',z,{radius:.052,bulge:.012,crease:.004}),m,position,new T.Euler(.11,0,rz));
   const points=seamLoop(.359,.399,.051,0,new T.Vector3()).map(v=>new T.Vector3(0,v.x,v.z).applyEuler(new T.Euler(.11,0,rz)).add(position));a.tube(points,.0013,piping,96,true);loops.push(points);
  }
- const blanket=fabricVariant(p,'#6f796b','gravity-draped-wool-throw');blanket.side=T.DoubleSide;blanket.sheen=.08;
- a.add(throwGeometry(),blanket);
+ const blanket=fabricVariant(p,'#6f796b','gravity-draped-wool-throw','throw');blanket.side=T.DoubleSide;
+ const cloth=throwGeometry(), weaveUV=cloth.attributes.uv;
+ for(let i=0;i<weaveUV.count;i++)weaveUV.setXY(i,weaveUV.getX(i)*.64,weaveUV.getY(i)*.98);
+ a.add(cloth,blanket);
  for(const side of [-.5,.5]){const edge=Array.from({length:73},(_,i)=>throwPoint(side,i/72));a.tube(edge,.0012,blanket,90)}
  const hem=Array.from({length:49},(_,i)=>throwPoint(i/48-.5,1));a.tube(hem,.0015,blanket,70);
  const group=a.finish('detailed-sofa');group.add(stitches(loops,thread));group.position.z=-.8;return group;
 }
 export function detailedRug(p:Palette){
- const a=new Assembly(),wool=namedMaterial('#ffffff','soft-wool-pile',1,{...(p.rugMap?{map:p.rugMap}:{}),...(p.rugBump?{bumpMap:p.rugBump}:{}),...(p.rugRoughness?{roughnessMap:p.rugRoughness}:{}),bumpScale:.00055}),binding=namedMaterial('#b9ae99','rug-overlock-binding',1),strand=namedMaterial('#c9beaa','cotton-fringe',1);
+ const a=new Assembly(),wool=coat(namedMaterial('#ffffff','soft-wool-pile',1,{...(p.rugMap?{map:p.rugMap}:{}),...(p.rugBump?{bumpMap:p.rugBump}:{}),...(p.rugRoughness?{roughnessMap:p.rugRoughness}:{}),bumpScale:.001}),'rug','original'),binding=finished('linen','#c9bfad','rug-overlock-binding'),strand=namedMaterial('#c9beaa','cotton-fringe',1);
  a.box(3.6,FINISH.rugThickness_m,3.8,-.05,FINISH.floorTop_m+FINISH.rugThickness_m/2,.05,wool,.008);
  a.tube(seamLoop(3.584,3.784,.023,.064,new T.Vector3(-.05,0,.05)),.0018,binding,180,true);
- const group=a.finish('woven-rug');
+ const group=a.finish('woven-rug');const pile=group.getObjectByName('woven-rug/soft-wool-pile');if(pile instanceof T.Mesh)applyPositionUvMetres(pile.geometry);
  const count=96,perSide=count*3,curve=new T.CatmullRomCurve3([new T.Vector3(0,0,0),new T.Vector3(.001,.0015,.028),new T.Vector3(-.002,0,.06)]),fringe=new T.InstancedMesh(new T.TubeGeometry(curve,8,.0011,4,false),strand,perSide*2),knots=new T.InstancedMesh(new T.CylinderGeometry(.0035,.003,.007,6),binding,count*2);
  let k=0;for(const sign of [-1,1])for(let i=0;i<count;i++){
   const x=-1.79+i*3.48/(count-1),z=.05+sign*1.896,yy=.05;
@@ -48,7 +54,7 @@ export function detailedRug(p:Palette){
  fringe.name='rug/576-instanced-twisted-fringe-strands';knots.name='rug/192-instanced-binding-knots';fringe.receiveShadow=knots.receiveShadow=true;fringe.castShadow=knots.castShadow=false;fringe.computeBoundingSphere();knots.computeBoundingSphere();group.add(fringe,knots);return group;
 }
 export function detailedTable(p:Palette){
- const a=new Assembly(),wood=p.walnut,edge=namedMaterial('#584636','joinery-recess'),paper=namedMaterial('#e4dccb','book-page-block',.99),cover=namedMaterial('#5e716b','cloth-book-cover',.95),cover2=namedMaterial('#d0b994','linen-book-cover',.95),porcelain=namedMaterial('#e4e1d7','glazed-porcelain',.28),coffee=namedMaterial('#302019','coffee-surface',.22),coaster=namedMaterial('#9b8972','ceramic-saucer',.7);
+ const a=new Assembly(),wood=p.walnut,edge=namedMaterial('#584636','joinery-recess'),paper=finished('pages','#fffdf7','book-page-block'),cover=finished('bookCloth','#627a71','cloth-book-cover'),cover2=finished('bookCloth','#d2bf9d','linen-book-cover'),porcelain=finished('porcelain',0xffffff,'glazed-porcelain','wrap'),coffee=namedMaterial('#39261a','coffee-surface',.16),coaster=finished('stone','#c6b39a','ceramic-saucer');
  // A 28mm top, slim apron and level-cut splayed legs. Tabletop is 442.5mm above datum.
  a.add(slab(1.16,1.32,.028,.14,.0015),wood,new T.Vector3(-.05,.427,-.1));
  a.add(slab(1.12,1.28,.004,.12,.0007),edge,new T.Vector3(-.05,.4088,-.1));
@@ -77,7 +83,7 @@ export function detailedTable(p:Palette){
  return a.finish('walnut-coffee-table');
 }
 export function detailedPlant(x:number,z:number,scale:number,floorY:number){
- const a=new Assembly(),ceramic=namedMaterial('#a59c8a','stoneware-planter',.82),soil=namedMaterial('#423b30','potting-soil',1),bark=namedMaterial('#625442','woody-branches',.9),vein=namedMaterial('#82916b','leaf-midrib',.86),green=[namedMaterial('#4f674d','mature-leaves',.8,{side:T.DoubleSide}),namedMaterial('#687955','new-leaves',.88,{side:T.DoubleSide}),namedMaterial('#3f5a46','deep-leaves',.8,{side:T.DoubleSide})];
+ const a=new Assembly(),ceramic=finished('clay','#d9cbb7','stoneware-planter','wrap'),soil=finished('earth','#a6957e','potting-soil'),bark=finished('bark','#907f6a','woody-branches'),vein=new T.MeshPhysicalMaterial({name:'leaf-midrib',color:'#617756',roughness:.92,specularIntensity:.08}),green=[['#56734e','mature-leaves'],['#74875d','new-leaves'],['#44664f','deep-leaves']].map(([tint,name])=>coat(new T.MeshPhysicalMaterial({name,color:tint,roughness:1,side:T.DoubleSide,specularIntensity:.27}),'leaf','original'));
  // A hollow lathed pot with a rolled rim, inner wall, foot ring and soil below the lip.
  a.add(lathe([[.075,0],[.153,0],[.163,.018],[.198,.36],[.223,.395],[.226,.414],[.216,.427],[.203,.418],[.201,.39],[.18,.07],[.07,.055]],56),ceramic);
  a.add(new T.TorusGeometry(.217,.008,6,56),ceramic,new T.Vector3(0,.414,0),new T.Euler(Math.PI/2,0,0));

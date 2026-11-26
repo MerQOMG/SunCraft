@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "bytes": 588
+  },
+  {
+    "path": "/src/main.tsx",
+    "status": 200,
+    "bytes": 2210
+  },
+  {
+    "path": "/src/App.tsx",
+    "status": 200,
+    "bytes": 119437
+  },
+  {
+    "path": "/src/Section.tsx",
+    "status": 200,
+    "bytes": 36263
+  },
+  {
+    "path": "/src/export.ts",
+    "status": 200,
+    "bytes": 10101
+  },
+  {
+    "path": "/src/api.ts",
+    "status": 200,
+    "bytes": 19399
+  }
+]

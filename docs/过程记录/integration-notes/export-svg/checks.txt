@@ -1,0 +1,38 @@
+PASS Valid current result is exportable
+PASS Pending, error or missing result is not treated as currently valid
+PASS Export button and snapshot use the current-valid result only
+PASS shanghai-summer has unique XML ids
+PASS shanghai-summer date diagram stays above the parameter heading
+PASS shanghai-summer parameter rows do not overlap the backend diagram
+PASS shanghai-summer backend diagram stays above the footer rule
+PASS shanghai-summer does not present live scores or a compliance certificate
+PASS shanghai-summer states true solar noon and the locked date
+PASS guangzhou-summer has unique XML ids
+PASS guangzhou-summer date diagram stays above the parameter heading
+PASS guangzhou-summer parameter rows do not overlap the backend diagram
+PASS guangzhou-summer backend diagram stays above the footer rule
+PASS guangzhou-summer does not present live scores or a compliance certificate
+PASS guangzhou-summer states true solar noon and the locked date
+PASS guangzhou-winter has unique XML ids
+PASS guangzhou-winter date diagram stays above the parameter heading
+PASS guangzhou-winter parameter rows do not overlap the backend diagram
+PASS guangzhou-winter backend diagram stays above the footer rule
+PASS guangzhou-winter does not present live scores or a compliance certificate
+PASS guangzhou-winter states true solar noon and the locked date
+PASS shanghai-mock-summer has unique XML ids
+PASS shanghai-mock-summer date diagram stays above the parameter heading
+PASS shanghai-mock-summer parameter rows do not overlap the backend diagram
+PASS shanghai-mock-summer backend diagram stays above the footer rule
+PASS shanghai-mock-summer does not present live scores or a compliance certificate
+PASS shanghai-mock-summer states true solar noon and the locked date
+PASS Guangzhou sheet annotates 0% shading and has no-summer-ray legend
+PASS Shanghai incidence case keeps the standard case title and has no inapplicable caveat
+PASS Guangzhou backend diagram keeps winter rays only and names no front incidence
+PASS Guangzhou 6/21 date diagram is frontend geometry with no representative ray
+PASS Winter depth in the snapshot matches the backend result depth
+PASS Footers disclaim certification and real GI
+PASS Chinese text has no replacement characters in the SVG source
+PASS HTTP 200 /src/export.ts
+PASS HTTP 200 /src/App.tsx
+PASS HTTP 200 /src/Section.tsx
+37 targeted export XML/guard/source checks passed; rasters are offline resvg+Noto, not a Chrome preview. No full suite or build.

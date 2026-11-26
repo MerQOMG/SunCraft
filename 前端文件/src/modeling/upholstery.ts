@@ -1,7 +1,7 @@
 import * as T from 'three';
 import {seatOffset} from './construction.ts';
 /** Local sofa coordinates; support is an ergonomic 43 cm above the finished floor. */
-export const SEAT={width:.85,height:.132,depth:.86,x:-1.865,y:.408,z:1.35,radius:.028,crown:.006,hollow:.012} as const;
+export const SEAT={width:.85,height:.136,depth:.86,x:-1.865,y:.410,z:1.35,radius:.028,crown:.011,hollow:.012} as const;
 export function seatTopAt(x:number,z:number){
  const dx=x-SEAT.x,dz=z-SEAT.z,r=SEAT.radius;
  const top=SEAT.height/2-r+Math.sqrt(Math.max(0,r*r-Math.max(0,Math.abs(dx)-(SEAT.width/2-r))**2-Math.max(0,Math.abs(dz)-(SEAT.depth/2-r))**2));

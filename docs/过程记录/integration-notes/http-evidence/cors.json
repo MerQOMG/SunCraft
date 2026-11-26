@@ -1,0 +1,8 @@
+{
+  "method": "OPTIONS",
+  "url": "http://127.0.0.1:8001/api/simulate",
+  "status": 200,
+  "allow_origin": "*",
+  "allow_methods": "GET, POST",
+  "allow_headers": "Accept, Accept-Language, Content-Language, Content-Type"
+}

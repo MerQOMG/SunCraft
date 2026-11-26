@@ -1,0 +1,32 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "bytes": 588
+  },
+  {
+    "path": "/src/App.tsx",
+    "status": 200,
+    "bytes": 144028
+  },
+  {
+    "path": "/src/Scene.tsx",
+    "status": 200,
+    "bytes": 75753
+  },
+  {
+    "path": "/src/camera.ts",
+    "status": 200,
+    "bytes": 10672
+  },
+  {
+    "path": "/src/annual.css",
+    "status": 200,
+    "bytes": 8054
+  },
+  {
+    "path": "/api/presets",
+    "status": 200,
+    "bytes": 595
+  }
+]

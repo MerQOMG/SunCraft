@@ -1,0 +1,12 @@
+{
+  "baseline_tracked_non_cache": 328,
+  "modified": [
+    "前端文件/src/Scene.tsx",
+    "前端文件/src/lighting.ts"
+  ],
+  "backend_unchanged": 23,
+  "Scene_only_windowLight_color_in_existing_tick": true,
+  "camera_geometry_materials_heatmap_UI_API_calendar_export_unchanged": true,
+  "new_lights_or_passes": 0,
+  "exposure_unchanged": 1.1
+}

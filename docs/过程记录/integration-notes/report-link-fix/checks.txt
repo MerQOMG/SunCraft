@@ -1,0 +1,33 @@
+PASS Transient score preview remains available
+PASS Hover alone never pins cases
+PASS Focus alone is not persistent selection
+PASS Explicit cases navigation transfers focused metric
+PASS Navigation consumes candidate
+PASS Blur/hidden original focus cannot erase activated inspection
+PASS Transient pointer target cannot steal explicit result
+PASS Selected annotation never leaks into date preview
+PASS Closed drawer immediately suppresses annotation
+PASS Explicit clear removes persistent annotation
+PASS Switching to score resets selected context
+PASS Switching to date resets selected context
+PASS Scope invalidation: close
+PASS Scope invalidation: new-report
+PASS Scope invalidation: pending
+PASS Scope invalidation: accordion-change
+PASS Unrelated focus/pointer action forgets unactivated candidate
+PASS Another metric replaces candidate rather than retaining winter
+PASS mouse native button shared activation state
+PASS mouse native button cannot reactivate cleared selection
+PASS keyboard Enter shared activation state
+PASS keyboard Enter cannot reactivate cleared selection
+PASS keyboard Space shared activation state
+PASS keyboard Space cannot reactivate cleared selection
+PASS Reducer preserves immutable empty state
+PASS Explicit visible metric navigation button
+PASS Mouse and keyboard share native button semantics
+PASS Focusable metric announces activation shortcut
+PASS Dev module HTTP /src/scoring/ScoreDrawer.tsx
+PASS Dev module HTTP /src/scoring/DimensionAccordion.tsx
+PASS Dev module HTTP /src/scoring/inspection.ts
+PASS Dev module HTTP /src/scoring/scoring.css
+32 targeted state/SSR/HTTP checks passed; no browser/full suite/build.

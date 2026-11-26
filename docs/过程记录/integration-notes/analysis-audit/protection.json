@@ -1,0 +1,14 @@
+{
+  "baseline_files": 364,
+  "modified": [
+    "前端文件/src/styles.css",
+    "前端文件/src/Scene.tsx",
+    "前端文件/src/Section.tsx",
+    "前端文件/src/App.tsx"
+  ],
+  "new_source": "前端文件/src/heatmap.ts",
+  "backend_unchanged": 23,
+  "Scene_everything_outside_heat_layer_byte_equal": true,
+  "export_function_unchanged": true,
+  "other_frontend_sources_including_lighting_camera_calendar_geometry_API_inspection_unchanged": true
+}

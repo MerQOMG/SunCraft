@@ -1,0 +1,19 @@
+{
+  "changed_existing": [
+    "README.md",
+    "前端文件/.gitignore",
+    "前端文件/README.md",
+    "前端文件/src/App.tsx",
+    "前端文件/src/api.ts",
+    "前端文件/src/export.ts",
+    "前端文件/vite.config.ts"
+  ],
+  "missing_original": [],
+  "backend_files_changed": [],
+  "added_source": [
+    "start-linked-dev.sh",
+    "integration-notes/"
+  ],
+  "dependency_link": "前端文件/node_modules -> /workspace/suncraft-implementation/node_modules",
+  "source": "user upload; no .git"
+}

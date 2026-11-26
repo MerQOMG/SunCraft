@@ -1,10 +1,12 @@
 import * as T from 'three';
+import {mapPart} from './surfaceUV';
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
 import { mergeGeometries,mergeVertices } from 'three/addons/utils/BufferGeometryUtils.js';
 /** Static parts are batched per material; a tube/stitch is never an individual draw call. */
 export class Assembly {
  group=new T.Group();batches=new Map<T.Material,T.BufferGeometry[]>();
  add(g:T.BufferGeometry,m:T.Material,position=new T.Vector3(),rotation=new T.Euler(),scale=new T.Vector3(1,1,1)){
+  mapPart(g,m);
   const transform=new T.Matrix4().compose(position,new T.Quaternion().setFromEuler(rotation),scale);g.applyMatrix4(transform);
   const flat=g.index?g.toNonIndexed():g;if(flat!==g)g.dispose();
   const list=this.batches.get(m)??[];list.push(flat);this.batches.set(m,list);return this;
@@ -29,7 +31,7 @@ export function softBlock(w:number,h:number,d:number,kind:'seat'|'back'|'pillow'
  const radius=Math.min(Math.min(w,h,d)*.49,profile.radius??(kind==='pillow'?Math.min(w,h,d)*.43:Math.min(h*.43,w*.43,d*.43,.11)));
  // RoundedBox's large flat face has no interior samples: use a face lattice so
  // compression really changes the surface, then project its boundary to a fillet.
- const g=new T.BoxGeometry(w,h,d,22,12,22),p=g.attributes.position;
+ const g=applyBoxUvMetres(new T.BoxGeometry(w,h,d,22,12,22),w,h,d),p=g.attributes.position;
  const inner=new T.Vector3(w/2-radius,h/2-radius,d/2-radius),point=new T.Vector3(),core=new T.Vector3();
  for(let i=0;i<p.count;i++){point.fromBufferAttribute(p,i);core.copy(point).clamp(inner.clone().negate(),inner);point.sub(core).normalize().multiplyScalar(radius).add(core);p.setXYZ(i,point.x,point.y,point.z)}
  for(let i=0;i<p.count;i++){
@@ -53,6 +55,15 @@ export function softBlock(w:number,h:number,d:number,kind:'seat'|'back'|'pillow'
 }
 export function lathe(points:[number,number][],segments=48){return new T.LatheGeometry(points.map(p=>new T.Vector2(...p)),segments)}
 export function cylinderBetween(a:T.Vector3,b:T.Vector3,ra:number,rb:number,segments=8){const g=new T.CylinderGeometry(rb,ra,a.distanceTo(b),segments,1,false);g.applyQuaternion(new T.Quaternion().setFromUnitVectors(new T.Vector3(0,1,0),b.clone().sub(a).normalize()));g.translate(...a.clone().add(b).multiplyScalar(.5).toArray());return g}
+export function applyBoxUvMetres(geometry:T.BufferGeometry,w:number,h:number,d:number){
+ const uv=geometry.attributes.uv;if(!uv||!geometry.groups.length)return geometry;
+ const dims:[[number,number],[number,number],[number,number],[number,number],[number,number],[number,number]]=[[d,h],[d,h],[w,d],[w,d],[w,h],[w,h]];
+ const seen=new Set<number>();
+ for(const group of geometry.groups){const[su,sv]=dims[group.materialIndex??0]??[1,1];
+  for(let i=group.start;i<group.start+group.count;i++){const vi=geometry.index?geometry.index.getX(i):i;if(seen.has(vi))continue;seen.add(vi);uv.setXY(vi,uv.getX(vi)*su,uv.getY(vi)*sv)}}
+ uv.needsUpdate=true;return geometry;
+}
+export {metricUV as applyPositionUvMetres} from './surfaceUV';
 export function namedMaterial(color:T.ColorRepresentation,name:string,roughness=.85,extra:T.MeshStandardMaterialParameters={}){const m=new T.MeshStandardMaterial({color,roughness,...extra});m.name=name;return m}
 export function meshInventory(root:T.Object3D){
  let meshes=0,instances=0,triangles=0,geometryBytes=0;const geometries=new Set<T.BufferGeometry>(),materials=new Set<T.Material>();

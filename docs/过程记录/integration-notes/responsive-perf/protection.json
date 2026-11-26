@@ -1,0 +1,11 @@
+{
+  "modified": [
+    "前端文件/src/App.tsx",
+    "前端文件/src/Scene.tsx",
+    "前端文件/src/scoring/ScoreDrawer.tsx"
+  ],
+  "backend_unchanged": 23,
+  "export_function_unchanged": true,
+  "scene_only_visibility_raf_guard": true,
+  "layout_css_unchanged": true
+}

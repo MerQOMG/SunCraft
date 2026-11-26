@@ -1,0 +1,222 @@
+[
+  {
+    "note": "Computed conservative framing envelope, NOT actual rendered model/screenshot bounds.",
+    "viewport": [
+      984,
+      446
+    ],
+    "old": {
+      "widthPx": 500.38098702844275,
+      "heightPx": 367.0117422237287,
+      "bounds": {
+        "left": -0.5354591335588604,
+        "right": 0.4815753929217143,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "new": {
+      "widthPx": 525.4875179634303,
+      "heightPx": 382.3480307712326,
+      "bounds": {
+        "left": -0.5337838834824745,
+        "right": 0.5342801774188066,
+        "bottom": -0.9592247416551316,
+        "top": 0.7553404187539831
+      }
+    },
+    "growth": 1.0417869151939967,
+    "beforeLayoutViewport": [
+      984,
+      403
+    ],
+    "beforeLayoutOldEnvelope": {
+      "widthPx": 452.13797706830167,
+      "heightPx": 331.62720205417634,
+      "bounds": {
+        "left": -0.4838341498300916,
+        "right": 0.4351454783575134,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "oldTvToWindowProjectedHeightRatio": 0.7163450649778597,
+    "newTvToWindowProjectedHeightRatio": 0.6964634269709394,
+    "safe": {
+      "left": -0.9715447154471545,
+      "right": 0.9715447154471545,
+      "bottom": -0.9641255605381166,
+      "top": 0.757847533632287
+    },
+    "target": [
+      -0.11226873179112071,
+      1.0779892030774303,
+      0.07792755476497171
+    ]
+  },
+  {
+    "note": "Computed conservative framing envelope, NOT actual rendered model/screenshot bounds.",
+    "viewport": [
+      790,
+      313
+    ],
+    "old": {
+      "widthPx": 351.1642352912615,
+      "heightPx": 257.56653658302037,
+      "bounds": {
+        "left": -0.46806246654668954,
+        "right": 0.4209609139375168,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "new": {
+      "widthPx": 338.64719033069946,
+      "heightPx": 249.9389955424298,
+      "bounds": {
+        "left": -0.42848482205893246,
+        "right": 0.42884983700612944,
+        "bottom": -0.9441646862357359,
+        "top": 0.6528895983804288
+      }
+    },
+    "growth": 0.9703861334559196,
+    "beforeLayoutViewport": [
+      790,
+      270
+    ],
+    "beforeLayoutOldEnvelope": {
+      "widthPx": 302.9212253311202,
+      "heightPx": 222.18199641346803,
+      "bounds": {
+        "left": -0.40375995516807084,
+        "right": 0.3631292228853979,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "oldTvToWindowProjectedHeightRatio": 0.7162720900861379,
+    "newTvToWindowProjectedHeightRatio": 0.6872893501942514,
+    "safe": {
+      "left": -0.9645569620253165,
+      "right": 0.9645569620253165,
+      "bottom": -0.9488817891373802,
+      "top": 0.6549520766773163
+    },
+    "target": [
+      -0.1343182187481303,
+      1.3312570324053368,
+      -0.03458090731714743
+    ]
+  },
+  {
+    "note": "Computed conservative framing envelope, NOT actual rendered model/screenshot bounds.",
+    "viewport": [
+      388,
+      240
+    ],
+    "old": {
+      "widthPx": 269.2633114054401,
+      "heightPx": 197.49510792308268,
+      "bounds": {
+        "left": -0.7307453942331636,
+        "right": 0.65720981919694,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "new": {
+      "widthPx": 310.0830514865924,
+      "heightPx": 219.0714558445429,
+      "bounds": {
+        "left": -0.7987747461275588,
+        "right": 0.7995914986486908,
+        "bottom": -0.8953000807857926,
+        "top": 0.9302953845853983
+      }
+    },
+    "growth": 1.1092500373723861,
+    "beforeLayoutViewport": [
+      388,
+      240
+    ],
+    "beforeLayoutOldEnvelope": {
+      "widthPx": 269.2633114054401,
+      "heightPx": 197.49510792308268,
+      "bounds": {
+        "left": -0.7307453942331636,
+        "right": 0.65720981919694,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "oldTvToWindowProjectedHeightRatio": 0.7166116850027603,
+    "newTvToWindowProjectedHeightRatio": 0.7088444483151475,
+    "safe": {
+      "left": -0.9278350515463918,
+      "right": 0.9278350515463918,
+      "bottom": -0.9,
+      "top": 0.9333333333333333
+    },
+    "target": [
+      -0.05141585030624743,
+      0.6254598315525887,
+      0.2652083633261454
+    ]
+  },
+  {
+    "note": "Computed conservative framing envelope, NOT actual rendered model/screenshot bounds.",
+    "viewport": [
+      720,
+      320
+    ],
+    "old": {
+      "widthPx": 359.0177485405868,
+      "heightPx": 263.32681056411025,
+      "bounds": {
+        "left": -0.5250540980786434,
+        "right": 0.47221742564520874,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "new": {
+      "widthPx": 348.48217809059906,
+      "heightPx": 256.90980725896725,
+      "bounds": {
+        "left": -0.483795579784207,
+        "right": 0.48421047046745713,
+        "bottom": -0.9452696910354766,
+        "top": 0.6604166043330687
+      }
+    },
+    "growth": 0.975631029398806,
+    "beforeLayoutViewport": [
+      720,
+      300
+    ],
+    "beforeLayoutOldEnvelope": {
+      "widthPx": 336.5791392568002,
+      "heightPx": 246.86888490385337,
+      "bounds": {
+        "left": -0.4922382169487284,
+        "right": 0.44270383654238327,
+        "bottom": -0.9500873094548276,
+        "top": 0.6957052565708615
+      }
+    },
+    "oldTvToWindowProjectedHeightRatio": 0.7163331603552392,
+    "newTvToWindowProjectedHeightRatio": 0.687986112523672,
+    "safe": {
+      "left": -0.9611111111111111,
+      "right": 0.9611111111111111,
+      "bottom": -0.95,
+      "top": 0.6625
+    },
+    "target": [
+      -0.13236926425426518,
+      1.3112124185883016,
+      -0.025807149381262127
+    ]
+  }
+]
