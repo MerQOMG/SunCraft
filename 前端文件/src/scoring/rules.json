@@ -1,0 +1,224 @@
+[
+  {
+    "id": "summer_shading",
+    "name": "夏季遮阳与防过热",
+    "rules": [
+      {
+        "key": "summer_shading_rate",
+        "name": "夏季遮挡率",
+        "weight": 20,
+        "x": [
+          0.4,
+          0.9
+        ],
+        "y": [
+          0,
+          1
+        ],
+        "target": 0.85,
+        "threshold": "目标 ≥ 85%，满分 ≥ 90%",
+        "unit": "%",
+        "citation": "项目目标（解析几何）",
+        "kind": "project",
+        "highlight": null
+      },
+      {
+        "key": "wwr_shgc",
+        "name": "窗墙比与等效 SHGC",
+        "weight": 15,
+        "x": [
+          0.45,
+          0.75
+        ],
+        "y": [
+          1,
+          0
+        ],
+        "target": 0.45,
+        "threshold": "WWR 与 SHGC 均 ≤ 0.45",
+        "unit": "",
+        "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
+        "kind": "mandatory_reference",
+        "highlight": null
+      }
+    ]
+  },
+  {
+    "id": "winter_gain",
+    "name": "冬季得热与日照",
+    "rules": [
+      {
+        "key": "winter_solar_gain_rate",
+        "name": "冬季得热率",
+        "weight": 12,
+        "x": [
+          0.4,
+          0.8
+        ],
+        "y": [
+          0,
+          1
+        ],
+        "target": 0.75,
+        "threshold": "目标 ≥ 75%，满分 ≥ 80%",
+        "unit": "%",
+        "citation": "项目目标（冬至真太阳正午）",
+        "kind": "project",
+        "highlight": null
+      },
+      {
+        "key": "winter_penetration_m",
+        "name": "冬季阳光进深",
+        "weight": 8,
+        "x": [
+          0,
+          2.8
+        ],
+        "y": [
+          0,
+          1
+        ],
+        "target": 2.5,
+        "threshold": "目标 ≥ 2.5 m，满分 ≥ 2.8 m",
+        "unit": "m",
+        "citation": "项目目标（沙发区）",
+        "kind": "project",
+        "highlight": "winter_section"
+      },
+      {
+        "key": "winter_full_window_hours",
+        "name": "冬至日满窗日照时数",
+        "weight": 5,
+        "x": [
+          0,
+          1,
+          2
+        ],
+        "y": [
+          0,
+          0.6,
+          1
+        ],
+        "target": 1,
+        "threshold": "及格 ≥ 1 h，满分 ≥ 2 h",
+        "unit": "h",
+        "citation": "参照 GB 50180—2018，按项目满窗几何口径",
+        "kind": "reference",
+        "highlight": null
+      }
+    ]
+  },
+  {
+    "id": "daylight",
+    "name": "室内自然采光",
+    "rules": [
+      {
+        "key": "daylight_compliance_rate",
+        "name": "采光达标面积比",
+        "weight": 15,
+        "x": [
+          0,
+          0.8,
+          0.85
+        ],
+        "y": [
+          0,
+          0.8,
+          1
+        ],
+        "target": 0.8,
+        "threshold": "DF ≥ 2% 的面积占比 ≥ 80%，满分 ≥ 85%",
+        "unit": "%",
+        "citation": "参照 GB 50033—2013（DF）",
+        "kind": "reference",
+        "highlight": null
+      },
+      {
+        "key": "daylight_uniformity",
+        "name": "采光均匀度",
+        "weight": 5,
+        "x": [
+          0,
+          0.4
+        ],
+        "y": [
+          0,
+          1
+        ],
+        "target": 0.4,
+        "threshold": "Emin / Eavg ≥ 0.40",
+        "unit": "",
+        "citation": "参照 GB 50033—2013，采用地板网格",
+        "kind": "reference",
+        "highlight": null
+      },
+      {
+        "key": "window_floor_ratio",
+        "name": "窗地面积比",
+        "weight": 5,
+        "x": [
+          0,
+          0.14285714285714285,
+          0.16666666666666666
+        ],
+        "y": [
+          0,
+          0.6,
+          1
+        ],
+        "target": 0.14285714285714285,
+        "threshold": "及格 ≥ 1/7，满分 ≥ 1/6",
+        "unit": "",
+        "citation": "参照 GB 50096—2011（方案列示）",
+        "kind": "reference",
+        "highlight": null
+      }
+    ]
+  },
+  {
+    "id": "health_carbon",
+    "name": "居住健康与低碳",
+    "rules": [
+      {
+        "key": "sofa_summer_hours",
+        "name": "沙发区夏季直射暴露时长",
+        "weight": 8,
+        "x": [
+          0.5,
+          2,
+          4
+        ],
+        "y": [
+          1,
+          0.6,
+          0
+        ],
+        "target": 2,
+        "threshold": "及格 ≤ 2 h/d，满分 ≤ 0.5 h/d",
+        "unit": "h/d",
+        "citation": "参照 ISO 105-B02，时长为项目代理指标",
+        "kind": "reference",
+        "highlight": "sofa"
+      },
+      {
+        "key": "relative_load_reduction",
+        "name": "相对节能降碳潜力",
+        "weight": 7,
+        "x": [
+          0,
+          0.25
+        ],
+        "y": [
+          0,
+          1
+        ],
+        "target": 0.25,
+        "threshold": "较同窗无遮阳基准降负荷 ≥ 25%",
+        "unit": "%",
+        "citation": "参照 GB/T 51366—2019，采用相对负荷代理",
+        "kind": "reference",
+        "highlight": null
+      }
+    ]
+  }
+]

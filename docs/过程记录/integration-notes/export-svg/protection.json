@@ -1,9 +1,0 @@
-{
-  "modified": [
-    "前端文件/src/App.tsx",
-    "前端文件/src/export.ts"
-  ],
-  "backend_unchanged": 23,
-  "section_lighting_camera_geometry_unchanged": true,
-  "layout_css_unchanged": true
-}

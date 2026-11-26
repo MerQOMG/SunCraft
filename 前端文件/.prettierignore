@@ -1,0 +1,9 @@
+node_modules/
+dist/
+.cache/
+test-results/
+playwright-report/
+*.html
+package-lock.json
+tests/fixtures/backend-scoring-reference.json
+src/scoring/rules.json

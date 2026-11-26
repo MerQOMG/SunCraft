@@ -1,1 +1,11 @@
-import React from 'react';import ReactDOM from 'react-dom/client';import App from './App';import './styles.css';import './scoring/scoring.css';import './annual.css';ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App/></React.StrictMode>);
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import './styles/main.css';
+import './scoring/scoring.css';
+import './styles/timeline.css';
+ReactDOM.createRoot(document.getElementById('root')!).render(
+  <React.StrictMode>
+    <App />
+  </React.StrictMode>,
+);
