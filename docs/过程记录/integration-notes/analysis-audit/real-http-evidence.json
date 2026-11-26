@@ -1,0 +1,56 @@
+{
+  "shanghai": {
+    "http": 200,
+    "parameters": {
+      "city_id": "shanghai",
+      "latitude": 31.2,
+      "overhang_depth_m": 0.4,
+      "louver_angle_deg": 0,
+      "window_wall_ratio": 0.45
+    },
+    "shape": [
+      24,
+      24
+    ],
+    "min": 1.8659360617361673,
+    "max": 13.621238200408893,
+    "row0_center": 6.442583459748135,
+    "last_row_center": 1.9909189431785907,
+    "rate_counted": 0.9340277777777778,
+    "rate_reported": 0.9340277777777778,
+    "summer_incident": true,
+    "ray_counts": {
+      "summer": 1,
+      "winter": 2
+    },
+    "score": 91.14974,
+    "grid_sha256": "2a2de95cfb76015bba95f20f8b4bd300d5bb5a251f6ba887c7daea2376648522"
+  },
+  "guangzhou": {
+    "http": 200,
+    "parameters": {
+      "city_id": "guangzhou",
+      "latitude": 23.1,
+      "overhang_depth_m": 0.4,
+      "louver_angle_deg": 0,
+      "window_wall_ratio": 0.45
+    },
+    "shape": [
+      24,
+      24
+    ],
+    "min": 1.8659360617361673,
+    "max": 13.621238200408893,
+    "row0_center": 6.442583459748135,
+    "last_row_center": 1.9909189431785907,
+    "rate_counted": 0.9340277777777778,
+    "rate_reported": 0.9340277777777778,
+    "summer_incident": false,
+    "ray_counts": {
+      "summer": 0,
+      "winter": 2
+    },
+    "score": 44.416552,
+    "grid_sha256": "2a2de95cfb76015bba95f20f8b4bd300d5bb5a251f6ba887c7daea2376648522"
+  }
+}

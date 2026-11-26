@@ -1,3 +1,8 @@
+import {finishes} from '../src/surfaceSamples';
+import {materialTextures} from '../src/materials';
+import {metricUV,mapPart,finished} from '../src/modeling/surfaceUV';
+import {EXAMPLE_ROOM,shadeGeometry} from '../src/geometry';
+import {DEFAULTS} from '../src/model';
 import {describe,it,expect,beforeAll} from 'vitest';
 import * as T from 'three';
 import {fineInterior,detailedSofa,detailedRug,detailedTable,detailedPlant} from '../src/modeling/interior';
@@ -5,7 +10,7 @@ import {fineWindow} from '../src/modeling/window';
 import {meshInventory,softBlock} from '../src/modeling/construction';
 import {windowGeometry} from '../src/model';
 import {SEAT,seatTopAt,throwPoint,throwGeometry} from '../src/modeling/upholstery';
-import {FINISH,LOUVER} from '../src/shading';
+import {FINISH,VISUAL_CONSTRUCTION} from '../src/shading';
 const palette={fabric:new T.MeshPhysicalMaterial(),walnut:new T.MeshStandardMaterial(),dark:new T.MeshStandardMaterial(),metal:new T.MeshStandardMaterial()};
 const bounds=(o:T.Object3D)=>{o.updateMatrixWorld(true);return new T.Box3().setFromObject(o)};
 let interior:T.Group;
@@ -17,7 +22,55 @@ describe('fine-model construction (pure geometry, not visual approval)',()=>{
  it('keeps sofa floor contact and room-width bounds plausible',()=>{const b=bounds(detailedSofa(palette));expect(b.min.y).toBeGreaterThanOrEqual(FINISH.floorTop_m-.0001);expect(b.min.y).toBeLessThan(FINISH.rugTop_m+.001);expect(b.min.x).toBeGreaterThan(-2.7);expect(b.max.x).toBeLessThan(-.8);expect(b.max.y).toBeLessThan(1.4)});
  it('keeps rug and table anchored at the actual finish surfaces',()=>{const rug=bounds(detailedRug(palette)),table=bounds(detailedTable(palette));expect(rug.min.y).toBeCloseTo(FINISH.floorTop_m,5);expect(table.min.y).toBeCloseTo(FINISH.rugTop_m,5);expect(rug.max.y).toBeLessThan(.075);expect(table.max.y).toBeLessThan(.7)});
  it('connects planter to the floor and leaves within the room envelope',()=>{const b=bounds(detailedPlant(1.8,-2.32,1.05,FINISH.floorTop_m));expect(b.min.y).toBeCloseTo(FINISH.floorTop_m,5);expect(b.max.y).toBeLessThan(2.2);expect(b.max.x).toBeLessThan(2.7);expect(b.min.z).toBeGreaterThan(-3.02)});
- it('updates hollow profiles and instanced mountings at all window/tilt limits without changing solar aperture inputs',()=>{const w=fineWindow();for(const ratio of [.25,.45,.65])for(const angle of [0,80]){const win=windowGeometry(ratio);w.update(win,angle);const b=bounds(w.group);expect(Number.isFinite(b.min.y+b.max.y)).toBe(true);const top=w.group.children[0] as T.Mesh;expect(top.position.y).toBe(win.top);const size=new T.Vector3();top.geometry.computeBoundingBox();top.geometry.boundingBox!.getSize(size);expect(size.x).toBeCloseTo(4.5,5);expect(size.y).toBeCloseTo(.055,5);expect(size.z).toBeCloseTo(.1,5);const profile=new T.Mesh(top.geometry,new T.MeshBasicMaterial({side:T.DoubleSide}));profile.updateMatrixWorld(true);expect(new T.Raycaster(new T.Vector3(-3,0,.025),new T.Vector3(1,0,0)).intersectObject(profile).length).toBe(0);expect(new T.Raycaster(new T.Vector3(-3,.025,.025),new T.Vector3(1,0,0)).intersectObject(profile).length).toBeGreaterThan(0);expect((w.group.getObjectByName('14-blade-pivot-pins') as T.InstancedMesh).count).toBe(LOUVER.count*2);expect((w.group.getObjectByName('14-blade-end-caps') as T.InstancedMesh).count).toBe(LOUVER.count*2)}expect(LOUVER.chord_m).toBe(.1);expect(LOUVER.thickness_m).toBe(.012)});
+ it('updates hollow profiles and instanced mountings at all window/tilt limits without changing solar aperture inputs',()=>{const w=fineWindow(EXAMPLE_ROOM);for(const ratio of [.25,.45,.65])for(const angle of [0,80]){const win=windowGeometry(ratio);const g=shadeGeometry({...DEFAULTS,window_wall_ratio:ratio,louver_angle_deg:angle},EXAMPLE_ROOM);w.update(g);const b=bounds(w.group);expect(Number.isFinite(b.min.y+b.max.y)).toBe(true);const top=w.group.children[0] as T.Mesh;expect(top.position.y).toBe(win.top+FINISH.floorTop_m);const size=new T.Vector3();top.geometry.computeBoundingBox();top.geometry.boundingBox!.getSize(size);expect(size.x).toBeCloseTo(EXAMPLE_ROOM.window_width_m+.1,5);expect(size.y).toBeCloseTo(.055,5);expect(size.z).toBeCloseTo(.1,5);const profile=new T.Mesh(top.geometry,new T.MeshBasicMaterial({side:T.DoubleSide}));profile.updateMatrixWorld(true);expect(new T.Raycaster(new T.Vector3(-3,0,.025),new T.Vector3(1,0,0)).intersectObject(profile).length).toBe(0);expect(new T.Raycaster(new T.Vector3(-3,.025,.025),new T.Vector3(1,0,0)).intersectObject(profile).length).toBeGreaterThan(0);expect((w.group.getObjectByName('variable-blade-pivot-pins') as T.InstancedMesh).count).toBe(g.blades.length*2);expect((w.group.getObjectByName('variable-blade-end-caps') as T.InstancedMesh).count).toBe(g.blades.length*2)}expect(EXAMPLE_ROOM.slat_chord_m).toBe(.06);expect(VISUAL_CONSTRUCTION.bladeThickness_m).toBe(.012)});
+});
+
+describe('procedural surface coordinates and maps',()=>{
+ it('reuses deterministic color and packed linear relief across tinted fabrics',()=>{
+  const library=materialTextures(2),seat=new T.MeshStandardMaterial(),pillow=new T.MeshStandardMaterial();
+  library.apply(seat,'linen');library.apply(pillow,'linen');
+  const map=seat.map!,relief=seat.bumpMap!;
+  expect(pillow.map).toBe(map);expect(seat.roughnessMap).toBe(relief);
+  expect(map.colorSpace).toBe(T.SRGBColorSpace);expect(relief.colorSpace).toBe(T.NoColorSpace);
+  expect(map.anisotropy).toBe(2);expect(map.generateMipmaps).toBe(true);
+  const floor=library.floor(5.4,6);expect(floor.bumpMap!.channel).toBe(1);
+  expect(floor.map!.image.width).toBe(1024);expect(floor.bumpMap!.image.width).toBe(256);
+  const disposed=new Set<T.Texture>();
+  for(const t of [map,relief,floor.map!,floor.roughnessMap!,floor.bumpMap!])t.addEventListener('dispose',()=>{disposed.add(t)});
+  library.dispose();expect(disposed.size).toBe(5);seat.dispose();pillow.dispose();floor.dispose();
+ });
+ it('tiles dyed fabrics and plaster without a boundary jump in any channel',()=>{
+  for(const kind of ['plaster','linen','cushion','throw','rug','curtain'] as const){
+   const sample=finishes[kind].sample;
+   for(const [u,v] of [[.19,.17],[.87,.92],[-.27,.61]]){
+    const reference=sample(u,v);
+    for(const shifted of [sample(u+1,v),sample(u,v+1)])shifted.forEach((n,i)=>expect(n).toBeCloseTo(reference[i],8));
+   }
+  }
+ });
+ it('uses the same metric coordinate on adjacent wall pieces after a window resize',()=>{
+  const bottom=new T.BoxGeometry(2,1,.1),top=new T.BoxGeometry(2,1,.1);
+  const pos=bottom.attributes.position.array.slice();
+  metricUV(bottom,new T.Vector3(0,.32,0),new T.Vector3(1,.64,1));
+  metricUV(top,new T.Vector3(0,1.04,0),new T.Vector3(1,.8,1));
+  const seam=(g:T.BufferGeometry,edge:number)=>{
+   const p=g.attributes.position,n=g.attributes.normal,uv=g.attributes.uv;
+   for(let i=0;i<p.count;i++)if(n.getZ(i)>.9&&p.getY(i)===edge)return uv.getY(i);
+  };
+  expect(seam(bottom,.5)).toBeCloseTo(.64);expect(seam(top,-.5)).toBeCloseTo(.64);
+  expect(bottom.attributes.position.array).toEqual(pos);
+  bottom.dispose();top.dispose();
+ });
+ it('maps a board lengthwise and its cut ends into separate texture regions',()=>{
+  const g=new T.BoxGeometry(.46,.32,3.3),m=finished('walnut',0xffffff,'test wood','wood');
+  mapPart(g,m);
+  for(let i=0;i<g.attributes.uv.count;i++){
+   const v=g.attributes.uv.getY(i);
+   if(Math.abs(g.attributes.normal.getZ(i))>.99)expect(v).toBeGreaterThan(.75);
+   else expect(v).toBeLessThan(.75);
+  }
+  g.dispose();m.dispose();
+ });
 });
 
 describe('P1 meaningful form and contact regressions',()=>{

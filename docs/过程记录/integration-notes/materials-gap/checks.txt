@@ -1,0 +1,27 @@
+PASS Plaster 2 m tiles seamlessly
+PASS Linen 0.25 m tiles seamlessly
+PASS Wool 1 m tiles seamlessly
+PASS plaster contrast is quiet and in range (211.6–230.4, r 0.860–0.971)
+PASS linen contrast is quiet and in range (202.0–225.6, r 0.817–0.935)
+PASS wool contrast is quiet and in range (163.4–205.2, r 0.800–0.980)
+PASS Walnut sample remains periodic and was not rewritten
+PASS Box face UVs are scaled into metres, not 0–1 stretched tiles
+PASS Rug still sits flush on the finished floor
+PASS Sofa feet still meet rug
+PASS Sofa feet still meet floor
+PASS Cabinet feet meet the floor and the carcass without a float gap
+PASS 前端文件/src/lighting.ts SHA protected
+PASS 前端文件/src/camera.ts SHA protected
+PASS 前端文件/src/export.ts SHA protected
+PASS 前端文件/src/styles.css SHA protected
+PASS 前端文件/src/scoring/ScoreDrawer.tsx SHA protected
+PASS 前端文件/src/modeling/window.ts SHA protected
+PASS 23 backend files unchanged
+PASS Walnut, TV rear and exposure budget assignments stay in Scene
+PASS No new light type; plaster/floor maps and existing pipeline remain
+PASS HTTP 200 /src/materials.ts
+PASS HTTP 200 /src/Scene.tsx
+PASS HTTP 200 /src/surfaceSamples.ts
+PASS HTTP 200 /src/modeling/construction.ts
+PASS HTTP 200 /src/modeling/interior.ts
+26 targeted material/UV/contact/SHA checks passed; no browser, full suite or build.

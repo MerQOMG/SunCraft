@@ -1,0 +1,40 @@
+PASS Original heat RGB unchanged 0
+PASS Original heat RGB unchanged 0.25
+PASS Original heat RGB unchanged 2
+PASS Original heat RGB unchanged 2.5
+PASS Original heat RGB unchanged 4.9
+PASS Original heat RGB unchanged 5
+PASS Original heat RGB unchanged 13.621238200408893
+PASS Heat requires requested/result/current false,false,false
+PASS Heat requires requested/result/current false,false,true
+PASS Heat requires requested/result/current false,true,false
+PASS Heat requires requested/result/current false,true,true
+PASS Heat requires requested/result/current true,false,false
+PASS Heat requires requested/result/current true,false,true
+PASS Heat requires requested/result/current true,true,false
+PASS Heat requires requested/result/current true,true,true
+PASS Legend exact labelled stops share absolute palette
+PASS 5%+ saturates, not per-grid normalization
+PASS Plane UV top maps south, bottom maps north with flipY
+PASS Canvas texture flips top canvas row to UV v=1
+PASS Cell centres stay inside full rectangular domain 24x24
+PASS Cell centres stay inside full rectangular domain 20x20
+PASS Cell centres stay inside full rectangular domain 3x5
+PASS Live backend returns24x24
+PASS Same geometry/sky DF independent of city latitude in current engine
+PASS Raw-percent threshold count equals interface area rate
+PASS Original live scores unchanged
+PASS Guangzhou explicitly no summer facade rays
+PASS Valid backend rays/depth highlight retained
+PASS No result has no substitute angles/rays/result-depth
+PASS Explicit no-incidence suppresses even contradictory summer array
+PASS Empty arrays never synthesize rays
+PASS Date north-side preview remains separate with no invented south rays
+PASS Adapter rejects empty heat grid
+PASS Full-field drawing with no8px cropping
+PASS Pending/error suppress plot and both backend section bindings
+PASS Module HTTP200 /src/App.tsx
+PASS Module HTTP200 /src/Scene.tsx
+PASS Module HTTP200 /src/Section.tsx
+PASS Module HTTP200 /src/heatmap.ts
+39 targeted audit checks passed; mathematical/SSR/source checks, not browser screenshots or full suite.

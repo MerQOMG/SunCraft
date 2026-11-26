@@ -1,0 +1,147 @@
+--- before/README.md
++++ after/README.md
+@@ -1,3 +1,9 @@
++## 当前追加：抽屉信息层整理（2026-11-26，Asia/Shanghai）
++
++开发入口仍为 http://127.0.0.1:5174/ 。抽屉内以「评分细则 / 日期几何 / 两至工况」三个页签区分来源：日期图来自前端NOAA真太阳12:00几何；评分、DF和两至代表射线来自原接口，不随日期播放重计。两至图前置，无需先滚过全部评分；广州适用性说明、请求错误和寻优/取消共用保留。全部原SVG保持挂载供原快照导出，未改变导出算法。
++
++本轮仅App抽屉装配、ScoreDrawer和其CSS；主画布/时间轴布局、已有字号、全景、材质/光源/计算口径、API及后端未变。仅定向类型/SSR语义/模块HTTP检查，无整套测试或构建；新布局与键盘滚动仍待正常浏览器实看。阶段记录及可逆备份索引见 `integration-notes/report-info/HANDOFF.md`。旧离线HTML未更新，不能当本轮效果。
++
+ # 夏遮冬透 · SunCraft
+ 
+ ## 当前材质小批精修（待同尺寸实看）
+--- before/前端文件/src/App.tsx
++++ after/前端文件/src/App.tsx
+@@ -5,6 +5,7 @@
+ import gsap from 'gsap';
+ import { Sun, Snowflake, Layers3, RotateCcw, ArrowUpRight, MapPin, ChevronDown, SlidersHorizontal, Download, Sparkles, Move, Maximize, Settings2, X, TriangleAlert, Check, Leaf, LoaderCircle } from 'lucide-react';
+ import {ScoreCapsule,ScoreDrawer} from './scoring/ScoreDrawer';
++import type {ReportView} from './scoring/ScoreDrawer';
+ import {EXAMPLE_SCORE_REPORT} from './scoring/example';
+ import type {LinkTarget} from './scoring/report';
+ import Scene from './Scene';import Section from './Section';import { api, initialConfig } from './api';import type {TransportConfig} from './api';
+@@ -16,13 +17,12 @@
+  const [geometrySource,setGeometrySource]=useState('');
+  const [config,setConfig]=useState<TransportConfig>(initialConfig),[presets,setPresets]=useState<Presets>(PRESETS),[presetsReady,setPresetsReady]=useState(false),[presetError,setPresetError]=useState('');
+  const [busy,setBusy]=useState(false),[optError,setOptError]=useState(''),[comparison,setComparison]=useState<Optimization|null>(null),[retry,setRetry]=useState(0),[toast,setToast]=useState(''),[settings,setSettings]=useState(false),[tab,setTab]=useState<'parameters'|'diagnostics'>('parameters');
+- const timeline=useAnnualTimeline();const frame=useMemo(()=>annualSolarFrame(timeline.day,parameters.latitude),[timeline.day,parameters.latitude]);const season:Season=frame.declination>=0?'summer':'winter';const [datePreviewOpen,setDatePreviewOpen]=useState(false);
++ const timeline=useAnnualTimeline();const frame=useMemo(()=>annualSolarFrame(timeline.day,parameters.latitude),[timeline.day,parameters.latitude]);const season:Season=frame.declination>=0?'summer':'winter';const [reportView,setReportView]=useState<ReportView>('score'),[reportFocusRequest,setReportFocusRequest]=useState(0);const diagramView=reportView!=='score';
+  const cameraView='analysis' as const;
+  const [scoreOpen,setScoreOpen]=useState(false),[highlight,setHighlight]=useState<LinkTarget|null>(null);
+- const scoreButton=useRef<HTMLButtonElement>(null),dateFocus=useRef(false);
+- useEffect(()=>{if(!scoreOpen||!datePreviewOpen||!dateFocus.current)return;const id=requestAnimationFrame(()=>{dateFocus.current=false;const details=document.getElementById('date-section-drawing')?.closest('details');const summary=details?.querySelector('summary');summary?.focus({preventScroll:true});summary?.scrollIntoView({block:'start',behavior:'auto'})});return()=>cancelAnimationFrame(id)},[scoreOpen,datePreviewOpen]);
++ const scoreButton=useRef<HTMLButtonElement>(null);
+  const closeScore=useCallback(()=>{setScoreOpen(false);setHighlight(null);setTab('parameters');requestAnimationFrame(()=>scoreButton.current?.focus())},[]);
+- function toggleScore(){const open=!scoreOpen;setScoreOpen(open);setTab(open?'diagnostics':'parameters')}
++ function toggleScore(){const open=!scoreOpen;if(open)setReportView('score');setScoreOpen(open);setTab(open?'diagnostics':'parameters')}
+  const [draftConfig,setDraftConfig]=useState(config),[configError,setConfigError]=useState('');
+  const optimizeController=useRef<AbortController|null>(null),tween=useRef<gsap.core.Tween|null>(null),operation=useRef(0);
+  const {result,pending,error}=useSimulation(parameters,config,busy||!presetsReady,retry);
+@@ -61,7 +61,7 @@
+  }catch(e){setToast(`导出未完成：${e instanceof Error?e.message:'请重试'}`)}}
+  async function fullscreen(){try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen()}catch{setToast('浏览器不允许全屏，可使用 F11 放大工作台')}}
+  function applySettings(){setConfigError('');try{const url=new URL(draftConfig.baseUrl);if(!['http:','https:'].includes(url.protocol)||url.username||url.password)throw Error();cancelOptimize();setConfig({...draftConfig,baseUrl:url.toString().replace(/\/$/,'')});setComparison(null);setSettings(false)}catch{setConfigError('请输入不含账号密码的 HTTP(S) 后端地址')}}
+- return <main className={`workspace season-${season}${scoreOpen?' score-report-open':''}${scoreOpen&&datePreviewOpen?' date-preview-active':''}`}>
++ return <main className={`workspace season-${season}${scoreOpen?' score-report-open':''}${scoreOpen&&diagramView?' date-preview-active':''}`}>
+  <Scene solarFrame={frame} room={room} highlight={highlight} cameraView={cameraView} parameters={parameters} season={season} heat={heat} result={result} resultCurrent={!pending} resetToken={resetToken} onReady={()=>setReady(true)}/>
+  <div className="scene-vignette"/>
+  <header className="brand"><div className="brand-icon"><Sun size={25} strokeWidth={1.3}/></div><div><h1>SunCraft<span>夏遮冬透</span></h1></div></header>
+@@ -81,22 +81,21 @@
+  <button className="reset-button" onClick={reset}><RotateCcw size={13}/>重置参数与视角</button>
+  </aside>
+  <div className="scene-caption" aria-label={room?`固定南向客厅，${room.width_m} × ${room.depth_m} × ${room.height_m} 米`:'南向客厅，几何未同步'}><div className="scene-title"><h2>南向客厅</h2><p><span>分析全景</span><span className="view-size">{room?`${room.width_m}×${room.depth_m}×${room.height_m} m`:'几何未同步'}</span></p></div><div className="study-meta"><strong>{frame.date.slice(5).replace('-','.')} · {termAt(timeline.day).label}</strong><span>12:00 太阳时</span></div></div>
+- <AnnualTimeline state={timeline} frame={frame} onSection={()=>{dateFocus.current=true;setDatePreviewOpen(true);setScoreOpen(true);setTab('diagnostics');if(scoreOpen&&datePreviewOpen){dateFocus.current=false;requestAnimationFrame(()=>{const section=document.getElementById('date-section-drawing')?.closest('details');const summary=section?.querySelector('summary');summary?.focus({preventScroll:true});summary?.scrollIntoView({block:'start',behavior:'auto'})})}}}/>
++ <AnnualTimeline state={timeline} frame={frame} onSection={()=>{setReportView('date');setReportFocusRequest(n=>n+1);setScoreOpen(true);setTab('diagnostics')}}/>
+  <ScoreCapsule report={scoreReport} open={scoreOpen} pending={pending||!!hasError} error={result?.score_report_error} onToggle={toggleScore} buttonRef={scoreButton}/>
+- <ScoreDrawer open={scoreOpen} report={scoreReport} pending={pending||!!hasError} error={result?.score_report_error} preview={<details className="annual-section" open={datePreviewOpen} onToggle={e=>setDatePreviewOpen(e.currentTarget.open)}><summary>当前日期剖面 · 前端几何</summary><Section drawingId="date-section-drawing" previewFrame={frame} room={room} parameters={parameters} result={null} season={season}/><p>与3D同一日期太阳帧；代表线不是后端冬至最远进深，也不计算分数/DF。</p></details>}
++ <ScoreDrawer view={reportView} onViewChange={setReportView} focusRequest={reportFocusRequest} open={scoreOpen} report={scoreReport} pending={pending||!!hasError} error={result?.score_report_error} preview={<div className="annual-section"><Section drawingId="date-section-drawing" previewFrame={frame} room={room} parameters={parameters} result={null} season={season}/><p>真太阳12:00（非北京时间）· NOAA日级几何，与3D同源；非真实GI，也不计算当天分数/DF。</p></div>}
+  applicability={config.mode==='api'&&result?.svg_rays.summer_incident===false?<p className="annual-applicability" role="note">适用性待校核：夏至正午南窗无正面入射，后端按约定返回遮挡率0，原报告遮阳项贡献{summerContribution?.score??'—'}/{summerContribution?.max_score??'—'}；本页保留原总分与贡献。这不等于普通遮阳不足，也不是所选日期或全年性能。</p>:undefined}
+  simulationNotice={hasError&&<div className="error-box" role="alert"><TriangleAlert size={15}/><span>{hasError}<button onClick={()=>{setOptError('');setRetry(r=>r+1)}}>重新请求</button></span></div>} onClose={closeScore} onHighlight={setHighlight} onOptimize={optimize} onCancel={cancelAndSnap} busy={busy} canOptimize={presetsReady&&!pending&&!error} renderDepthPreview={drawingId=><><p className="linked-depth-caption">当前冬季结果标注：<strong>{pending?'更新中':result?`${result.svg_rays.winter_hit_depth.toFixed(2)} m`:'待计算'}</strong><span>模拟剖面定位，非评分示例值</span></p><Section room={room} drawingId={drawingId} highlightWinter={highlight==='winter-depth'} parameters={parameters} result={pending?null:result} season={season}/></>}>
+- <div className="panel-heading"><div><h2>冬夏设计工况</h2></div><span className="live-badge"><i/>{pending?'更新中':'LIVE'}</span></div>
+  <div className={`data-notice ${config.mode==='api'?'api-mode':''}`}><span className="notice-dot"/>{config.mode==='mock'?'演示 / 近似数据 · 非规范判定':room?'后端计算 / 理想几何已同步 · 非精度认证':'后端计算 / 几何未同步 · 暂停3D'}</div>
+  
++ <section className="section-card"><div className="section-card-title"><h3>冬夏工况剖面对照</h3><span>A — A</span></div><Section room={room} highlightWinter={highlight==='winter-depth'} parameters={parameters} result={pending?null:result} season={season}/><div className="drawing-legend"><span><i className="summer-line"/>夏至光线</span><span><i className="winter-line"/>冬至光线</span><span>几何示意 · 非施工图</span></div></section>
++ <div className="depth-row"><span>冬至日入射深度</span><strong>{m?m.winter_penetration_m.toFixed(2):'—'}<small> m</small></strong></div>
+  <div className="metrics" aria-busy={pending}>
+  <Metric name="夏季遮阳率" tag="直射遮挡" value={m?.summer_shading_rate} color="terra" icon={<Sun size={15}/>} hint={result?.svg_rays.summer_incident===false?'无正面入射 · 原评分待校核':m&&m.summer_shading_rate<.65?'夏季遮阳率偏低':m?'夏季遮阳改善':'等待计算'} />
+  <Metric name="冬季得热率" tag="冬季得热" value={m?.winter_solar_gain_rate} color="gold" icon={<Snowflake size={15}/>} hint="保留冬日温暖" />
+  <Metric name="采光面积比例" tag={`DF ≥ ${presets.daylight_threshold_pct.toFixed(1)}%`} value={m?.daylight_compliance_rate} color="green" icon={<Leaf size={15}/>} hint={m?(m.daylight_compliance_rate>=.8?'面积比例 ≥ 80%（待复核）':'面积比例低于 80% 目标'):'等待计算'} />
+  </div>
+  {comparison&&<div className="comparison"><Check size={14}/><span>{config.mode==='mock'?'演示寻优已应用':'寻优参数已应用'} · 遮阳率 {percent(comparison.before.metrics.summer_shading_rate)} → {percent(comparison.after.metrics.summer_shading_rate)}</span></div>}
+- <section className="section-card"><div className="section-card-title"><h3>冬夏工况剖面对照</h3><span>A — A</span></div><Section room={room} highlightWinter={highlight==='winter-depth'} parameters={parameters} result={pending?null:result} season={season}/><div className="drawing-legend"><span><i className="summer-line"/>夏至光线</span><span><i className="winter-line"/>冬至光线</span><span>几何示意 · 非施工图</span></div></section>
+- <div className="depth-row"><span>冬至日入射深度</span><strong>{m?m.winter_penetration_m.toFixed(2):'—'}<small> m</small></strong></div>
+  <p className="model-footnote">{pending?'参数已即时预览，指标与热力图待更新。':config.mode==='mock'?`${result?.heatmap_grid.length??'—'} × ${result?.heatmap_grid[0]?.length??'—'} 演示矩阵，与 3D 阴影独立；非 GB 50033 判定。0° 水平百叶夏至仍可能全遮直射。`:`${result?.heatmap_grid.length??'—'} × ${result?.heatmap_grid[0]?.length??'—'} 采光矩阵；数值/虚线来自接口，${room?'理想几何已同步；型材/家具/反射为展示近似，统计区不等于实体沙发。':'几何未同步，3D/剖面暂停。'}`}</p>
+  
+  </ScoreDrawer>
+--- before/前端文件/src/scoring/ScoreDrawer.tsx
++++ after/前端文件/src/scoring/ScoreDrawer.tsx
+@@ -10,24 +10,30 @@
+  const example=report?.provenance==='example';
+  return <button ref={buttonRef} className="score-capsule" type="button" onClick={onToggle} aria-expanded={open} aria-controls="score-drawer" aria-label={`${example?'独立示例，非当前方案评分':pending?'冬夏工况评分待更新':'冬夏设计工况评分，非当前日期或全年分'} ${formatScore(report?.total_score)}，${report?.grade_label??'待后端评分数据'}，${open?'收起':'展开'}细则`}><div className="capsule-score"><ScoreRing value={report?.total_score??null} max={report?.max_score??100} grade={report?.grade??''}/></div><span className="capsule-copy"><strong style={{borderColor:report?gradeColor(report.grade):undefined}}>{error?'异常':example?`示例 · ${report?.grade}级`:report?.grade?`${report.grade}级`:'待接入'}</strong><small>{error?'评分不可用':example?'非当前方案':pending?(report?'更新中 · 上次评分':'评分请求中'):report?'冬夏工况分':'后端尚未提供评分'}</small></span><span className="capsule-detail">{(report?.warnings.length??0)>0&&<TriangleAlert size={13} aria-label="含报告警示"/>}细则<ChevronDown size={13}/></span></button>;
+ }
+-export function ScoreDrawer({open,report,pending,error,simulationNotice,onClose,onHighlight,onOptimize,onCancel,busy,canOptimize,children,renderDepthPreview,preview,applicability}:{open:boolean;report:ScoreReport|null;pending:boolean;error?:string;simulationNotice?:ReactNode;onClose:()=>void;onHighlight:(target:LinkTarget|null)=>void;onOptimize:()=>void;onCancel:()=>void;busy:boolean;canOptimize:boolean;children:ReactNode;preview?:ReactNode;applicability?:ReactNode;renderDepthPreview?:(drawingId:string)=>ReactNode}){
+- const [openId,setOpenId]=useState<string|null>(null),[diagnostics,setDiagnostics]=useState(false),close=useRef<HTMLButtonElement>(null);
++export type ReportView='score'|'date'|'cases';
++const REPORT_VIEWS:[ReportView,string][]=[['score','评分细则'],['date','日期几何'],['cases','两至工况']];
++export function ScoreDrawer({open,report,pending,error,simulationNotice,onClose,onHighlight,onOptimize,onCancel,busy,canOptimize,children,renderDepthPreview,preview,applicability,view,onViewChange,focusRequest=0}:{open:boolean;report:ScoreReport|null;pending:boolean;error?:string;simulationNotice?:ReactNode;onClose:()=>void;onHighlight:(target:LinkTarget|null)=>void;onOptimize:()=>void;onCancel:()=>void;busy:boolean;canOptimize:boolean;children:ReactNode;preview?:ReactNode;applicability?:ReactNode;renderDepthPreview?:(drawingId:string)=>ReactNode;view?:ReportView;onViewChange?:(view:ReportView)=>void;focusRequest?:number}){
++ const [openId,setOpenId]=useState<string|null>(null),[localView,setLocalView]=useState<ReportView>('score'),close=useRef<HTMLButtonElement>(null),body=useRef<HTMLDivElement>(null),lastFocusRequest=useRef(0),tabs=useRef<Record<ReportView,HTMLButtonElement|null>>({score:null,date:null,cases:null});
++ const active=view??localView,changeView=onViewChange??setLocalView;
+  useEffect(()=>{if(!open)return;close.current?.focus();const escape=(event:KeyboardEvent)=>{if(event.key==='Escape'&&!document.querySelector('[aria-modal="true"]')){event.stopPropagation();onClose()}};document.addEventListener('keydown',escape);return()=>document.removeEventListener('keydown',escape)},[open,onClose]);
+- // Separate pointer/focus ownership prevents scrolling or preview reflow from cancelling a focused row.
+- const [spatial,dispatchSpatial]=useReducer(spatialReducer,EMPTY_SPATIAL);
+- const target=spatialTarget(spatial);
+- useEffect(()=>{dispatchSpatial({type:'clear'})},[open,openId,report]);
+- useEffect(()=>{onHighlight(open?target:null)},[open,target,onHighlight]);
+- const previewDimension=report?.dimensions.find(d=>d.id===openId&&d.items.some(item=>item.link_target==='winter-depth'));
+- const example=report?.provenance==='example';
+- return <section id="score-drawer" className={`score-drawer ${open?'is-open':''}`} role="region" aria-labelledby="score-drawer-title" aria-hidden={!open} inert={!open}><header className="score-drawer-heading"><div><h2 id="score-drawer-title">光热舒适评测</h2><p>{example?'独立示例 · 非当前方案评分':report?'冬夏设计工况分 · 非所选日期/全年分':'旧版接口可用 · 评分待接入'}</p></div><button ref={close} className="icon-button" aria-label="关闭评分细则" onClick={onClose}><X size={18}/></button></header><div className="score-drawer-body">
+- {preview}{applicability}{simulationNotice}
++ useEffect(()=>{if(!open)return;if(body.current)body.current.scrollTop=0;const heading=document.querySelector<HTMLElement>(`#report-panel-${active} h3`);heading?.scrollIntoView({block:'nearest',behavior:'auto'})},[active,open]);
++ useEffect(()=>{if(!open||focusRequest===0||lastFocusRequest.current===focusRequest)return;const id=requestAnimationFrame(()=>{lastFocusRequest.current=focusRequest;const panel=document.getElementById(`report-panel-${active}`);panel?.focus({preventScroll:true});panel?.scrollIntoView({block:'start',behavior:'auto'})});return()=>cancelAnimationFrame(id)},[open,active,focusRequest]);
++ const [spatial,dispatchSpatial]=useReducer(spatialReducer,EMPTY_SPATIAL),target=spatialTarget(spatial);
++ useEffect(()=>{dispatchSpatial({type:'clear'})},[open,openId,report,active]);
++ useEffect(()=>{onHighlight(open&&active==='score'?target:null)},[open,active,target,onHighlight]);
++ const previewDimension=active==='score'?report?.dimensions.find(d=>d.id===openId&&d.items.some(item=>item.link_target==='winter-depth')):undefined,example=report?.provenance==='example';
++ return <section id="score-drawer" className={`score-drawer ${open?'is-open':''}`} role="region" aria-labelledby="score-drawer-title" aria-hidden={!open} inert={!open}><header className="score-drawer-heading"><div className="report-heading-row"><div><h2 id="score-drawer-title">光热分析</h2><p>按来源分别查看 · 日期不重计分</p></div><button ref={close} className="icon-button" aria-label="关闭光热分析" onClick={onClose}><X size={18}/></button></div><div className="report-tabs" role="tablist" aria-label="分析信息来源">{REPORT_VIEWS.map(([id,label],index)=><button key={id} ref={el=>{tabs.current[id]=el}} id={`report-tab-${id}`} role="tab" aria-selected={active===id} aria-controls={`report-panel-${id}`} tabIndex={active===id?0:-1} onClick={()=>changeView(id)} onKeyDown={event=>{let next=index;if(event.key==='ArrowRight')next=(index+1)%REPORT_VIEWS.length;else if(event.key==='ArrowLeft')next=(index+REPORT_VIEWS.length-1)%REPORT_VIEWS.length;else if(event.key==='Home')next=0;else if(event.key==='End')next=REPORT_VIEWS.length-1;else return;event.preventDefault();const target=REPORT_VIEWS[next][0];changeView(target);tabs.current[target]?.focus()}}>{label}</button>)}</div></header><div ref={body} className="score-drawer-body">
++ {applicability}{simulationNotice}
+  {error&&<p role="alert" className="score-report-error">评分暂不可用：{error}。原模拟指标与剖面仍可使用。</p>}
+- {report?<><p className="score-provenance">{example?'以下为固定界面示例，不随参数或寻优变化；真实模拟指标在下方另列。':pending?'参数已变化，以下为上次返回的评分，等待更新。':'以下报告值与来源由接口提供，前端不重新计分，也不作规范认证。'}</p>{report.completeness==='partial'&&<p className="score-partial">报告不完整：仅展示后端已返回的维度/子项，不补造其余结果。</p>}
++ <section id="report-panel-score" role="tabpanel" aria-labelledby="report-tab-score" className="report-view-panel" hidden={active!=='score'} tabIndex={0}><h3>{example?'独立评分示例':'后端评分 · 冬夏设计工况'}</h3>
++ {report?<><p className="score-provenance">{example?'以下为固定界面示例，不随参数或寻优变化；模拟指标在“两至工况”单列，不参与此示例评分。':pending?'参数已变化，以下为上次返回的评分，等待更新。':'以下报告值与来源由接口提供，前端不重新计分，也不作规范认证。'}</p>{report.completeness==='partial'&&<p className="score-partial">报告不完整：仅展示后端已返回的维度/子项，不补造其余结果。</p>}
+  <div className="dimension-overview" aria-label="各维度得分总览">{report.dimensions.map(d=><button key={d.id} onClick={()=>setOpenId(id=>id===d.id?null:d.id)} aria-label={`${d.name} ${formatScore(d.score)}/${d.weight}，展开子项`}><span><span>{d.name}</span><b>{formatScore(d.score)} / {d.weight}</b></span><i><i style={{width:`${d.weight?Math.min(100,(d.score??0)/d.weight*100):0}%`,background:gradeColor(report.grade)}}/></i></button>)}</div>
+  {report.warnings.length>0&&<details className="score-warnings"><summary><TriangleAlert size={14}/>口径与警示（{report.warnings.length}）</summary><ul>{report.warnings.map(w=><li key={w.id}>{w.message}</li>)}</ul><p>警示单列，不擅自清零；来源分类不等于合规认定。</p></details>}
+  <div className="score-dimensions">{report.dimensions.map(d=><DimensionAccordion key={d.id} dimension={d} open={openId===d.id} onToggle={()=>setOpenId(id=>id===d.id?null:d.id)} onSpatialAction={dispatchSpatial} depthPreview={d.items.some(item=>item.link_target==='winter-depth')?renderDepthPreview?.(`score-linked-mobile-${d.id}`):undefined}/>)}</div><div className="score-method"><strong>{example?'示例口径':'后端方法声明 · 前端未验证'}</strong><p>{report.methodology_note||'后端尚未提供方法声明。'}</p><p>精度、法规适用与S级可达性需独立验证。</p></div></>:<p className="score-provenance">当前模拟接口未提供 score_report。保留原有指标、热力与剖面，不从正午结果推造全天日照或低碳分数。</p>}
+- <details className="simulation-disclosure" open={diagnostics} onToggle={e=>setDiagnostics(e.currentTarget.open)}><summary>冬夏工况指标与剖面对照<ChevronDown size={15}/></summary><div>{children}</div></details>
+- <div className="score-optimize"><button className="optimize-button" onClick={onOptimize} disabled={!canOptimize||busy}>{busy?'正在优化参数…':example?'优化构件':'优化评分'}</button>{busy&&<button className="text-button" onClick={onCancel}>取消寻优</button>}<p>以实际后端目标为准，不承诺分数提升或S级。演示模式仍是原网格评分，非此独立评分示例。</p></div>
++
++ </section><section id="report-panel-date" role="tabpanel" aria-labelledby="report-tab-date" className="report-view-panel" hidden={active!=='date'} tabIndex={0}><h3>当前日期 · 前端几何</h3>{preview}</section>
++ <section id="report-panel-cases" role="tabpanel" aria-labelledby="report-tab-cases" className="report-view-panel" hidden={active!=='cases'} tabIndex={0}><h3>{example?'演示两至工况':'后端两至工况'} <span className="report-update">{pending?'更新中':example?'近似示例':'接口结果'}</span></h3><p className="report-scope">{example?'演示':'接口'}指标与代表射线，不是所选日期或全年性能。</p>{children}</section>
++ <div className="score-optimize"><button className="optimize-button" onClick={onOptimize} disabled={!canOptimize||busy}>{busy?'正在优化参数…':example?'优化构件':'优化评分'}</button>{busy&&<button className="text-button" onClick={onCancel}>取消寻优</button>}<p>{example?'近似网格寻优，不对应此独立评分示例。':'以实际后端冬夏工况目标为准，不承诺提分或S级。'}</p></div>
++
+  </div>{previewDimension&&renderDepthPreview&&<div className="linked-section-preview">{renderDepthPreview("score-linked-desktop")}</div>}</section>;
+ }
+--- before/前端文件/src/scoring/scoring.css
++++ after/前端文件/src/scoring/scoring.css
+@@ -150,3 +150,22 @@
+   .mobile-depth-preview { display:block; padding-top:8px }
+   .mobile-depth-preview svg { display:block; width:100%; max-height:150px }
+ }
++
++/* Information-only organization inside the existing 360px lane. */
++.score-drawer-heading { display:block }
++.report-heading-row { display:flex; align-items:center; justify-content:space-between; gap:10px }
++.report-tabs { display:flex; gap:5px; margin-top:8px; border-bottom:1px solid var(--line) }
++.report-tabs button { flex:1; min-width:0; min-height:32px; padding:4px 2px; font-size:13px; line-height:1.5; border-bottom:2px solid transparent; white-space:nowrap }
++.report-tabs [aria-selected=true] { border-bottom-color:var(--forest); color:var(--forest); font-weight:600 }
++.report-view-panel[hidden] { display:none!important }
++.report-view-panel { scroll-margin-top:10px }
++.report-view-panel:focus-visible { outline:2px solid #9b5037; outline-offset:3px }
++.report-view-panel>h3 { font-size:14px; line-height:1.5; font-weight:600; margin-bottom:10px }
++.report-view-panel>h3 .report-update { float:right; font-size:12px; font-weight:400; color:var(--muted) }
++.report-scope { color:var(--muted); font-size:12px; line-height:1.65; margin-bottom:10px }
++.report-view-panel .annual-section { border-bottom:0; margin-bottom:0 }
++@media(max-width:760px) {
++ .report-tabs { margin-top:6px }
++ .report-view-panel,.report-view-panel>h3,.report-view-panel .dimension-accordion h3 button { scroll-margin-top:126px }
++ .report-view-panel .score-item[tabindex] { scroll-margin-block:126px 110px }
++}

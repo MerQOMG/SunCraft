@@ -1,15 +1,16 @@
 """Same-origin entry point for the checked-in SunCraft Studio."""
 
 from pathlib import Path
+import os
 
 from fastapi import FastAPI, HTTPException
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import FileResponse
+from fastapi.responses import FileResponse, RedirectResponse
 from pydantic import BaseModel, ConfigDict, Field, model_validator
 
 from . import scene
-from .api import app as engine_app, validation_error
+from .api import app as engine_app, validation_error, presets as engine_presets
 from .optimization import optimize
 from .schemas import SimulationInput, SimulationResult
 from .simulation import simulate
@@ -65,16 +66,27 @@ def studio_result(result: SimulationResult):
     return data
 
 
-@app.get("/", response_class=FileResponse, include_in_schema=False)
+@app.get("/", include_in_schema=False)
 def studio_page():
+    # Development-only routing, not a rebuild of the checked-in legacy bundle.
+    if os.environ.get("SUNCRAFT_DEV_ENTRY") == "1":
+        return RedirectResponse("http://127.0.0.1:5174/", status_code=307, headers={"Cache-Control": "no-store"})
     return FileResponse(FRONTEND, media_type="text/html")
+
+
+@app.get("/legacy-demo", response_class=FileResponse, include_in_schema=False)
+def legacy_page():
+    return FileResponse(FRONTEND, media_type="text/html", headers={"X-SunCraft-Entry": "legacy-offline-demo"})
 
 
 @app.get("/api/presets")
 def studio_presets():
     return {"cities": [{"id": key, "name": name, "latitude": lat}
                        for key, (name, lat) in scene.CITIES.items()],
-            "daylight_threshold_pct": scene.DF_THRESHOLD}
+            "daylight_threshold_pct": scene.DF_THRESHOLD,
+            "room": {**engine_presets()["room"], "geometry_model": "head-periodic-outward-down-v1"},
+            "limits": {"overhang_depth_m": [0, 1.8], "louver_angle_deg": [0, 80],
+                       "window_wall_ratio": [.25, .65]}}
 
 
 @app.post("/api/simulate")

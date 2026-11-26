@@ -1,0 +1,39 @@
+{
+  "sampleCount": 4096,
+  "periodicBoundaryPairs": 64,
+  "maxSeamError": 1.7053025658242404e-13,
+  "woodFinalRoughnessRange": [
+    0.600394419910438,
+    0.7796055800895619
+  ],
+  "materials": {
+    "tvRear": {
+      "roughness": 0.86,
+      "metalness": 0,
+      "srgb": "5b625d"
+    },
+    "powdercoat": {
+      "roughness": 0.62,
+      "metalness": 0.05,
+      "srgb": "545d58"
+    },
+    "walnut": {
+      "roughness": 1,
+      "metalness": 0,
+      "srgb": "ffffff"
+    }
+  },
+  "newTexture": {
+    "size": [
+      256,
+      256
+    ],
+    "linear": true,
+    "additionalBaseLevelBytes": 262144
+  },
+  "addedMeshes": 0,
+  "addedTriangles": 0,
+  "newLights": 0,
+  "newRenderPasses": 0,
+  "note": "Pure data/PBR construction checks only, not GPU/visual/VRAM measurement."
+}

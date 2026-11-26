@@ -6,5 +6,7 @@ const result=await build({configFile:false,plugins:[react(),tailwind()],base:'./
 const outputs=(Array.isArray(result)?result:[result]).flatMap(r=>r.output);
 const script=outputs.filter(o=>o.type==='chunk').map(o=>o.code).join('\n').replace(/<\/script/gi,'<\\/script');
 const css=outputs.filter(o=>o.type==='asset'&&o.fileName.endsWith('.css')).map(o=>o.source).join('\n');
-await fs.writeFile('SunCraft-离线演示.html',`<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>夏遮冬透 · SunCraft 离线演示</title><style>${css}</style></head><body><div id="root"></div><script type="module">${script}</script></body></html>`);
-console.log('Created self-contained offline HTML (demo mode, no runtime installation needed).');
+const html=`<!doctype html><html lang="zh-CN"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>夏遮冬透 · SunCraft 离线演示</title><style>${css}</style></head><body><div id="root"></div><script type="module">${script}</script></body></html>`;
+const entries=['../SunCraft-离线演示.html','../../夏遮冬透.html'];
+await Promise.all(entries.map(entry=>fs.writeFile(new URL(entry,import.meta.url),html)));
+console.log('Updated both self-contained SunCraft demo pages.');

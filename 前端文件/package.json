@@ -4,7 +4,7 @@
   "private": true,
   "type": "module",
   "scripts": {
-    "dev": "vite --host 127.0.0.1",
+    "dev": "vite --host 127.0.0.1 --port 5174 --strictPort",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "vitest run tests/model.test.ts tests/modeling.test.ts tests/camera.test.ts tests/lighting.test.ts tests/presentation.test.tsx tests/scoring.test.tsx tests/scoring-layout.test.tsx",

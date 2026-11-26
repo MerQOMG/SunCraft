@@ -1,0 +1,117 @@
+/* Compact, measured instrument row. Essential date/transport/source stays visible. */
+.workspace { --annual-row-height:108px }
+/* When 月份/节气 is open, the compact 108px reserve no longer covers
+ * the 164px extra (opens upward). Grow the reserved row so the scene
+ * shrinks instead of being covered. Collapsed layout is unchanged. */
+@media(min-width:761px) {
+ .workspace:has(.annual-extra) { --annual-row-height:calc(108px + 164px + 18px) }
+}
+.scene { bottom:calc(var(--annual-row-height) + 72px) }
+.viewport-tools { bottom:calc(var(--annual-row-height) + 82px) }
+.score-drawer { max-height:calc(100dvh - 235px - var(--annual-row-height)) }
+.annual-timeline { position:absolute; z-index:7; left:calc(var(--left) + var(--gutter) + 10px); right:var(--gutter); bottom:56px; padding:8px 12px; background:var(--paper); border:1px solid var(--line); border-radius:3px; display:flex; flex-direction:column; gap:5px; font-size:12px; line-height:1.5; min-width:0 }
+.annual-primary { display:flex; align-items:center; gap:8px; flex-wrap:wrap; flex-shrink:0; min-width:0 }
+.annual-heading,.annual-playback,.annual-date-controls { display:flex; align-items:center; gap:5px; flex-shrink:0; min-width:0 }
+.annual-heading strong { font-size:14px; font-weight:600; white-space:nowrap }
+.annual-term { color:var(--forest); width:62px; font-weight:550; white-space:nowrap }
+.annual-timeline button,.annual-timeline select { min-height:30px; padding:2px 6px; border:1px solid transparent; border-radius:2px; font-size:13px }
+.annual-playback button { min-width:66px }
+.annual-playback button,.annual-playback select,.annual-section-trigger,.annual-extra select { border-color:var(--line) }
+.annual-timeline select,.annual-timeline input[type=date] { background:var(--paper); color:var(--ink); min-width:0 }
+.annual-date-controls input[type=date] { width:140px; max-width:100%; height:32px; border:1px solid var(--line); padding:2px 5px; font-size:14px }
+.annual-date-controls button { width:26px; padding:0 }
+.annual-altitude { color:var(--forest); width:112px; font-size:12px; white-space:nowrap }
+.annual-section-trigger { margin-left:auto; white-space:nowrap }
+.annual-axis { display:flex; align-items:center; gap:10px; min-width:0 }
+.annual-timeline .annual-range { flex:1; width:0; min-width:0; min-height:22px; accent-color:var(--forest); cursor:ew-resize; margin:0; touch-action:pan-x }
+.annual-timeline button,.annual-timeline select,.annual-timeline input[type=date] { touch-action:manipulation }
+.annual-axis>button { flex-shrink:0; font-size:12px; min-height:26px }
+.annual-scope { color:var(--muted); font-size:12px; line-height:1.5; overflow-wrap:anywhere }
+/* Desktop disclosure opens upwards, keeping date/transport at the same bottom anchor. */
+.annual-extra { order:-1; display:flex; flex-direction:column; gap:8px; max-height:164px; overflow:auto; padding-bottom:9px; border-bottom:1px solid var(--line); min-width:0 }
+.annual-extra label { display:flex; align-items:center; flex-wrap:wrap; gap:8px; font-size:12px }
+.annual-extra p { color:var(--muted); font-size:12px; line-height:1.6; overflow-wrap:anywhere }
+.annual-extra a { color:var(--forest); text-underline-offset:2px }
+.annual-months { display:grid; grid-template-columns:repeat(12,minmax(0,1fr)); flex-shrink:0; min-width:0 }
+.annual-months button { min-width:0; padding:1px 0; min-height:28px; font-size:12px }
+.annual-months [aria-current=date] { background:#e1e8df; color:var(--forest); font-weight:600 }
+.annual-input-error { color:var(--terra); font-size:12px }
+.annual-method { font-size:12px; color:var(--muted); line-height:1.65; margin:14px 0 }
+.annual-method summary { cursor:pointer; color:var(--forest); padding-block:5px }
+.annual-method p { margin-top:7px }
+.annual-section { padding-bottom:12px; margin-bottom:14px; border-bottom:1px solid var(--line); scroll-margin-top:8px }
+.annual-section summary { font-size:14px; font-weight:550; cursor:pointer; padding-block:6px; scroll-margin-block:8px }
+.annual-section svg { display:block; width:100%; height:auto }
+.annual-section p { font-size:12px; line-height:1.6; color:var(--muted) }
+.annual-applicability { border-left:3px solid #b37d35; padding:10px; background:#f1ebde; color:#724b25; font-size:12px; line-height:1.7; margin-bottom:14px }
+.analysis-hint { bottom:calc(var(--annual-row-height) + 82px); max-width:calc(100% - var(--left) - 70px) }
+/* Date-first drawer uses the capsule area while open; X/Escape remain available. */
+@media(min-width:761px) {
+ .date-preview-active .score-capsule { visibility:hidden }
+ .date-preview-active .score-drawer { top:102px; max-height:calc(100dvh - 172px - var(--annual-row-height)) }
+}
+@media(max-width:760px) {
+ .workspace { --annual-row-height:212px; --mobile-score-top:calc(119px + var(--mobile-scene-height) + 20px + var(--annual-row-height)) }
+ .scene { bottom:auto }
+ .annual-timeline { left:12px; right:12px; top:calc(119px + var(--mobile-scene-height) + 10px); bottom:auto; padding:10px; gap:7px }
+ .annual-primary { display:grid; grid-template-columns:minmax(0,1fr) auto; grid-template-areas:"heading playback" "date date" "altitude section"; gap:5px 6px }
+ .annual-heading { grid-area:heading; flex-wrap:wrap; column-gap:5px; row-gap:0 }
+ .annual-heading strong { font-size:14px }
+ .annual-term { width:auto; font-size:12px }
+ .annual-playback { grid-area:playback }
+ .annual-date-controls { grid-area:date; justify-content:center }
+ .annual-altitude { grid-area:altitude; width:auto }
+ .annual-section-trigger { grid-area:section }
+ .annual-timeline button,.annual-timeline select { min-height:32px }
+ .annual-date-controls input[type=date] { width:164px; height:34px }
+ .annual-date-controls button { width:32px }
+ .annual-axis { gap:7px }
+ .annual-months { grid-template-columns:repeat(6,minmax(0,1fr)) }
+ .annual-extra { order:initial; max-height:min(36dvh,220px); overflow:auto; padding-bottom:0; padding-top:8px; border-bottom:0; border-top:1px solid var(--line) }
+ .workspace:has(.annual-extra) { --annual-row-height:calc(212px + min(36dvh, 220px) + 16px) }
+ .viewport-tools { bottom:auto; top:calc(var(--mobile-score-top) + 8px) }
+ .score-drawer { max-height:none }
+ .annual-section summary { scroll-margin-top:88px }
+ .analysis-hint { top:176px; bottom:auto; max-width:calc(100% - 24px) }
+}
+@media(prefers-reduced-motion:reduce) { .annual-timeline * { transition:none!important } }
+
+/* Framing stage: reclaim real desktop viewport pixels, not a fake room scale.
+ * Same controls/scope and 12px source text; source shares the lower row with axis.
+ * Small/medium layouts retain the already reviewed R2 stacking.
+ */
+@media(min-width:1100px) {
+ .annual-timeline { display:grid; grid-template-columns:minmax(220px,1fr) auto; gap:5px 10px; bottom:44px }
+ .annual-primary,.annual-extra,.annual-input-error { grid-column:1 / -1 }
+ .annual-scope { max-width:420px; align-self:center }
+ .scene { bottom:calc(var(--annual-row-height) + 52px) }
+ .viewport-tools { bottom:7px; right:calc(var(--gutter) + 180px) }
+ .analysis-hint { bottom:calc(var(--annual-row-height) + 62px) }
+}
+
+@media(min-width:761px) {
+ .annual-timeline { bottom:44px }
+ .scene { bottom:calc(var(--annual-row-height) + 52px) }
+ .viewport-tools { bottom:7px; right:calc(var(--gutter) + 180px) }
+ .analysis-hint { bottom:calc(var(--annual-row-height) + 62px) }
+ .score-drawer { max-height:calc(100dvh - 223px - var(--annual-row-height)) }
+ .date-preview-active .score-drawer { max-height:calc(100dvh - 160px - var(--annual-row-height)) }
+}
+
+/* Reserve an actual desktop report lane instead of painting the 360px drawer
+ * over the right window/TV. Mobile retains the reviewed below-canvas flow.
+ */
+@media(min-width:761px) {
+ .score-report-open .scene { right:calc(var(--gutter) + 372px) }
+ .score-report-open .scene-caption { right:calc(var(--gutter) + 372px); padding-right:12px }
+ .score-report-open .heat-legend { right:calc(var(--gutter) + 384px) }
+ .score-report-open .analysis-hint { max-width:calc(100% - var(--left) - var(--gutter) - 402px) }
+}
+
+@media(min-width:761px) {
+ /* Both date and winter-depth disclosures: keep one scrolling column, not a
+  * second pinned preview stealing the date diagram's first-screen height. */
+ .date-preview-active .linked-section-preview { display:none }
+ .date-preview-active .mobile-depth-preview { display:block; margin-top:12px; padding:10px 5px 3px; border-top:1px solid var(--line) }
+ .date-preview-active .mobile-depth-preview svg { display:block; width:100%; height:auto; max-height:170px }
+}

@@ -77,6 +77,9 @@ input[type=range]:disabled { cursor:wait; opacity:.55 }
 .optimize-button:not(:disabled):hover { background:#203b32 }
 .optimize-button>span { flex:1 }
 .optimize-button small { display:block; color:#e0e7dd; font-size:12px; font-weight:400; line-height:1.5; margin-top:3px }
+/* Disabled solid primary actions only: hollow and muted. Enabled fill, type, and hover above stay unchanged. */
+.export-button:disabled,.optimize-button:disabled { background:transparent; color:var(--muted); box-shadow:inset 0 0 0 1px #b7c0b6; opacity:1 }
+.optimize-button:disabled small { color:var(--muted) }
 .optimize-note { font-size:12px; line-height:1.65; color:var(--muted); margin-top:10px }
 .text-button { text-decoration:underline; font-size:14px; padding:8px 0 }
 .cancel { display:flex; margin:4px auto 0 }
@@ -129,7 +132,7 @@ input[type=range]:disabled { cursor:wait; opacity:.55 }
 .heat-legend>div { display:flex; justify-content:space-between; gap:8px }
 .heat-legend strong { font-weight:550 }
 .heat-legend>div>span { color:var(--muted) }
-.heat-legend>i { display:block; height:7px; margin:7px 0 4px; background:linear-gradient(90deg,#586f8d,#6f9ca0,#9fbf91,#ead889,#e6b46d) }
+.heat-legend>i { display:block; height:7px; margin:7px 0 4px }
 .statusbar { position:absolute; bottom:0; left:var(--gutter); right:var(--gutter); height:39px; display:flex; align-items:center; justify-content:space-between; gap:12px; color:var(--muted); font-size:12px; line-height:1.5; pointer-events:none }
 .statusbar>div,.statusbar p { display:flex; align-items:center; gap:8px }
 .statusbar b { font-weight:400 }
@@ -200,3 +203,5 @@ input[type=range]:disabled { cursor:wait; opacity:.55 }
 }
 @media(max-width:360px) { .brand-icon { display:none } .heat-label-full { display:none } .heat-label-short { display:inline } .heat-toggle>svg { display:none } .top-controls { gap:6px } .season-tabs button { padding:0 4px } }
 @media(prefers-reduced-motion:reduce) { *,*::before,*::after { scroll-behavior:auto!important; transition:none!important; animation:none!important } }
+
+.heat-legend>p { margin-top:4px; color:var(--muted) }

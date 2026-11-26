@@ -1,0 +1,18 @@
+PASS Unavailable capsule does not present last 91.1/S as current
+PASS Unavailable copy matches the failure footnote intent and accessible name
+PASS Unavailable capsule does not keep a live-success caption or warning icon
+PASS Successful current report still shows its score
+PASS Pending may show last score only as a waiting-review state
+PASS Visually hidden open-drawer capsule is inert and out of the accessibility tree
+PASS Visible open-drawer capsule stays the accessible toggle
+PASS App withholds failed reports from the capsule and suppresses it only in the existing date-preview lane
+PASS Hidden tab stops scheduling RAF; visibility restars the clock
+PASS Zero-size resize skipped; heat canvas only rebuilt when the grid changes
+PASS Date clock still pauses when hidden or reduced-motion preference changes
+PASS Existing 360px report lane kept
+PASS Reviewed mobile canvas clamp, timeline height and desktop reserved lane kept
+PASS HTTP 200 /src/scoring/ScoreDrawer.tsx
+PASS HTTP 200 /src/App.tsx
+PASS HTTP 200 /src/Scene.tsx
+PASS HTTP 200 /src/AnnualTimeline.tsx
+17 targeted capsule/a11y/guard checks passed; no browser, FPS claim, full suite or build.

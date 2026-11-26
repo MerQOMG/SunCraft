@@ -1,0 +1,22 @@
+[
+  {
+    "path": "/src/surfaceSamples.ts",
+    "status": 200,
+    "bytes": 2702
+  },
+  {
+    "path": "/src/materials.ts",
+    "status": 200,
+    "bytes": 15718
+  },
+  {
+    "path": "/src/Scene.tsx",
+    "status": 200,
+    "bytes": 77416
+  },
+  {
+    "path": "/src/modeling/window.ts",
+    "status": 200,
+    "bytes": 18924
+  }
+]

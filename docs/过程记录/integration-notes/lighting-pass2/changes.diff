@@ -1,0 +1,38 @@
+--- before/前端文件/src/Scene.tsx
++++ after/前端文件/src/Scene.tsx
+@@ -111,7 +111,7 @@
+  [...frameSides,...mullions,glass].forEach(m=>{m.scale.y=win.height;m.position.y=F+win.center});
+  overhang.visible=geometry.canopy.visible;overhang.scale.z=Math.max(.000001,geometry.canopy.depth);overhang.position.set(0,F+win.top+.06,facade-geometry.canopy.depth/2);
+  louvers.forEach((m,i)=>{const b=geometry.blades[i];m.visible=louverOptics[i].visible=!!b;if(!b)return;m.position.set(0,F+b.centerHeight,facade+b.centerDepth);m.rotation.x=-geometry.angle;const optical=louverOptics[i];optical.position.copy(m.position);optical.rotation.x=Math.PI/2-geometry.angle});
+- windowDetails.update(geometry);const solar=solarFrame??solarNoon(p.latitude,season,resultCurrent?result?.solar_angles:undefined);el.dataset.solarFrame=JSON.stringify(solarFrame??null);sun.position.set(solar.direction.x*15,solar.direction.y*15,solar.direction.z*15);sun.target.position.set(0,0,0);const budget=lightingBudget(p,solarFrame?'annual':season,solar.direction,room);scene.environmentIntensity=budget.environment;sun.color.copy(budget.sunColor);sun.intensity=solarFrame&&!solarFrame.aboveHorizon?0:budget.sunIntensity;windowLight.height=win.height;windowLight.position.set(0,F+win.center,facade+.04);windowLight.lookAt(0,F+win.center,0);windowLight.intensity=budget.portal;floorBounce.intensity=budget.floorBounce;northBounce.intensity=budget.northBounce;renderer.toneMappingExposure=budget.exposure;el.dataset.lightingApproximation=JSON.stringify({skyVisibility:budget.skyFraction,environment:budget.environment,skyKelvin:LIGHTING.skyKelvin,portal:budget.portal,sunIntensity:sun.intensity,floorBounce:budget.floorBounce,northBounce:budget.northBounce,exposure:budget.exposure})}
++ windowDetails.update(geometry);const solar=solarFrame??solarNoon(p.latitude,season,resultCurrent?result?.solar_angles:undefined);el.dataset.solarFrame=JSON.stringify(solarFrame??null);sun.position.set(solar.direction.x*15,solar.direction.y*15,solar.direction.z*15);sun.target.position.set(0,0,0);const budget=lightingBudget(p,solarFrame?'annual':season,solar.direction,room);scene.environmentIntensity=budget.environment;sun.color.copy(budget.sunColor);sun.intensity=solarFrame&&!solarFrame.aboveHorizon?0:budget.sunIntensity;windowLight.height=win.height;windowLight.position.set(0,F+win.center,facade+.04);windowLight.lookAt(0,F+win.center,0);windowLight.color.copy(kelvinColor(LIGHTING.skyKelvin));windowLight.intensity=budget.portal;floorBounce.intensity=budget.floorBounce;northBounce.intensity=budget.northBounce;renderer.toneMappingExposure=budget.exposure;el.dataset.lightingApproximation=JSON.stringify({skyVisibility:budget.skyFraction,environment:budget.environment,skyKelvin:LIGHTING.skyKelvin,portal:budget.portal,sunIntensity:sun.intensity,floorBounce:budget.floorBounce,northBounce:budget.northBounce,exposure:budget.exposure})}
+  const showHeat=showCurrentHeat(heat,!!result,resultCurrent);if(heatMesh.visible!==showHeat)needsRender=true;heatMesh.visible=showHeat;if(showHeat&&result&&result.heatmap_grid!==lastGrid){needsRender=true;lastGrid=result.heatmap_grid;const small=document.createElement('canvas');small.width=result.heatmap_grid[0].length;small.height=result.heatmap_grid.length;const sc=small.getContext('2d')!;for(let z=0;z<small.height;z++)for(let x=0;x<small.width;x++){const value=result.heatmap_grid[z][x];sc.fillStyle=heatmapColor(value);sc.fillRect(x,z,1,1)}hc.clearRect(0,0,384,384);hc.imageSmoothingEnabled=true;hc.filter='blur(6px)';hc.drawImage(small,0,0,384,384);heatTex.needsUpdate=true}
+  controls.update();if(needsRender){if(post)post.render(showHeat);else renderer.render(scene,camera);needsRender=false}}
+  renderer.setSize(el.clientWidth,el.clientHeight,false);post?.resize(el.clientWidth,el.clientHeight);fitCamera();tick();ready.current();
+--- before/前端文件/src/lighting.ts
++++ after/前端文件/src/lighting.ts
+@@ -4,11 +4,12 @@
+ import type {RoomGeometry} from './geometry';
+ import {FINISH} from './shading.ts';
+ /** Rendering calibration, NOT lux, a backend result, or a validated radiosity solver.
+- * Window-biased diffuse rather than isotropic wash. Fixed exposure/direct solar strength.
++ * One bounded rebalance: lower undirected IBL and first-bounce fill, raise aperture-origin
++ * key light, slightly stronger annual direct (shadowed by real geometry). Exposure stays put.
+  * Daylight-only fill is off below the horizon; north-side sun still gets sky diffuse,
+- * never a fictional direct-floor bounce. AO remains a small geometric contact effect.
++ * never a fictional direct-floor bounce. AO is a tighter geometric contact, not a vignette.
+  */
+-export const LIGHTING={exposure:1.10,environment:.07,skyRadiance:11,skyKelvin:6800,floorReflectance:.48,wallReflectance:.76,floorFluxShare:.36,northFluxShare:.12,aoRadius_m:.11,aoIntensity:.35,aoMaxDimension:900} as const;
++export const LIGHTING={exposure:1.10,environment:.03,skyRadiance:15.5,skyKelvin:6400,floorReflectance:.48,wallReflectance:.76,floorFluxShare:.18,northFluxShare:.06,aoRadius_m:.08,aoIntensity:.45,aoMaxDimension:900} as const;
+ type V={x:number;y:number;z:number};
+ function exteriorBlocked(p:Parameters,o:V,d:V,room:RoomGeometry){
+  const g=shadeGeometry(p,room),w=g.window,facade=-room.depth_m/2,f=RENDER_FLOOR_Y;
+@@ -33,7 +34,7 @@
+  const r=t<=66?255:329.698727446*Math.pow(t-60,-.1332047592),g=t<=66?99.4708025861*Math.log(t)-161.1195681661:288.1221695283*Math.pow(t-60,-.0755148492),b=t>=66?255:t<=19?0:138.5177312231*Math.log(t-10)-305.0447927307;
+  return new Color().setRGB(clamp(r),clamp(g),clamp(b),SRGBColorSpace);
+ }
+-export function lightingBudget(p:Parameters,season:Season|'annual',sun:V,room:RoomGeometry){const win=windowGeometry(p.window_wall_ratio,room),skyFraction=apertureSkyFraction(p,room),daylight=sun.y>0?1:0,portal=LIGHTING.skyRadiance*skyFraction*daylight,sunIntensity=daylight*(season==='annual'?5.3:season==='summer'?5.6:5),sunFloorFraction=floorSunFraction(p,sun,room),area=win.width*win.height;
++export function lightingBudget(p:Parameters,season:Season|'annual',sun:V,room:RoomGeometry){const win=windowGeometry(p.window_wall_ratio,room),skyFraction=apertureSkyFraction(p,room),daylight=sun.y>0?1:0,portal=LIGHTING.skyRadiance*skyFraction*daylight,sunIntensity=daylight*(season==='annual'?6.2:season==='summer'?6.55:5.85),sunFloorFraction=floorSunFraction(p,sun,room),area=win.width*win.height;
+  const skyFloor=portal*area/(room.width_m*room.depth_m)*LIGHTING.floorFluxShare*LIGHTING.floorReflectance;
+  const directFloor=sunIntensity*Math.max(0,sun.y)*sunFloorFraction*LIGHTING.floorReflectance/Math.PI;
+  return {exposure:LIGHTING.exposure,environment:LIGHTING.environment*daylight,skyFraction,sunFloorFraction,portal,floorBounce:skyFloor+directFloor,northBounce:portal*area/(room.width_m*room.height_m)*LIGHTING.northFluxShare*LIGHTING.wallReflectance,sunIntensity,sunColor:kelvinColor(season==='annual'?5600:season==='summer'?6000:5200)};

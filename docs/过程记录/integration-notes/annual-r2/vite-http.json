@@ -1,0 +1,27 @@
+[
+  {
+    "path": "/",
+    "status": 200,
+    "bytes": 604
+  },
+  {
+    "path": "/src/App.tsx",
+    "status": 200,
+    "bytes": 143886
+  },
+  {
+    "path": "/src/AnnualTimeline.tsx",
+    "status": 200,
+    "bytes": 35354
+  },
+  {
+    "path": "/src/timelineClock.ts",
+    "status": 200,
+    "bytes": 2885
+  },
+  {
+    "path": "/src/annual.css",
+    "status": 200,
+    "bytes": 6392
+  }
+]

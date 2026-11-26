@@ -1,0 +1,1 @@
+Changed-source TypeScript static diagnostics: 0. Includes existing vite-env.d.ts. No emit/build/test suite.

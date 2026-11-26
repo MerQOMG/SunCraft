@@ -1,3 +1,4 @@
+import {EXAMPLE_ROOM,shadeGeometry} from '../src/geometry';
 import { describe,it,expect } from 'vitest';
 import { DEFAULTS, PRESETS, mockSimulate, mockOptimize, windowGeometry } from '../src/model';
 import { validateSimulation,validatePresets,validateOptimization } from '../src/api';
@@ -33,11 +34,11 @@ describe('shared solar-noon geometry',()=>{
  it('removes responsive SVG width styles inside the fixed design sheet viewport',()=>{const out=designSheet(DEFAULTS,mockSimulate(DEFAULTS),'<svg style="width: 100%; height: auto; font-family: Arial;" viewBox="0 0 370 256"></svg>','上海','演示 / 近似数据');expect(out).not.toContain('width: 100%');expect(out).toContain('width="964" height="650"')});
 });
 
-import { LOUVER,FINISH,sofaFoot } from '../src/shading';
+import { VISUAL_CONSTRUCTION,FINISH,sofaFoot } from '../src/shading';
 describe('R3 construction diagnosis',()=>{
- it('retains seven fixed blades while using actual 100mm chords and 12mm thickness',()=>{expect(LOUVER.count).toBe(7);expect(LOUVER.chord_m).toBe(.1);expect(LOUVER.thickness_m).toBe(.012)});
- it('leaves a real winter aperture at horizontal angle, not a fake light patch',()=>{const w=windowGeometry(DEFAULTS.window_wall_ratio),spacing=w.height/LOUVER.count;const altitude=solarNoon(DEFAULTS.latitude,'winter').altitude*Math.PI/180;const occlusion=LOUVER.thickness_m+LOUVER.chord_m*Math.tan(altitude);const legacy=.035+.19*Math.tan(altitude);expect(occlusion).toBeLessThan(spacing);expect(occlusion).toBeLessThan(legacy*.6)});
- it('does not pretend that 0 degrees is open to a high summer-noon sun',()=>{const spacing=windowGeometry(DEFAULTS.window_wall_ratio).height/LOUVER.count;expect(LOUVER.chord_m*Math.tan(solarNoon(DEFAULTS.latitude,'summer').altitude*Math.PI/180)+LOUVER.thickness_m).toBeGreaterThan(spacing)});
+ it('uses head-periodic 60mm ideal blades with separately declared decorative thickness',()=>{expect(EXAMPLE_ROOM.slat_chord_m).toBe(.06);expect(EXAMPLE_ROOM.slat_pitch_m).toBe(.45);expect(VISUAL_CONSTRUCTION.bladeThickness_m).toBe(.012);expect(shadeGeometry(DEFAULTS,EXAMPLE_ROOM).blades).toHaveLength(4)});
+ it('tilts the outer edge down for a positive angle',()=>{const g=shadeGeometry({...DEFAULTS,louver_angle_deg:30},EXAMPLE_ROOM);expect(g.blades[0].outerHeight).toBeLessThan(g.blades[0].rootHeight);expect(g.blades[0].outerDepth).toBeLessThan(0)});
+ it('hides zero-depth canopies rather than leaving a residual strip',()=>{expect(shadeGeometry({...DEFAULTS,overhang_depth_m:0},EXAMPLE_ROOM).canopy.visible).toBe(false)});
  it('puts rug and both sofa leg lengths in contact instead of floating',()=>{expect(FINISH.floorTop_m+FINISH.rugThickness_m).toBeCloseTo(FINISH.rugTop_m);for(const rug of [true,false]){const f=sofaFoot(rug);expect(f.center-f.height/2).toBeCloseTo(rug?FINISH.rugTop_m:FINISH.floorTop_m);expect(f.center+f.height/2).toBeCloseTo(FINISH.sofaLegTop_m)}});
  it('does not alter the demonstration metric meaning with a visual construction change',()=>{const s=mockSimulate(DEFAULTS);expect(s.metrics.summer_shading_rate).toBeCloseTo(.292);expect(s.metrics.winter_solar_gain_rate).toBeCloseTo(.914);expect(s.heatmap_grid).toHaveLength(24)});
 });

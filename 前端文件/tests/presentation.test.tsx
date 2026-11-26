@@ -1,3 +1,4 @@
+import {EXAMPLE_ROOM} from '../src/geometry';
 import {describe,it,expect} from 'vitest';
 import {renderToStaticMarkup} from 'react-dom/server';
 import {readFileSync,writeFileSync} from 'node:fs';
@@ -9,7 +10,7 @@ const css=readFileSync(new URL('../src/styles.css',import.meta.url),'utf8');
 const app=readFileSync(new URL('../src/App.tsx',import.meta.url),'utf8');
 const luminance=(hex:string)=>hex.slice(1).match(/../g)!.map(n=>parseInt(n,16)/255).map(n=>n<=.04045?n/12.92:((n+.055)/1.055)**2.4).reduce((a,n,i)=>a+n*[.2126,.7152,.0722][i],0);
 const result=mockSimulate(DEFAULTS);
-const section=renderToStaticMarkup(<Section parameters={DEFAULTS} result={result} season="winter"/>);
+const section=renderToStaticMarkup(<Section room={EXAMPLE_ROOM} parameters={DEFAULTS} result={result} season="winter"/>);
 describe('P3 readable presentation (pure checks, not browser validation)',()=>{
  it('gives all normal text inks at least 4.5:1 contrast on the panel paper',()=>{
   const background=luminance(INK.paper);
@@ -21,7 +22,7 @@ describe('P3 readable presentation (pure checks, not browser validation)',()=>{
  });
  it('keeps correct geometry and labels with larger SVG text, including north-side summer sun',()=>{
   expect(section).toContain('夏至 82.2°');expect(section).toContain('冬至 35.4°');expect(section).toContain('6 000 mm');expect(section).toContain('font-size="20"');
-  const north=renderToStaticMarkup(<Section parameters={{...DEFAULTS,latitude:23.1}} result={null} season="summer"/>);
+  const north=renderToStaticMarkup(<Section room={EXAMPLE_ROOM} parameters={{...DEFAULTS,latitude:23.1}} result={null} season="summer"/>);
   expect(north).toContain('89.7° / 北侧');
  });
  it('wraps long CJK or unbroken names without dropping characters',()=>{
@@ -53,6 +54,6 @@ describe('P3 readable presentation (pure checks, not browser validation)',()=>{
   const sizes=[...css.matchAll(/font-size:\s*(\d+(?:\.\d+)?)px/g)].map(m=>Number(m[1]));
   expect(Math.min(...sizes)).toBeGreaterThanOrEqual(12);
   expect(css).not.toContain('blur(');expect(app).not.toContain('className="room-label"');
-  expect(app).toContain('GB 50033 判定');expect(app).toContain('presets.daylight_threshold_pct));');
+  expect(app).toContain('GB 50033 判定');expect(app).toContain('presets.daylight_threshold_pct,room));');
  });
 });

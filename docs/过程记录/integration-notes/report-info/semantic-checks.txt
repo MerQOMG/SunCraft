@@ -1,0 +1,5 @@
+HTTP 200 /src/App.tsx
+HTTP 200 /src/scoring/ScoreDrawer.tsx
+HTTP 200 /src/scoring/scoring.css
+HTTP 200 /src/export.ts
+24 targeted SSR fixtures / 427 semantic+HTTP assertions passed; no browser, build or full suite.

@@ -1,0 +1,16 @@
+// Cached real HTTP input + pure Three/SVG geometry only. Not browser/GPU validation.
+import fs from 'node:fs/promises';import {fileURLToPath} from 'node:url';import {createServer} from '../前端文件/node_modules/vite/dist/node/index.js';
+const root=fileURLToPath(new URL('../前端文件/',import.meta.url));const out=new URL('./geometry-http-evidence/',import.meta.url);
+const server=await createServer({root,server:{middlewareMode:true},logLevel:'error'});
+try{const {validatePresets,validateSimulation}=await server.ssrLoadModule('/src/api.ts');const {shadeGeometry,RENDER_FLOOR_Y}=await server.ssrLoadModule('/src/geometry.ts');const {DEFAULTS}=await server.ssrLoadModule('/src/model.ts');
+const {default:Section}=await server.ssrLoadModule('/src/Section.tsx');const {fineWindow}=await server.ssrLoadModule('/src/modeling/window.ts');const {designSheet}=await server.ssrLoadModule('/src/export.ts');const {lightingBudget}=await server.ssrLoadModule('/src/lighting.ts');const {solarNoon}=await server.ssrLoadModule('/src/solar.ts');
+const room=validatePresets(JSON.parse(await fs.readFile(new URL('01-presets.json',out),'utf8')).body).room;
+const result=validateSimulation(JSON.parse(await fs.readFile(new URL('02-simulate.json',out),'utf8')).body);
+const {createElement}=await import('../前端文件/node_modules/react/index.js');const {renderToStaticMarkup}=await import('../前端文件/node_modules/react-dom/server.node.js');
+const window=fineWindow(room),cases=[];
+for(const ratio of [.25,.45,.65])for(const angle of [0,30,80]){const p={...DEFAULTS,window_wall_ratio:ratio,louver_angle_deg:angle},g=shadeGeometry(p,room);window.update(g);const top=window.group.children[0],vertical=window.group.children[2],pins=window.group.getObjectByName('variable-blade-pivot-pins');if(Math.abs(top.position.y-(g.window.top+RENDER_FLOOR_Y))>1e-12||Math.abs(vertical.position.y-(g.window.center+RENDER_FLOOR_Y))>1e-12||pins.count!==2*g.blades.length)throw Error('Window assembly geometry mismatch');
+const budget=lightingBudget(p,'winter',solarNoon(p.latitude,'winter',result.solar_angles).direction,room);if(![budget.floorBounce,budget.northBounce,budget.exposure,budget.portal].every(Number.isFinite))throw Error('Nonfinite render budget');cases.push({ratio,angle,profileTop:top.position.y,profileCenter:vertical.position.y,pinCount:pins.count,renderBudget:budget})}
+const section=renderToStaticMarkup(createElement(Section,{room,parameters:DEFAULTS,result,season:'winter',highlightWinter:true}));const svg=designSheet(DEFAULTS,result,section,'上海','后端计算 / 待专业校核',2,room);await fs.writeFile(new URL('default-section.svg',out),section);await fs.writeFile(new URL('default-design-sheet.svg',out),svg);
+const missing=renderToStaticMarkup(createElement(Section,{room:null,parameters:DEFAULTS,result,season:'winter'}));if(!missing.includes('几何未同步')||missing.includes('data-ray-source'))throw Error('Missing geometry fallback not explicit');
+await fs.writeFile(new URL('surface-cases.json',out),JSON.stringify({case_count:cases.length,cases,missingRoom:missing,note:'Pure geometry and serialized SVG fixtures, not browser screenshots or downloaded files'},null,2));console.log('9 window/profile/render-budget cases finite; missing geometry explicit; SVG uses cached real backend rays.');
+}finally{await server.close()}

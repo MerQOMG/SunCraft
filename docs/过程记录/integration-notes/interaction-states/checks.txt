@@ -1,0 +1,25 @@
+PASS No current result does not claim solstice rays
+PASS Shanghai default keeps both ray labels
+PASS Guangzhou has no 夏至光线 claim and keeps winter
+PASS Failed to fetch is explicit, not a leftover success
+PASS NetworkError is explicit
+PASS 409 copy is preserved
+PASS 422 copy is preserved
+PASS Timeout copy is preserved
+PASS Activated inspection starts selected
+PASS Explicit clear still empties selection
+PASS Drawer clears inspection when parameter scope or failure changes, not only pending boolean
+PASS App passes parameter scope and failure into the drawer
+PASS Stale result is not treated as current success in plot footnote or legend
+PASS Guangzhou applicability uses current result only
+PASS Sidebar cancel sits outside the busy fieldset
+PASS Failed drawer copy is not a waiting-success state
+PASS Pending still explains last score is waiting
+PASS Drawer cancel remains available while optimization is busy
+PASS Capsule marks a failed request instead of last live score
+PASS HTTP 200 /src/App.tsx
+PASS HTTP 200 /src/analysisCopy.ts
+PASS HTTP 200 /src/scoring/ScoreDrawer.tsx
+PASS HTTP 200 /src/api.ts
+PASS HTTP 200 /src/useSimulation.ts
+24 targeted state/legend/error checks passed; no browser, full suite or build.

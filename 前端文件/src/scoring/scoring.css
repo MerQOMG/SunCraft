@@ -150,3 +150,25 @@
   .mobile-depth-preview { display:block; padding-top:8px }
   .mobile-depth-preview svg { display:block; width:100%; max-height:150px }
 }
+
+/* Information-only organization inside the existing 360px lane. */
+.score-drawer-heading { display:block }
+.report-heading-row { display:flex; align-items:center; justify-content:space-between; gap:10px }
+.report-tabs { display:flex; gap:5px; margin-top:8px; border-bottom:1px solid var(--line) }
+.report-tabs button { flex:1; min-width:0; min-height:32px; padding:4px 2px; font-size:13px; line-height:1.5; border-bottom:2px solid transparent; white-space:nowrap }
+.report-tabs [aria-selected=true] { border-bottom-color:var(--forest); color:var(--forest); font-weight:600 }
+.report-view-panel[hidden] { display:none!important }
+.report-view-panel { scroll-margin-top:10px }
+.report-view-panel:focus-visible { outline:2px solid #9b5037; outline-offset:3px }
+.report-view-panel>h3 { font-size:14px; line-height:1.5; font-weight:600; margin-bottom:10px }
+.report-view-panel>h3 .report-update { float:right; font-size:12px; font-weight:400; color:var(--muted) }
+.report-scope { color:var(--muted); font-size:12px; line-height:1.65; margin-bottom:10px }
+.report-view-panel .annual-section { border-bottom:0; margin-bottom:0 }
+@media(max-width:760px) {
+ .report-tabs { margin-top:6px }
+ .report-view-panel,.report-view-panel>h3,.report-view-panel .dimension-accordion h3 button { scroll-margin-top:126px }
+ .report-view-panel .score-item[tabindex] { scroll-margin-block:126px 110px }
+}
+
+/* Explicit result inspection survives source navigation; not a solar effect. */
+.inspection-selection { display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:6px; margin-bottom:8px }

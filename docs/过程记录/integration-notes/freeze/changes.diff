@@ -1,0 +1,12 @@
+--- before/前端文件/src/styles.css
++++ after/前端文件/src/styles.css
+@@ -77,6 +77,9 @@
+ .optimize-button:not(:disabled):hover { background:#203b32 }
+ .optimize-button>span { flex:1 }
+ .optimize-button small { display:block; color:#e0e7dd; font-size:12px; font-weight:400; line-height:1.5; margin-top:3px }
++/* Disabled solid primary actions only: hollow and muted. Enabled fill, type, and hover above stay unchanged. */
++.export-button:disabled,.optimize-button:disabled { background:transparent; color:var(--muted); box-shadow:inset 0 0 0 1px #b7c0b6; opacity:1 }
++.optimize-button:disabled small { color:var(--muted) }
+ .optimize-note { font-size:12px; line-height:1.65; color:var(--muted); margin-top:10px }
+ .text-button { text-decoration:underline; font-size:14px; padding:8px 0 }
+ .cancel { display:flex; margin:4px auto 0 }

@@ -1,0 +1,58 @@
+{
+  "cities": [
+    {
+      "id": "shanghai",
+      "name": "上海 / 同济",
+      "latitude": 31.2
+    },
+    {
+      "id": "beijing",
+      "name": "北京",
+      "latitude": 39.9
+    },
+    {
+      "id": "guangzhou",
+      "name": "广州",
+      "latitude": 23.1
+    },
+    {
+      "id": "harbin",
+      "name": "哈尔滨",
+      "latitude": 45.8
+    }
+  ],
+  "daylight_threshold_pct": 2.0,
+  "room": {
+    "width_m": 5.4,
+    "depth_m": 6.0,
+    "height_m": 3.0,
+    "window_width_m": 4.86,
+    "sill_m": 0.45,
+    "slat_chord_m": 0.06,
+    "slat_pitch_m": 0.45,
+    "sofa_depth_range_m": [
+      2.0,
+      3.8
+    ],
+    "sofa_width_m": 2.2,
+    "grid_shape": [
+      24,
+      24
+    ],
+    "geometry_model": "head-periodic-outward-down-v1"
+  },
+  "limits": {
+    "overhang_depth_m": [
+      0,
+      1.8
+    ],
+    "louver_angle_deg": [
+      0,
+      80
+    ],
+    "window_wall_ratio": [
+      0.25,
+      0.65
+    ]
+  }
+}

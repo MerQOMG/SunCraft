@@ -1,0 +1,63 @@
+{
+  "scope": "NON-browser targeted checks. Dependency dispatcher is a shim, not actual React lifecycle or browser Network capture.",
+  "clockCases": [
+    {
+      "speed": 1,
+      "daysAfter250ms": 1,
+      "stopInvalidatesQueuedCallback": true,
+      "restartInvalidatesPriorGeneration": true
+    },
+    {
+      "speed": 2,
+      "daysAfter250ms": 2,
+      "stopInvalidatesQueuedCallback": true,
+      "restartInvalidatesPriorGeneration": true
+    },
+    {
+      "speed": 4,
+      "daysAfter250ms": 4,
+      "stopInvalidatesQueuedCallback": true,
+      "restartInvalidatesPriorGeneration": true
+    }
+  ],
+  "dynamicAriaLabels": [
+    "播放日期，1倍，每秒4日",
+    "暂停日期，1倍，每秒4日",
+    "播放日期，2倍，每秒8日",
+    "暂停日期，2倍，每秒8日",
+    "播放日期，4倍，每秒16日",
+    "暂停日期，4倍，每秒16日"
+  ],
+  "networkProbe": {
+    "actualHttpCount": 1,
+    "initial": 1,
+    "dateOnlyRerenders": 24,
+    "additionalDateRequests": 0,
+    "changedParameterSchedulesRequest": true,
+    "score": 91.14974,
+    "requests": [
+      {
+        "url": "http://127.0.0.1:5174/api/simulate",
+        "method": "POST",
+        "payload": {
+          "city_id": "shanghai",
+          "latitude": 31.2,
+          "overhang_depth_m": 0.4,
+          "louver_angle_deg": 0,
+          "window_wall_ratio": 0.45
+        }
+      }
+    ]
+  },
+  "exportGuardStatic": {
+    "synchronousClockStop": true,
+    "flushPendingCommitBeforeReadingContext": true,
+    "domDateEqualityCheck": true,
+    "earlyPointerAndKeyboardFocusPause": true
+  },
+  "stillNeedsBrowser": [
+    "playback click/Enter/Space export",
+    "actual React Network during playback",
+    "compact layout and SVG viewport"
+  ]
+}

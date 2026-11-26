@@ -1,0 +1,22 @@
+[96m前端文件/src/Scene.tsx[0m:[93m106[0m:[93m486[0m - [91merror[0m[90m TS2345: [0mArgument of type 'RoomGeometry | null' is not assignable to parameter of type 'RoomGeometry'.
+  Type 'null' is not assignable to type 'RoomGeometry'.
+
+[7m106[0m  function tick(){frameId=requestAnimationFrame(tick);if(!visible)return;const {parameters:p,season,heat,result,resultCurrent,highlight}=live.current;if(sofaHint.visible!==(highlight==='sofa')){sofaHint.visible=highlight==='sofa';needsRender=true;el.dataset.analysisHighlight=highlight??'none'};const key=JSON.stringify([p,season,resultCurrent?result?.solar_angles:null]);if(key!==lastKey){lastKey=key;needsRender=true;renderer.shadowMap.needsUpdate=true;const geometry=shadeGeometry(p,room),win=geometry.window;
+[7m   [0m [91m                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                     ~~~~[0m
+[96m前端文件/src/Scene.tsx[0m:[93m111[0m:[93m284[0m - [91merror[0m[90m TS2345: [0mArgument of type 'RoomGeometry | null' is not assignable to parameter of type 'RoomGeometry'.
+  Type 'null' is not assignable to type 'RoomGeometry'.
+
+[7m111[0m  windowDetails.update(geometry);const solar=solarNoon(p.latitude,season,resultCurrent?result?.solar_angles:undefined);sun.position.set(solar.direction.x*15,solar.direction.y*15,solar.direction.z*15);sun.target.position.set(0,0,0);const budget=lightingBudget(p,season,solar.direction,room);sun.color.copy(budget.sunColor);sun.intensity=budget.sunIntensity;windowLight.height=win.height;windowLight.position.set(0,F+win.center,facade+.04);windowLight.lookAt(0,F+win.center,0);windowLight.intensity=budget.portal;floorBounce.intensity=budget.floorBounce;northBounce.intensity=budget.northBounce;renderer.toneMappingExposure=budget.exposure;el.dataset.lightingApproximation=JSON.stringify({skyVisibility:budget.skyFraction,floorBounce:budget.floorBounce,northBounce:budget.northBounce,exposure:budget.exposure})}
+[7m   [0m [91m                                                                                                                                                                                                                                                                                           ~~~~[0m
+[96m前端文件/src/api.ts[0m:[93m8[0m:[93m27[0m - [91merror[0m[90m TS2339: [0mProperty 'env' does not exist on type 'ImportMeta'.
+
+[7m8[0m const envMode=import.meta.env.VITE_DATA_MODE==='mock'?'mock':import.meta.env.VITE_DATA_MODE==='api'||pageOrigin?'api':'mock';
+[7m [0m [91m                          ~~~[0m
+[96m前端文件/src/api.ts[0m:[93m8[0m:[93m74[0m - [91merror[0m[90m TS2339: [0mProperty 'env' does not exist on type 'ImportMeta'.
+
+[7m8[0m const envMode=import.meta.env.VITE_DATA_MODE==='mock'?'mock':import.meta.env.VITE_DATA_MODE==='api'||pageOrigin?'api':'mock';
+[7m [0m [91m                                                                         ~~~[0m
+[96m前端文件/src/api.ts[0m:[93m9[0m:[93m78[0m - [91merror[0m[90m TS2339: [0mProperty 'env' does not exist on type 'ImportMeta'.
+
+[7m9[0m export const initialConfig:TransportConfig={mode:envMode,baseUrl:import.meta.env.VITE_API_BASE_URL||pageOrigin||'http://127.0.0.1:8000'};
+[7m [0m [91m                                                                             ~~~[0m
