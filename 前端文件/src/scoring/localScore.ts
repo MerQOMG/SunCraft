@@ -15,13 +15,16 @@ function interpolate(value: number, xs: number[], ys: number[]) {
   return ys[ys.length - 1];
 }
 function contribution(rule: Rule, values: PerformanceValues) {
+  const incident = values.summer_incident !== 0;
   const fraction =
     rule.key === 'wwr_shgc'
       ? Math.min(
           interpolate(values.wwr, rule.x, rule.y),
-          interpolate(values.shgc, [0.45, 0.55], [1, 0]),
+          incident ? interpolate(values.shgc, [0.45, 0.55], [1, 0]) : 1,
         )
-      : interpolate(values[rule.key], rule.x, rule.y);
+      : rule.key === 'summer_shading_rate' && !incident
+        ? 1
+        : interpolate(values[rule.key], rule.x, rule.y);
   return round(fraction * rule.weight);
 }
 export function localTotal(values: PerformanceValues) {
@@ -37,21 +40,31 @@ export function localScoreReport(values: PerformanceValues): ScoreReport {
   const dimensions = definitions.map((dimension) => {
     const items: ScoreItem[] = dimension.rules.map((rule) => {
       const paired = rule.key === 'wwr_shgc',
-        value = values[rule.key];
+        value = values[rule.key],
+        noSummerBeam = values.summer_incident === 0;
       const passed = paired
-        ? Math.max(values.wwr, values.shgc) <= rule.target
-        : rule.y[0] > rule.y[rule.y.length - 1]
-          ? value <= rule.target
-          : value >= rule.target;
+        ? (noSummerBeam ? values.wwr : Math.max(values.wwr, values.shgc)) <= rule.target
+        : rule.key === 'summer_shading_rate' && noSummerBeam
+          ? true
+          : rule.y[0] > rule.y[rule.y.length - 1]
+            ? value <= rule.target
+            : value >= rule.target;
       return {
         key: rule.key,
         name: rule.name,
         value_display: paired
-          ? `WWR ${values.wwr.toFixed(3)} / SHGC ${values.shgc.toFixed(3)}`
-          : rule.unit === '%'
-            ? `${(value * 100).toFixed(1)}%`
-            : `${value.toFixed(3)} ${rule.unit}`.trim(),
-        threshold_display: rule.threshold,
+          ? `WWR ${values.wwr.toFixed(3)} / SHGC ${values.shgc.toFixed(3)}${noSummerBeam ? '（该工况无正面直射）' : ''}`
+          : rule.key === 'summer_shading_rate' && noSummerBeam
+            ? '无正面直射 · 无需直射遮挡'
+            : rule.unit === '%'
+              ? `${(value * 100).toFixed(1)}%`
+              : `${value.toFixed(3)} ${rule.unit}`.trim(),
+        threshold_display:
+          noSummerBeam && paired
+            ? '无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查'
+            : noSummerBeam && rule.key === 'summer_shading_rate'
+              ? '当前工况无直射风险，按目标已满足计分；非全年结论'
+              : rule.threshold,
         score: contribution(rule, values),
         max_score: rule.weight,
         status: passed ? 'pass' : 'warn',
@@ -80,6 +93,14 @@ export function localScoreReport(values: PerformanceValues): ScoreReport {
   const total = localTotal(values),
     grade = total >= 90 ? 'S' : total >= 80 ? 'A' : total >= 65 ? 'B' : 'C';
   const warnings: ScoreReport['warnings'] = [];
+  if (values.summer_incident === 0)
+    warnings.push({
+      id: 'summer_shading_rate',
+      message:
+        '夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。',
+      severity: 'warning',
+      item_keys: ['summer_shading_rate'],
+    });
   if (values.wwr > 0.45)
     warnings.push({
       id: 'wwr_shgc',

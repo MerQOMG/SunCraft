@@ -71,11 +71,13 @@ def seasonal_exposure(window, latitude, orientation, depth, tilt, louvers_enable
     return winter_hours, summer_hours, relative
 
 
-def performance_values(window, wwr, shading, gain, area_rate, penetration, uniformity, exposure):
+def performance_values(window, wwr, shading, gain, area_rate, penetration, uniformity, exposure,
+                       summer_incident=True):
     winter_hours, sofa_hours, relative = exposure
     shgc = GLASS_SHGC * (1 - 0.75 * shading)
     return {
         "summer_shading_rate": shading, "wwr": wwr, "shgc": shgc,
+        "summer_incident": summer_incident,
         "winter_solar_gain_rate": gain, "winter_penetration_m": penetration,
         "winter_full_window_hours": winter_hours, "daylight_compliance_rate": area_rate,
         "daylight_uniformity": uniformity,

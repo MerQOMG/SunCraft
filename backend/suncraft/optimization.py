@@ -62,7 +62,8 @@ def grid_performance(wwr, latitude, orientation, enabled, studio=False):
     # The common diffuse transmission cancels in min/mean for every feasible design.
     exposure = comfort_physics.seasonal_exposure(window, latitude, orientation, depth, tilt, enabled)
     values = comfort_physics.performance_values(window, wwr, shading, gain, compliance, penetration,
-                                                base.min() / base.mean(), exposure)
+                                                base.min() / base.mean(), exposure,
+                                                summer_incident=suns[0].slope is not None)
     scores = scoring_engine.evaluate(values)
     result = tuple(a.ravel() for a in (shading, gain, compliance, scores))
     for array in result:

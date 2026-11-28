@@ -181,7 +181,7 @@ export default function AnnualTimeline({
           <ChevronDown size={14} />
         </button>
       </div>
-      <p className="annual-scope">真太阳12:00 · NOAA日级近似，非北京时间；DF/工况分固定</p>
+      <p className="annual-scope">真太阳12:00 · 日期光照随时间更新；DF与工况分独立</p>
       {more && (
         <div id="annual-more-tools" className="annual-extra">
           <div className="annual-months" aria-label="月份跳转" onPointerDownCapture={s.pause}>

@@ -13,3 +13,5 @@
 - `scripts/preview.cjs`：在 5175 提供同一份离线工作台。
 
 `npm test`、`npm run build`、`npm run build:offline` 与 `npm run format:check` 用于日常检查。浏览器测试产生的截图和下载文件位于忽略提交的 `test-results/evidence/`，不再写进源码或公开静态目录。
+
+热力图默认使用“日期光照”，按当天太阳方向、窗口与遮阳几何计算理想地面的直射与漫射相对强度；可切换“全阴天DF”查看原始固定采光系数。相对光照不代表实测 lux 或天气数据。

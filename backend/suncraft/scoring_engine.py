@@ -58,10 +58,15 @@ DIMENSIONS = (
 
 
 def contribution(rule, values):
+    incident = values.get("summer_incident", True)
     if rule.key == "wwr_shgc":
         wwr = np.interp(values["wwr"], rule.x, rule.y)
-        shgc = np.interp(values["shgc"], (.45, .55), (1, 0))
+        shgc = np.where(incident, np.interp(values["shgc"], (.45, .55), (1, 0)), 1.0)
         fraction = np.minimum(wwr, shgc)
+    elif rule.key == "summer_shading_rate":
+        # A back-facing/zenith beam has no direct overheating to block. Keep
+        # the physical rate at zero, but do not label it a failed shade.
+        fraction = np.where(incident, np.interp(values[rule.key], rule.x, rule.y), 1.0)
     else:
         fraction = np.interp(values[rule.key], rule.x, rule.y)
     return np.round(fraction * rule.weight, 6)
@@ -90,16 +95,26 @@ def evaluate(values, *, report=False):
 
 
 def describe_item(rule, values, score):
+    no_summer_beam = not values.get("summer_incident", True)
+    threshold = rule.threshold
     if rule.key == "wwr_shgc":
         value = {"wwr": float(values["wwr"]), "shgc": float(values["shgc"])}
         display = f"WWR {value['wwr']:.3f} / SHGC {value['shgc']:.3f}"
         passed = max(value.values()) <= rule.target
+        if no_summer_beam:
+            display += "（该工况无正面直射）"
+            threshold = "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查"
+            passed = value["wwr"] <= rule.target
     else:
         value = float(values[rule.key])
         display = f"{value:.1%}" if rule.unit == "%" else f"{value:.3f} {rule.unit}".strip()
         passed = value <= rule.target if rule.y[0] > rule.y[-1] else value >= rule.target
+        if no_summer_beam and rule.key == "summer_shading_rate":
+            display = "无正面直射 · 无需直射遮挡"
+            threshold = "当前工况无直射风险，按目标已满足计分；非全年结论"
+            passed = True
     return ScoreItem(key=rule.key, name=rule.name, value=value, value_display=display,
-                     threshold_display=rule.threshold, score=score, max_score=rule.weight,
+                     threshold_display=threshold, score=score, max_score=rule.weight,
                      status="pass" if passed else "warn", citation=rule.citation,
                      citation_type=rule.kind, highlight_target=rule.highlight)
 
@@ -115,6 +130,9 @@ def grade_for(total):
 def make_report(total, dimensions, values):
     grade, label = grade_for(total)
     warnings = []
+    if not values.get("summer_incident", True):
+        warnings.append(ScoreWarning(key="summer_shading_rate", message=
+            "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。"))
     if values["wwr"] > .45:
         warnings.append(ScoreWarning(key="wwr_shgc", message="窗墙比超过方案筛查线 0.45，需按地区与构造核查适用条文。"))
     if values["winter_full_window_hours"] < 1:

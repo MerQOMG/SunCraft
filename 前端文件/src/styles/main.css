@@ -750,7 +750,7 @@ input[type='range']:disabled {
   bottom: 110px;
   left: calc(var(--left) + var(--gutter) + 24px);
   padding: 10px 12px;
-  width: 176px;
+  width: 190px;
   border-radius: 2px;
   font-size: 12px;
   line-height: 1.5;
@@ -1127,7 +1127,7 @@ input[type='range']:disabled {
     top: 177px;
     left: 12px;
     bottom: auto;
-    width: 164px;
+    width: 190px;
     padding: 7px 10px;
   }
   .mobile-tabs {
@@ -1250,4 +1250,40 @@ input[type='range']:disabled {
 .heat-legend > p {
   margin-top: 4px;
   color: var(--muted);
+}
+.heat-mode-switch {
+  gap: 4px;
+  margin-bottom: 9px;
+}
+.heat-mode-switch button {
+  flex: 1;
+  min-height: 30px;
+  padding: 3px 5px;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  color: var(--ink);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.heat-mode-switch button[aria-pressed='true'] {
+  background: var(--forest);
+  border-color: var(--forest);
+  color: var(--paper);
+}
+.heat-legend .heat-date {
+  font-weight: 550;
+  color: var(--ink);
+}
+.heat-legend .heat-model-note {
+  font-size: 12px;
+}
+.solar-position-note {
+  font-size: 12px;
+  line-height: 1.6;
+  margin: 9px 0 0;
+  color: var(--muted);
+}
+.metric-top strong.metric-text {
+  font-size: 24px;
+  letter-spacing: 0;
 }

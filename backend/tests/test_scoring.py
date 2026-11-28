@@ -129,3 +129,24 @@ def test_polar_night_and_unsuitable_orientation_do_not_claim_s_grade():
     result = optimize(q)
     assert result.after.score_report.grade != "S"
     assert items(result.before.score_report)["winter_full_window_hours"].value == 0
+
+
+@pytest.mark.parametrize("latitude", [23.1, 23.44])
+def test_no_summer_incidence_does_not_mean_shading_failure(latitude):
+    request = SimulationInput(latitude=latitude, window_to_wall_ratio=.45)
+    result = simulate(request)
+    report = items(result.score_report)
+    assert result.svg_rays.summer_incident is False
+    assert result.metrics.summer_shading_rate == 0
+    assert result.svg_rays.summer == []
+    assert report["summer_shading_rate"].score == 20
+    assert report["summer_shading_rate"].status == "pass"
+    assert "无正面直射" in report["summer_shading_rate"].value_display
+    assert report["wwr_shgc"].value["shgc"] == .55
+    assert report["wwr_shgc"].score == 15
+    assert report["wwr_shgc"].status == "pass"
+    wide = simulate(request.model_copy(update={"window_to_wall_ratio": .65}))
+    assert items(wide.score_report)["wwr_shgc"].score < 15
+    optimized = optimize(request, studio=True, include_simulation=True)
+    assert optimized.after.score_report.total_score >= result.score_report.total_score
+    assert optimized.after.score_report == optimized.simulation.score_report

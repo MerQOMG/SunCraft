@@ -227,6 +227,7 @@ function calculate(p: Parameters) {
   const seasonal = exposure(window, p);
   const values: PerformanceValues = {
     summer_shading_rate: shading,
+    summer_incident: summer.slope === null ? 0 : 1,
     wwr: p.window_wall_ratio,
     shgc: 0.55 * (1 - 0.75 * shading),
     winter_solar_gain_rate: gain,
