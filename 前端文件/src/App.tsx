@@ -1,5 +1,7 @@
 import { flushSync } from 'react-dom';
-import { HEATMAP_GRADIENT } from './heatmap';
+import { HEATMAP_GRADIENT, DATE_HEATMAP_GRADIENT } from './heatmap';
+import { dateHeatmap } from './dateHeatmap';
+import type { HeatMode } from './dateHeatmap';
 import { caseRayLegend } from './analysisCopy';
 import AnnualTimeline, { useAnnualTimeline, solsticeDay } from './components/AnnualTimeline';
 import { annualSolarFrame, termAt, SUMMER_DAY, WINTER_DAY } from './annual';
@@ -42,6 +44,7 @@ export default function App() {
     [heat, setHeat] = useState(false),
     [resetToken, setResetToken] = useState(0),
     [ready, setReady] = useState(false);
+  const [heatMode, setHeatMode] = useState<HeatMode>('date');
   const [geometrySource, setGeometrySource] = useState('');
   const [config, setConfig] = useState<TransportConfig>(initialConfig),
     [presets, setPresets] = useState<Presets>(PRESETS),
@@ -251,6 +254,13 @@ export default function App() {
     m = currentResult?.metrics,
     heatReady = !!room && !!currentResult,
     rayLegend = caseRayLegend(currentResult);
+  const dateHeat = useMemo(
+    () =>
+      heat && heatMode === 'date' && room && currentResult
+        ? dateHeatmap(parameters, room, frame, currentResult.heatmap_grid)
+        : null,
+    [heat, heatMode, room, currentResult, parameters, frame],
+  );
   const exportContext = useRef({
     parameters,
     result,
@@ -281,6 +291,7 @@ export default function App() {
     setParameters({ ...DEFAULTS, city_id: parameters.city_id, latitude: parameters.latitude });
     timeline.jump(SUMMER_DAY);
     setHeat(false);
+    setHeatMode('date');
     setComparison(null);
     setOptError('');
     setResetToken((t) => t + 1);
@@ -366,6 +377,8 @@ export default function App() {
         parameters={parameters}
         season={season}
         heat={heat}
+        heatMode={heatMode}
+        dateHeat={dateHeat}
         result={result}
         resultCurrent={!!currentResult}
         resetToken={resetToken}
@@ -516,6 +529,11 @@ export default function App() {
           <span>{parameters.latitude.toFixed(1)}° N</span>
           <span>正南朝向 · 12:00 太阳时</span>
         </div>
+        {!frame.south && frame.aboveHorizon && (
+          <p className="solar-position-note" role="note">
+            当前日期正午太阳在北侧，南窗无直射；室内仍有天空漫射采光。
+          </p>
+        )}
 
         <fieldset className="sliders" disabled={busy}>
           {(
@@ -622,7 +640,7 @@ export default function App() {
             仅2026，真太阳时12:00，不是北京时间。NOAA/Meeus赤纬取当日UTC12代表值，逐日期计算，不在冬夏间插值；无折射/天气，未标定实测误差。
           </p>
           <p>
-            节气日期：香港天文台2026年历（UTC+8）。DF为固定几何的均匀天空值；评分/寻优按冬夏设计工况，日期播放不改变它们。
+            节气日期：香港天文台2026年历（UTC+8）。日期光照热力按当天太阳与遮挡更新；全阴天DF保持固定。评分/寻优按冬夏设计工况，日期播放不重计方案分。
           </p>
           <p>系统减少动态时不自动播放；可手动播放，切出页面自动暂停。</p>
         </details>
@@ -708,9 +726,9 @@ export default function App() {
         applicability={
           currentResult?.svg_rays.summer_incident === false ? (
             <p className="annual-applicability" role="note">
-              适用性待校核：夏至正午南窗无正面入射，模型按约定返回遮挡率0，原报告遮阳项贡献
+              夏至正午南窗无正面直射：遮阳按无直射风险计分，贡献
               {summerContribution?.score ?? '—'}/{summerContribution?.max_score ?? '—'}
-              ；本页保留原总分与贡献。这不等于普通遮阳不足，也不是所选日期或全年性能。
+              。窗墙比仍参与筛查；不表示全年无需遮阳。当天光照以日期热力图为准。
             </p>
           ) : undefined
         }
@@ -815,11 +833,12 @@ export default function App() {
             name="夏季遮阳率"
             tag="直射遮挡"
             value={m?.summer_shading_rate}
+            valueText={currentResult?.svg_rays.summer_incident === false ? '无直射' : undefined}
             color="terra"
             icon={<Sun size={15} />}
             hint={
               currentResult?.svg_rays.summer_incident === false
-                ? '无正面入射 · 原评分待校核'
+                ? '该工况无需直射遮挡'
                 : m && m.summer_shading_rate < 0.65
                   ? '夏季遮阳率偏低'
                   : m
@@ -892,20 +911,57 @@ export default function App() {
         </div>
       )}
       {heat && (
-        <div className="heat-legend glass" aria-label="固定绝对色标的DF百分数，非当前日期光照">
+        <div
+          className="heat-legend glass"
+          aria-label={heatMode === 'date' ? '随日期变化的相对光照热力图' : '固定全阴天DF热力图'}
+        >
+          <div className="heat-mode-switch" role="group" aria-label="热力图类型">
+            <button
+              type="button"
+              aria-pressed={heatMode === 'date'}
+              onClick={() => setHeatMode('date')}
+            >
+              日期光照
+            </button>
+            <button
+              type="button"
+              aria-pressed={heatMode === 'df'}
+              onClick={() => setHeatMode('df')}
+            >
+              全阴天DF
+            </button>
+          </div>
           <div>
-            <strong>均匀天空 DF</strong>
-            <span>% · {config.mode === 'mock' ? '本地计算' : '接口'}</span>
+            <strong>{heatMode === 'date' ? '相对光照' : '均匀天空 DF'}</strong>
+            <span>
+              {heatMode === 'date'
+                ? '0–100'
+                : `% · ${config.mode === 'mock' ? '本地计算' : '接口'}`}
+            </span>
           </div>
           {heatReady ? (
             <>
-              <i style={{ background: HEATMAP_GRADIENT }} />
+              <i
+                style={{
+                  background: heatMode === 'date' ? DATE_HEATMAP_GRADIENT : HEATMAP_GRADIENT,
+                }}
+              />
               <div>
                 <span>0</span>
-                <span>2.5</span>
-                <span>5.0+</span>
+                <span>{heatMode === 'date' ? '10' : '2.5'}</span>
+                <span>{heatMode === 'date' ? '100' : '5.0+'}</span>
               </div>
-              <p>固定色标 · 与日期无关</p>
+              {heatMode === 'date' ? (
+                <>
+                  <p className="heat-date">{frame.date} · 真太阳12:00</p>
+                  <p>
+                    {dateHeat?.southIncident ? '直射 + 漫射 · 随日期更新' : '南窗无直射 · 显示漫射'}
+                  </p>
+                  <p className="heat-model-note">对数色标 · 光照近似</p>
+                </>
+              ) : (
+                <p>固定色标 · 与日期无关</p>
+              )}
             </>
           ) : (
             <p role="status">
@@ -1015,6 +1071,7 @@ function Metric({
   name,
   tag,
   value,
+  valueText,
   color,
   icon,
   hint,
@@ -1022,6 +1079,7 @@ function Metric({
   name: string;
   tag: string;
   value: number | undefined;
+  valueText?: string;
   color: string;
   icon: React.ReactNode;
   hint: string;
@@ -1033,9 +1091,9 @@ function Metric({
           {icon}
           {name}
         </span>
-        <strong>
-          {value === undefined ? '—' : Math.round(value * 100)}
-          <small>%</small>
+        <strong className={valueText ? 'metric-text' : undefined}>
+          {valueText ?? (value === undefined ? '—' : Math.round(value * 100))}
+          {!valueText && <small>%</small>}
         </strong>
       </div>
       <div className="metric-bottom">

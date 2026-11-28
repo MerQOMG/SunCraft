@@ -1,8 +1,9 @@
 import { Color, SRGBColorSpace } from 'three';
 import type { Parameters, Season } from './model.ts';
-import { shadeGeometry, windowGeometry, RENDER_FLOOR_Y } from './geometry';
+import { windowGeometry, RENDER_FLOOR_Y } from './geometry';
 import type { RoomGeometry } from './geometry';
 import { FINISH } from './shading.ts';
+import { apertureAccess } from './solarAccess';
 /** Rendering calibration, NOT lux, a backend result, or a validated radiosity solver.
  * One bounded rebalance: lower undirected IBL and first-bounce fill, raise aperture-origin
  * key light, slightly stronger annual direct (shadowed by real geometry). Exposure stays put.
@@ -23,36 +24,10 @@ export const LIGHTING = {
   aoMaxDimension: 900,
 } as const;
 type V = { x: number; y: number; z: number };
-function exteriorBlocked(p: Parameters, o: V, d: V, room: RoomGeometry) {
-  const g = shadeGeometry(p, room),
-    w = g.window,
-    facade = -room.depth_m / 2,
-    f = RENDER_FLOOR_Y;
-  if (d.z >= -1e-10) return true;
-  const t = (facade - o.z) / d.z;
-  const x = o.x + t * d.x,
-    h = o.y + t * d.y - f;
-  if (t < 0 || Math.abs(x) > w.width / 2 || h < w.sill || h > w.top) return true;
-  if (g.canopy.visible && d.y > 1e-10) {
-    const tc = (f + w.top - o.y) / d.y,
-      z = o.z + tc * d.z;
-    if (tc > 0 && z <= facade && z >= facade - g.canopy.depth) return true;
-  }
-  const c = Math.cos(g.angle),
-    s = Math.sin(g.angle);
-  for (const b of g.blades) {
-    const denom = c * d.y - s * d.z;
-    if (Math.abs(denom) < 1e-10) continue;
-    const tb = (c * (b.rootHeight + f - o.y) - s * (facade - o.z)) / denom;
-    if (tb <= 0) continue;
-    const along = -(o.y + tb * d.y - b.rootHeight - f) * s - (o.z + tb * d.z - facade) * c;
-    if (along >= 0 && along <= room.slat_chord_m) return true;
-  }
-  return false;
-}
 /** 768 cosine-weighted aperture samples, upper sky; global diffuse visibility approximation. */
 export function apertureSkyFraction(p: Parameters, room: RoomGeometry) {
   const win = windowGeometry(p.window_wall_ratio, room);
+  const access = apertureAccess(p, room);
   let open = 0,
     total = 0;
   for (let y = 0; y < 4; y++)
@@ -67,7 +42,7 @@ export function apertureSkyFraction(p: Parameters, room: RoomGeometry) {
             y: RENDER_FLOOR_Y + win.sill + ((y + 0.5) * win.height) / 4,
             z: -room.depth_m / 2 + 0.0001,
           };
-        if (!exteriorBlocked(p, o, d, room)) open++;
+        if (access(o, d)) open++;
         total++;
       }
   return open / total;
@@ -76,13 +51,14 @@ export function apertureSkyFraction(p: Parameters, room: RoomGeometry) {
 export function floorSunFraction(p: Parameters, d: V, room: RoomGeometry) {
   if (d.y <= 0 || d.z >= 0) return 0;
   let open = 0;
+  const access = apertureAccess(p, room);
   for (let i = 0; i < 768; i++) {
     const o = {
       x: -room.width_m / 2 + ((i + 0.5) * room.width_m) / 768,
       y: FINISH.floorTop_m,
       z: -room.depth_m / 2 + ((i * 0.61803398875 + 0.137) % 1) * room.depth_m,
     };
-    if (!exteriorBlocked(p, o, d, room)) open++;
+    if (access(o, d)) open++;
   }
   return open / 768;
 }

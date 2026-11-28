@@ -6968,10 +6968,19 @@
           ]
         },
         "score_report": {
-          "total_score": 44.416552,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 79.416552,
+          "grade": "B",
+          "grade_label": "合格",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "winter_full_window_hours",
               "message": "冬至 08–16 时整窗同时直射不足 1 小时。",
@@ -6989,17 +6998,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 35.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -7012,11 +7021,11 @@
                     "wwr": 0.45,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.450 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.450 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 15.0,
                   "max_score": 15,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
                   "citation_type": "mandatory_reference",
                   "highlight_target": null,
@@ -7234,10 +7243,19 @@
           ]
         },
         "score_report": {
-          "total_score": 50.380589,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 85.380589,
+          "grade": "A",
+          "grade_label": "优良 · 推荐方案",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "winter_full_window_hours",
               "message": "冬至 08–16 时整窗同时直射不足 1 小时。",
@@ -7249,23 +7267,23 @@
             }
           ],
           "methodology_note": "全阴天 DF 的均匀漫射天空近似与解析几何。相对负荷仅作方案比较；±10% 精度目标尚未标定。",
-          "suggest_optimization": true,
+          "suggest_optimization": false,
           "dimensions": [
             {
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 35.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -7278,11 +7296,11 @@
                     "wwr": 0.45,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.450 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.450 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 15.0,
                   "max_score": 15,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
                   "citation_type": "mandatory_reference",
                   "highlight_target": null,
@@ -7500,10 +7518,19 @@
           ]
         },
         "score_report": {
-          "total_score": 35.464854,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 67.964854,
+          "grade": "B",
+          "grade_label": "合格",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "wwr_shgc",
               "message": "窗墙比超过方案筛查线 0.45，需按地区与构造核查适用条文。",
@@ -7530,17 +7557,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 32.5,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -7553,9 +7580,9 @@
                     "wwr": 0.5,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.500 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.500 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 12.5,
                   "max_score": 15,
                   "status": "warn",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
@@ -7775,10 +7802,19 @@
           ]
         },
         "score_report": {
-          "total_score": 47.5056,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 77.5056,
+          "grade": "B",
+          "grade_label": "合格",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "wwr_shgc",
               "message": "窗墙比超过方案筛查线 0.45，需按地区与构造核查适用条文。",
@@ -7805,17 +7841,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 30.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -7828,9 +7864,9 @@
                     "wwr": 0.55,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.550 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.550 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 10.0,
                   "max_score": 15,
                   "status": "warn",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
@@ -8050,10 +8086,19 @@
           ]
         },
         "score_report": {
-          "total_score": 39.101262,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 74.101262,
+          "grade": "B",
+          "grade_label": "合格",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "winter_full_window_hours",
               "message": "冬至 08–16 时整窗同时直射不足 1 小时。",
@@ -8071,17 +8116,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 35.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -8094,11 +8139,11 @@
                     "wwr": 0.25,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.250 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.250 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 15.0,
                   "max_score": 15,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
                   "citation_type": "mandatory_reference",
                   "highlight_target": null,
@@ -8316,10 +8361,19 @@
           ]
         },
         "score_report": {
-          "total_score": 52.717856,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 77.717856,
+          "grade": "B",
+          "grade_label": "合格",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "wwr_shgc",
               "message": "窗墙比超过方案筛查线 0.45，需按地区与构造核查适用条文。",
@@ -8346,17 +8400,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 25.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -8369,9 +8423,9 @@
                     "wwr": 0.65,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.650 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.650 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 5.0,
                   "max_score": 15,
                   "status": "warn",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
@@ -8591,10 +8645,19 @@
           ]
         },
         "score_report": {
-          "total_score": 38.648104,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 73.648104,
+          "grade": "B",
+          "grade_label": "合格",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "winter_full_window_hours",
               "message": "冬至 08–16 时整窗同时直射不足 1 小时。",
@@ -8612,17 +8675,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 35.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -8635,11 +8698,11 @@
                     "wwr": 0.25,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.250 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.250 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 15.0,
                   "max_score": 15,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
                   "citation_type": "mandatory_reference",
                   "highlight_target": null,
@@ -8857,10 +8920,19 @@
           ]
         },
         "score_report": {
-          "total_score": 52.681364,
-          "grade": "C",
-          "grade_label": "待优化",
+          "total_score": 77.681364,
+          "grade": "B",
+          "grade_label": "合格",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "wwr_shgc",
               "message": "窗墙比超过方案筛查线 0.45，需按地区与构造核查适用条文。",
@@ -8887,17 +8959,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 25.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -8910,9 +8982,9 @@
                     "wwr": 0.65,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.650 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.650 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 5.0,
                   "max_score": 15,
                   "status": "warn",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
@@ -9117,10 +9189,19 @@
           ]
         },
         "score_report": {
-          "total_score": 16.632591,
+          "total_score": 51.632591,
           "grade": "C",
           "grade_label": "待优化",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "winter_full_window_hours",
               "message": "冬至 08–16 时整窗同时直射不足 1 小时。",
@@ -9138,17 +9219,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 35.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -9161,11 +9242,11 @@
                     "wwr": 0.25,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.250 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.250 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 15.0,
                   "max_score": 15,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
                   "citation_type": "mandatory_reference",
                   "highlight_target": null,
@@ -9383,10 +9464,19 @@
           ]
         },
         "score_report": {
-          "total_score": 35.746427,
+          "total_score": 60.746427,
           "grade": "C",
           "grade_label": "待优化",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "wwr_shgc",
               "message": "窗墙比超过方案筛查线 0.45，需按地区与构造核查适用条文。",
@@ -9413,17 +9503,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 25.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -9436,9 +9526,9 @@
                     "wwr": 0.65,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.650 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.650 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 5.0,
                   "max_score": 15,
                   "status": "warn",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
@@ -9643,10 +9733,19 @@
           ]
         },
         "score_report": {
-          "total_score": 16.424258,
+          "total_score": 51.424258,
           "grade": "C",
           "grade_label": "待优化",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "winter_full_window_hours",
               "message": "冬至 08–16 时整窗同时直射不足 1 小时。",
@@ -9664,17 +9763,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 35.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -9687,11 +9786,11 @@
                     "wwr": 0.25,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.250 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.250 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 15.0,
                   "max_score": 15,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
                   "citation_type": "mandatory_reference",
                   "highlight_target": null,
@@ -9909,10 +10008,19 @@
           ]
         },
         "score_report": {
-          "total_score": 32.621427,
+          "total_score": 57.621427,
           "grade": "C",
           "grade_label": "待优化",
           "warnings": [
+            {
+              "key": "summer_shading_rate",
+              "message": "夏至正午南窗无正面直射：遮阳按无直射风险计分，SHGC 项仅按窗墙比筛查；不代表全年无需遮阳或热工规范豁免。",
+              "id": "summer_shading_rate",
+              "severity": "warning",
+              "item_keys": [
+                "summer_shading_rate"
+              ]
+            },
             {
               "key": "wwr_shgc",
               "message": "窗墙比超过方案筛查线 0.45，需按地区与构造核查适用条文。",
@@ -9939,17 +10047,17 @@
               "id": "summer_shading",
               "name": "夏季遮阳与防过热",
               "weight": 35,
-              "score": 0.0,
+              "score": 25.0,
               "items": [
                 {
                   "key": "summer_shading_rate",
                   "name": "夏季遮挡率",
                   "value": 0.0,
-                  "value_display": "0.0%",
-                  "threshold_display": "目标 ≥ 85%，满分 ≥ 90%",
-                  "score": 0.0,
+                  "value_display": "无正面直射 · 无需直射遮挡",
+                  "threshold_display": "当前工况无直射风险，按目标已满足计分；非全年结论",
+                  "score": 20.0,
                   "max_score": 20,
-                  "status": "warn",
+                  "status": "pass",
                   "citation": "项目目标（解析几何）",
                   "citation_type": "project",
                   "highlight_target": null,
@@ -9962,9 +10070,9 @@
                     "wwr": 0.65,
                     "shgc": 0.55
                   },
-                  "value_display": "WWR 0.650 / SHGC 0.550",
-                  "threshold_display": "WWR 与 SHGC 均 ≤ 0.45",
-                  "score": 0.0,
+                  "value_display": "WWR 0.650 / SHGC 0.550（该工况无正面直射）",
+                  "threshold_display": "无正面直射：本项目仅按 WWR ≤ 0.45 筛查，SHGC 仍需专业核查",
+                  "score": 5.0,
                   "max_score": 15,
                   "status": "warn",
                   "citation": "强制规范参考 GB 55015—2021，参照 GB 50176—2016；数值为项目筛查线",
@@ -13674,6 +13782,21 @@
       },
       "status": "infeasible",
       "best": null
+    },
+    {
+      "parameters": {
+        "city_id": "guangzhou",
+        "latitude": 23.1,
+        "overhang_depth_m": 0.4,
+        "louver_angle_deg": 0.0,
+        "window_wall_ratio": 0.45
+      },
+      "status": "optimal",
+      "best": {
+        "overhang_depth_m": 0.0,
+        "louver_angle_deg": 0.0,
+        "total_score": 85.380589
+      }
     }
   ]
 }

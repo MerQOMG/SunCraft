@@ -6,6 +6,9 @@
  * the 164px extra (opens upward). Grow the reserved row so the scene
  * shrinks instead of being covered. Collapsed layout is unchanged. */
 @media (min-width: 761px) {
+  .heat-legend {
+    bottom: calc(var(--annual-row-height) + 84px);
+  }
   .workspace:has(.annual-extra) {
     --annual-row-height: calc(108px + 164px + 18px);
   }

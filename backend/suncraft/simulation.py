@@ -20,7 +20,8 @@ def simulate(request: SimulationInput, *, include_heatmap: bool = True) -> Simul
     exposure = comfort_physics.seasonal_exposure(window, request.resolved_latitude, request.orientation_deg,
                                                 depth, tilt, enabled)
     values = comfort_physics.performance_values(window, request.window_to_wall_ratio, shading, gain,
-        passing, penetration, np.min(grid) / mean_df if mean_df > 0 else 0.0, exposure)
+        passing, penetration, np.min(grid) / mean_df if mean_df > 0 else 0.0, exposure,
+        summer_incident=summer.slope is not None)
     fields = dict(
         score_report=scoring_engine.evaluate(values, report=True),
         solar_angles=Angles(summer_noon_alt=summer.altitude, summer_noon_az=summer.azimuth,

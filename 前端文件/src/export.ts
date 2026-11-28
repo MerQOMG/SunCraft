@@ -47,11 +47,9 @@ export function designSheet(
     `挑檐深度：${p.overhang_depth_m.toFixed(2)} m`,
     `水平百叶倾角：${p.louver_angle_deg.toFixed(0)}°（0° 为水平，仍会遮光）`,
     `窗墙比：${percent(p.window_wall_ratio)}${win ? `（宽${win.width.toFixed(2)}m × 高${win.height.toFixed(3)}m，窗台${win.sill.toFixed(2)}m）` : '（几何未同步）'}`,
-    `夏季遮阳率：${percent(m.summer_shading_rate)} / 冬季得热率：${percent(m.winter_solar_gain_rate)}`,
+    `夏季遮阳：${result.svg_rays.summer_incident === false ? '无正面直射，无需直射遮挡' : percent(m.summer_shading_rate)} / 冬季得热率：${percent(m.winter_solar_gain_rate)}`,
     ...(result.svg_rays.summer_incident === false
-      ? [
-          `适用性待校核：夏至正午南窗无正面入射，模型按约定返回遮挡率0。\n这不等于普通遮阳不足，也不是所选日期或全年性能。`,
-        ]
+      ? [`夏至正午南窗无正面直射：按无直射风险计分，窗墙比仍参与筛查；并非全年无需遮阳。`]
       : []),
     `采光面积比例（DF ≥ ${daylightThreshold.toFixed(1)}%）：${percent(m.daylight_compliance_rate)} / 面积目标 80%（待复核）`,
     `冬至日入射深度：${m.winter_penetration_m.toFixed(2)} m`,

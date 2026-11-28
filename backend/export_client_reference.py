@@ -31,7 +31,7 @@ for city, (_, latitude) in CITIES.items():
         cases.append({"parameters": parameters.model_dump(), "expected": expected})
 
 optimization_cases = []
-for city, ratio in (("shanghai", 0.45), ("harbin", 0.5), ("beijing", 0.25)):
+for city, ratio in (("shanghai", 0.45), ("harbin", 0.5), ("beijing", 0.25), ("guangzhou", 0.45)):
     parameters = StudioParameters(city_id=city, latitude=CITIES[city][1], overhang_depth_m=0.4,
                                   louver_angle_deg=0, window_wall_ratio=ratio)
     answer = optimize(parameters.design(), studio=True)

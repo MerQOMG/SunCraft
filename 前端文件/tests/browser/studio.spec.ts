@@ -53,6 +53,86 @@ test('renders 3D, current design score, winter date and heat overlay', async ({ 
   await page.screenshot({ path: `${evidence}/winter-heat.png` });
 });
 
+test('Guangzhou keeps the real north-side summer sun and does not score it as failed shading', async ({
+  page,
+}) => {
+  await ready(page);
+  await page.locator('#city').selectOption('guangzhou');
+  await expect(page.locator('.score-capsule .score-number')).toHaveText('79.4');
+  await expect(page.locator('.solar-position-note')).toContainText('太阳在北侧');
+  await expect
+    .poll(
+      async () =>
+        JSON.parse((await page.locator('.scene').getAttribute('data-solar-frame'))!).latitude,
+    )
+    .toBe(23.1);
+  const frame = JSON.parse((await page.locator('.scene').getAttribute('data-solar-frame'))!);
+  expect(frame.direction.z).toBeGreaterThan(0);
+  await cases(page);
+  await expect(page.locator('.metric.terra .metric-top strong')).toHaveText('无直射');
+  await page.getByRole('tab', { name: '评分细则' }).click();
+  await expect(page.locator('.annual-applicability')).toContainText('按无直射风险计分');
+  await page.getByRole('button', { name: '关闭光热分析' }).click();
+  await page.getByRole('button', { name: '冬至正午', exact: true }).click();
+  await expect(page.locator('.solar-position-note')).toHaveCount(0);
+  await expect
+    .poll(
+      async () =>
+        JSON.parse((await page.locator('.scene').getAttribute('data-solar-frame'))!).direction.z,
+    )
+    .toBeLessThan(0);
+  await page.screenshot({ path: `${evidence}/guangzhou-winter.png` });
+});
+
+test('date light changes with the timeline while the separate DF layer stays constant', async ({
+  page,
+}) => {
+  await ready(page);
+  await page.getByRole('button', { name: '采光热力', exact: true }).click();
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-date', '2026-06-21');
+  const summer = JSON.parse((await page.locator('.scene').getAttribute('data-heatmap-summary'))!);
+  await page.getByRole('button', { name: '冬至正午', exact: true }).click();
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-date', '2026-12-22');
+  const winter = JSON.parse((await page.locator('.scene').getAttribute('data-heatmap-summary'))!);
+  expect(winter.mean).toBeGreaterThan(summer.mean);
+  expect(winter.directArea).toBeGreaterThan(summer.directArea);
+  await expect(page.locator('.heat-date')).toContainText('2026-12-22');
+  const bounds = await page.evaluate(() => ({
+    legend: document.querySelector('.heat-legend')!.getBoundingClientRect().bottom,
+    timeline: document.querySelector('.annual-timeline')!.getBoundingClientRect().top,
+  }));
+  expect(bounds.legend).toBeLessThan(bounds.timeline);
+  await page.screenshot({ path: `${evidence}/date-light-winter.png` });
+  await page.getByRole('button', { name: '全阴天DF', exact: true }).click();
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-mode', 'df');
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-date', '');
+  const df = await page.locator('.scene').getAttribute('data-heatmap-summary');
+  await page.getByRole('button', { name: '夏至正午', exact: true }).click();
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-summary', df!);
+  await expect(page.locator('.heat-legend')).toContainText('与日期无关');
+  await page.getByRole('button', { name: '日期光照', exact: true }).click();
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-date', '2026-06-21');
+  await page.setViewportSize({ width: 390, height: 534 });
+  const mobileBounds = await page.evaluate(() => ({
+    legend: document.querySelector('.heat-legend')!.getBoundingClientRect(),
+    scene: document.querySelector('.scene')!.getBoundingClientRect(),
+  }));
+  expect(mobileBounds.legend.right).toBeLessThanOrEqual(390);
+  expect(mobileBounds.legend.bottom).toBeLessThanOrEqual(mobileBounds.scene.bottom);
+});
+
+test('heatmap follows date playback and its paused date without stale cells', async ({ page }) => {
+  await ready(page);
+  await page.getByRole('button', { name: '采光热力', exact: true }).click();
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-date', '2026-06-21');
+  await page.getByRole('button', { name: /^播放日期/ }).click();
+  await expect(page.locator('input[type=date]')).not.toHaveValue('2026-06-21');
+  await page.getByRole('button', { name: /^暂停日期/ }).click();
+  const paused = await page.locator('input[type=date]').inputValue();
+  await expect(page.locator('.scene')).toHaveAttribute('data-heatmap-date', paused);
+  await expect(page.locator('.heat-date')).toContainText(paused);
+});
+
 test('sliders, city and reset update the design and pause playback', async ({ page }) => {
   await ready(page);
   await page.locator('#overhang_depth_m').fill('1.2');

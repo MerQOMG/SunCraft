@@ -1,5 +1,6 @@
 import { coat, finished, mapPart, metricUV, surfaceOf } from '../modeling/surfaceUV';
-import { heatmapColor, showCurrentHeat } from '../heatmap';
+import { heatmapColor, dateHeatmapColor, showCurrentHeat } from '../heatmap';
+import type { DateHeatmap, HeatMode } from '../dateHeatmap';
 import type { SolarFrame } from '../annual';
 import { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
@@ -29,6 +30,8 @@ interface Props {
   parameters: Parameters;
   season: Season;
   heat: boolean;
+  heatMode: HeatMode;
+  dateHeat: DateHeatmap | null;
   result: Simulation | null;
   resetToken: number;
   resultCurrent: boolean;
@@ -37,7 +40,15 @@ interface Props {
 let areaLightingReady = false;
 type Live = Pick<
   Props,
-  'parameters' | 'season' | 'heat' | 'result' | 'resultCurrent' | 'highlight' | 'solarFrame'
+  | 'parameters'
+  | 'season'
+  | 'heat'
+  | 'heatMode'
+  | 'dateHeat'
+  | 'result'
+  | 'resultCurrent'
+  | 'highlight'
+  | 'solarFrame'
 >;
 export default function Scene(props: Props) {
   const host = useRef<HTMLDivElement>(null),
@@ -551,6 +562,8 @@ export default function Scene(props: Props) {
         parameters: p,
         season,
         heat,
+        heatMode,
+        dateHeat,
         result,
         resultCurrent,
         highlight,
@@ -641,20 +654,34 @@ export default function Scene(props: Props) {
           exposure: budget.exposure,
         });
       }
-      const showHeat = showCurrentHeat(heat, !!result, resultCurrent);
+      const grid = heatMode === 'date' ? dateHeat?.grid : result?.heatmap_grid;
+      const showHeat = showCurrentHeat(heat, !!grid, resultCurrent);
       if (heatMesh.visible !== showHeat) needsRender = true;
       heatMesh.visible = showHeat;
-      if (showHeat && result && result.heatmap_grid !== lastGrid) {
+      el.dataset.heatmapMode = heatMode;
+      el.dataset.heatmapDate = showHeat && heatMode === 'date' ? (dateHeat?.date ?? '') : '';
+      if (showHeat && grid && grid !== lastGrid) {
         needsRender = true;
-        lastGrid = result.heatmap_grid;
+        lastGrid = grid;
+        el.dataset.heatmapSummary = JSON.stringify(
+          heatMode === 'date' && dateHeat
+            ? {
+                date: dateHeat.date,
+                max: dateHeat.max,
+                mean: dateHeat.mean,
+                directArea: dateHeat.directAreaFraction,
+                southIncident: dateHeat.southIncident,
+              }
+            : { mean: grid.flat().reduce((sum, n) => sum + n, 0) / (grid.length * grid[0].length) },
+        );
         const small = document.createElement('canvas');
-        small.width = result.heatmap_grid[0].length;
-        small.height = result.heatmap_grid.length;
+        small.width = grid[0].length;
+        small.height = grid.length;
         const sc = small.getContext('2d')!;
         for (let z = 0; z < small.height; z++)
           for (let x = 0; x < small.width; x++) {
-            const value = result.heatmap_grid[z][x];
-            sc.fillStyle = heatmapColor(value);
+            const value = grid[z][x];
+            sc.fillStyle = heatMode === 'date' ? dateHeatmapColor(value) : heatmapColor(value);
             sc.fillRect(x, z, 1, 1);
           }
         hc.clearRect(0, 0, 384, 384);
